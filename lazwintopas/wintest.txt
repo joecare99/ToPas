@@ -1,0 +1,19 @@
+#1.2t	__int8=-1t	__int16=-2t	__int32=-4t	__int64=-8[BCB4.def]M7	__BORLANDC__\
+	0x0540 //BCB4M11	_MSC_VER\
+	800[W32.def]M8	cdecl\
+	__cdeclM9	_cdecl\
+	__cdeclM10	_fastcall\
+	__fastcallM13	__declspec(modifiers)M17	_inline\
+	__inlineM18	__forceinline\
+	__inlineM20	INM22	_M_IX86\
+	500 //PentiumM26	OUTM28	__w64M30	_WIN32[BCB.def]M15	__TURBOC\
+	1M16	__TURBOC__\
+	__BORLANDC__M23	__MSDOS__\
+	1M26	__FLAT__\
+	1M30	WIN32\
+	1M31	__WIN32__\
+	1M32	_Windows\
+	1[user.def]M14	ALDI\
+	1M15	K6\
+	0M48	_CHAR_UNSIGNED\
+	1

@@ -1,0 +1,1102 @@
+#1.2
+t	__int8=-1
+t	__int16=-2
+t	__int32=-4
+t	__int64=-8
+[bcb4.def]
+M7	__BORLANDC__\
+	0x0540 //BCB4
+M11	_MSC_VER\
+	800
+[w32.def]
+M8	cdecl\
+	__cdecl
+M9	_cdecl\
+	__cdecl
+M10	_fastcall\
+	__fastcall
+M13	__declspec(modifiers)
+M17	_inline\
+	__inline
+M18	__forceinline\
+	__inline
+M20	IN
+M22	_M_IX86\
+	500 //Pentium
+M26	OUT
+M28	__w64
+M30	_WIN32
+[bcb.def]
+M15	__TURBOC\
+	1
+M16	__TURBOC__\
+	__BORLANDC__
+M23	__MSDOS__\
+	1
+M26	__FLAT__\
+	1
+M30	WIN32\
+	1
+M31	__WIN32__\
+	1
+M32	_Windows\
+	1
+[user.def]
+M14	ALDI\
+	1
+M15	K6\
+	0
+M48	_CHAR_UNSIGNED\
+	1
+[parsetest.c]
+M6	SevenZip
+[stdio.h]
+M18	__STDIO_H
+M19	_INC_STDIO
+[_stddef.h]
+M18	___STDDEF_H
+[_defs.h]
+M40	___DEFS_H
+M42	_RTLENTRY\
+	__cdecl
+M43	_USERENTRY\
+	__cdecl
+M49	_RTLENTRYF\
+	_RTLENTRY
+M50	_USERENTRYF\
+	_USERENTRY
+M53	_FAR
+M65	_EXPCLASS
+M66	_EXPDATA
+M67	_EXPFUNC
+M71	_EXPFUNC32\
+	_EXPFUNC
+M72	_EXPFUNC16
+M75	_Cdecl\
+	_RTLENTRY
+M76	_CType\
+	_RTLENTRYF
+M77	_CLASSTYPE\
+	_EXPCLASS
+M78	_FARFUNC\
+	_EXPFUNC
+M79	_FARCALL\
+	_EXPFUNC __far
+[_null.h]
+M19	NULL\
+	0
+[_stddef.h]
+M36	__STD
+M50	_SIZE_T\
+	size_t
+M45	_SIZE_T_DEFINED
+t45	size_t=+i
+M64	_PTRDIFF_T
+t64	ptrdiff_t=i
+M69	offsetof(s_name,m_name)\
+	(_SIZE_T)&(((s_name _FAR *)0)->m_name)
+M73	_WCHAR_T
+M74	_WCHAR_T_DEFINED
+t74	wchar_t=+s
+M89	_WINT_T\
+	wint_t
+t89	wint_t="wchar_t"
+M95	_WCTYPE_T_DEFINED
+t95	wctype_t="wchar_t"
+p101	__threadid:()C+l
+M102	_threadid\
+	(__threadid())
+[_nfile.h]
+M18	___NFILE_H
+M21	_NFILE_\
+	50
+t21	fpos_t=l
+[stdio.h]
+v51	_floatconvert:i
+t111	S:FILE={curp:*+c;buffer:*+c;level:i;bsize:i;istemp:+s;flags:+s;hold:"wchar_t";fd:c;token:+c;}
+M55	_IOFBF\
+	0
+M56	_IOLBF\
+	1
+M57	_IONBF\
+	2
+M61	_F_RDWR\
+	0x0003/* Read/write flag       */
+M62	_F_READ\
+	0x0001/* Read only file        */
+M63	_F_WRIT\
+	0x0002/* Write only file       */
+M64	_F_BUF\
+	0x0004/* Malloc'ed Buffer data */
+M65	_F_LBUF\
+	0x0008/* line-buffered file    */
+M66	_F_ERR\
+	0x0010/* Error indicator       */
+M67	_F_EOF\
+	0x0020/* EOF indicator         */
+M68	_F_BIN\
+	0x0040/* Binary file indicator */
+M69	_F_IN\
+	0x0080/* Data is incoming      */
+M70	_F_OUT\
+	0x0100/* Data is outgoing      */
+M71	_F_TERM\
+	0x0200/* File is a terminal    */
+M75	EOF\
+	(-1)/* End of file indicator */
+M76	WEOF\
+	(_WINT_T)(0xFFFF)/* wide-character end of file indicator */
+M80	BUFSIZ\
+	512/* Buffer size for stdio */
+M84	L_ctermid\
+	5/* CON: plus null byte */
+M85	P_tmpdir\
+	""/* temporary directory */
+M86	L_tmpnam\
+	13/* tmpnam buffer size */
+M90	SEEK_CUR\
+	1
+M91	SEEK_END\
+	2
+M92	SEEK_SET\
+	0
+M96	TMP_MAX\
+	0xFFFF
+t96	FILE="S:FILE"
+M118	FOPEN_MAX\
+	(_NFILE_)
+M119	SYS_OPEN\
+	(_NFILE_)
+M122	FILENAME_MAX\
+	260
+v122	_streams:[]"FILE"
+v131	_nfile:+i
+M133	stdin\
+	(&_streams[0])
+M134	stdout\
+	(&_streams[1])
+M135	stderr\
+	(&_streams[2])
+p135	__getStream:(:i;)C*"FILE"
+p149	clearerr:(__stream:*"FILE";)Cv
+p150	fclose:(__stream:*"FILE";)Ci
+p151	fflush:(__stream:*"FILE";)Ci
+p152	fgetc:(__stream:*"FILE";)Ci
+p153	fgetwc:(__stream:*"FILE";)C"wint_t"
+p154	fgetpos:(__stream:*"FILE";__pos:*"fpos_t";)Ci
+p155	fgets:(__s:*c;__n:i;__stream:*"FILE";)C*c
+p156	fgetws:(__s:*"wchar_t";__n:i;__stream:*"FILE";)C*"wchar_t"
+p157	fopen:(__path:*#c;__mode:*#c;)C*"FILE"
+p158	_wfopen:(__path:*#"wchar_t";__mode:*#"wchar_t";)C*"FILE"
+p160	fprintf:(__stream:*"FILE";__format:*#c;:~;)Ci
+p161	fwprintf:(__stream:*"FILE";__format:*#"wchar_t";:~;)Ci
+p162	fputc:(__c:i;__stream:*"FILE";)Ci
+p163	fputwc:(__c:"wint_t";__stream:*"FILE";)C"wint_t"
+p164	fputs:(__s:*#c;__stream:*"FILE";)Ci
+p165	fputws:(__s:*#"wchar_t";__stream:*"FILE";)Ci
+p166	fread:(__ptr:*v;__size:"size_t";__n:"size_t";__stream:*"FILE";)C"size_t"
+p168	freopen:(__path:*#c;__mode:*#c;__stream:*"FILE";)C*"FILE"
+p170	_wfreopen:(__path:*#"wchar_t";__mode:*#"wchar_t";__stream:*"FILE";)C*"FILE"
+p172	fscanf:(__stream:*"FILE";__format:*#c;:~;)Ci
+p173	fwscanf:(__stream:*"FILE";__format:*#"wchar_t";:~;)Ci
+p174	fseek:(__stream:*"FILE";__offset:l;__whence:i;)Ci
+p175	fsetpos:(__stream:*"FILE";__pos:*#"fpos_t";)Ci
+p176	ftell:(__stream:*"FILE";)Cl
+p177	fwrite:(__ptr:*#v;__size:"size_t";__n:"size_t";__stream:*"FILE";)C"size_t"
+p179	gets:(__s:*c;)C*c
+p180	_getws:(__s:*"wchar_t";)C*"wchar_t"
+p181	_pclose:(__stream:*"FILE";)Ci
+[stdlib.h]
+p300	perror:(__s:*#c;)Cv
+p302	_wperror:(__s:*#"wchar_t";)Cv
+[stdio.h]
+p184	_popen:(__command:*#c;__mode:*#c;)C*"FILE"
+p185	_wpopen:(__command:*#"wchar_t";__mode:*#"wchar_t";)C*"FILE"
+p188	printf:(__format:*#c;:~;)Ci
+p189	wprintf:(__format:*#"wchar_t";:~;)Ci
+p190	puts:(__s:*#c;)Ci
+p191	_putws:(__s:*#"wchar_t";)Ci
+p193	remove:(__path:*#c;)Ci
+p194	_wremove:(__path:*#"wchar_t";)Ci
+p195	rename:(__oldname:*#c;__newname:*#c;)Ci
+p196	_wrename:(__oldname:*#"wchar_t";__newname:*#"wchar_t";)Ci
+p197	rewind:(__stream:*"FILE";)Cv
+p198	scanf:(__format:*#c;:~;)Ci
+p199	wscanf:(__format:*#"wchar_t";:~;)Ci
+p200	setbuf:(__stream:*"FILE";__buf:*c;)Cv
+p201	setvbuf:(__stream:*"FILE";__buf:*c;__type:i;__size:"size_t";)Ci
+p203	sprintf:(__buffer:*c;__format:*#c;:~;)Ci
+p204	swprintf:(__buffer:*"wchar_t";__format:*#"wchar_t";:~;)Ci
+p205	snprintf:(__buffer:*c;__nsize:"size_t";__format:*#c;:~;)Ci
+p207	snwprintf:(__buffer:*"wchar_t";__nsize:"size_t";__format:*#"wchar_t";:~;)Ci
+p210	_snprintf:(__buffer:*c;__nsize:"size_t";__format:*#c;:~;)Ci
+p212	_snwprintf:(__buffer:*"wchar_t";__nsize:"size_t";__format:*#"wchar_t";:~;)Ci
+p215	sscanf:(__buffer:*#c;__format:*#c;:~;)Ci
+p217	swscanf:(__buffer:*#"wchar_t";__format:*#"wchar_t";:~;)Ci
+[string.h]
+p88	strerror:(__errnum:i;)C*c
+[stdio.h]
+p220	tmpfile:()C*"FILE"
+p221	tmpnam:(__s:*c;)C*c
+p222	_wtmpnam:(__s:*"wchar_t";)C*"wchar_t"
+M341	ungetc(__c,__f)\
+	ungetc((__c),__f)/* traditionally a macro */
+p341	ungetc:(__c:i;__stream:*"FILE";)Ci
+p224	ungetwc:(__c:"wint_t";__stream:*"FILE";)C"wint_t"
+p225	vfprintf:(__stream:*"FILE";__format:*#c;__arglist:*v;)Ci
+p227	vfscanf:(__stream:*"FILE";__format:*#c;__arglist:*v;)Ci
+p229	vprintf:(__format:*#c;__arglist:*v;)Ci
+p230	vscanf:(__format:*#c;__arglist:*v;)Ci
+p231	vsprintf:(__buffer:*c;__format:*#c;__arglist:*v;)Ci
+p233	vsnprintf:(__buffer:*c;__nsize:"size_t";__format:*#c;__arglist:*v;)Ci
+p235	vsscanf:(__buffer:*#c;__format:*#c;__arglist:*v;)Ci
+p237	vfwprintf:(__stream:*"FILE";__format:*#"wchar_t";__arglist:*v;)Ci
+p239	vfwscanf:(__stream:*"FILE";__format:*#"wchar_t";__arglist:*v;)Ci
+p241	vwprintf:(__format:*#"wchar_t";__arglist:*v;)Ci
+p242	vwscanf:(__format:*#"wchar_t";__arglist:*v;)Ci
+p243	vswprintf:(__buffer:*"wchar_t";__format:*#"wchar_t";__arglist:*v;)Ci
+p245	vsnwprintf:(__buffer:*"wchar_t";__nsize:"size_t";__format:*#"wchar_t";__arglist:*v;)Ci
+p247	vswscanf:(__buffer:*#"wchar_t";__format:*#"wchar_t";__arglist:*v;)Ci
+p249	_unlink:(__path:*#c;)Ci
+p250	_wunlink:(__path:*#"wchar_t";)Ci
+p252	_vsnprintf:(__buffer:*c;__nsize:"size_t";__format:*#c;__arglist:*v;)Ci
+p254	_vsnwprintf:(__buffer:*"wchar_t";__nsize:"size_t";__format:*#"wchar_t";__arglist:*v;)Ci
+M326	getc(__f)
+p326	getc:(__fp:*"FILE";)Ci
+p259	getwc:(__fp:*"FILE";)C"wint_t"
+M334	getchar()\
+	getc(stdin)
+p334	getchar:()Ci
+M335	getwchar()\
+	getwc(stdin)
+p335	getwchar:()C"wint_t"
+M336	putchar(__c)\
+	putc((__c), stdout)
+p336	putchar:(__c:#i;)Ci
+M337	putwchar(__c)\
+	putwc((__c), stdout)
+p337	putwchar:(__c:#"wint_t";)C"wint_t"
+M330	putc(__c,__f)
+p330	putc:(__c:#i;__fp:*"FILE";)Ci
+p265	putwc:(__c:#"wint_t";__fp:*"FILE";)C"wint_t"
+M322	feof(__f)\
+	((__f)->flags & _F_EOF)
+p322	feof:(__fp:*"FILE";)Ci
+M321	ferror(__f)\
+	((__f)->flags & _F_ERR)
+p321	ferror:(__fp:*"FILE";)Ci
+M324	_fileno(__f)\
+	((__f)->fd)
+p324	_fileno:(__fp:*"FILE";)Ci
+p269	_flushall:()Ci
+p270	_fcloseall:()Ci
+p271	_fdopen:(__handle:i;__type:*c;)C*"FILE"
+p272	_wfdopen:(__handle:i;__type:*"wchar_t";)C*"FILE"
+p273	_fgetchar:()Ci
+p274	_fgetwchar:()C"wint_t"
+p275	_fputchar:(__c:i;)Ci
+p276	_fputwchar:(__c:"wint_t";)C"wint_t"
+p277	_fsopen:(__path:*#c;__mode:*#c;__shflag:i;)C*"FILE"
+p278	_wfsopen:(__path:*#"wchar_t";__mode:*#"wchar_t";__shflag:i;)C*"FILE"
+p283	_sopen:(__path:*#c;__access:i;__shflag:i;:~;)Ci
+p286	_wsopen:(__path:*#"wchar_t";__access:i;__shflag:i;:~;)Ci
+p288	_getw:(__stream:*"FILE";)Ci
+p289	_putw:(__w:i;__stream:*"FILE";)Ci
+p290	_rmtmp:()Ci
+[string.h]
+p98	_strerror:(__s:*#c;)C*c
+[stdio.h]
+p292	_tempnam:(__dir:*c;__pfx:*c;)C*c
+p293	_wtempnam:(__dir:*"wchar_t";__pfx:*"wchar_t";)C*"wchar_t"
+p294	_fgetc:(__stream:*"FILE";)Ci
+p295	_fgetwc:(__stream:*"FILE";)C"wint_t"
+p296	_fputc:(__c:c;__stream:*"FILE";)Ci
+p297	_fputwc:(__c:"wchar_t";__stream:*"FILE";)C"wint_t"
+p299	flushall:()Ci
+p300	fdopen:(__handle:i;__type:*c;)C*"FILE"
+p301	fputchar:(__c:i;)Ci
+p302	fgetchar:()Ci
+M323	fileno(__f)\
+	((__f)->fd)
+p323	fileno:(__fp:*"FILE";)Ci
+p304	fcloseall:()Ci
+p305	tempnam:(__dir:*c;__pfx:*c;)C*c
+p306	rmtmp:()Ci
+p307	unlink:(__path:*#c;)Ci
+p308	getw:(__stream:*"FILE";)Ci
+p309	putw:(__w:i;__stream:*"FILE";)Ci
+p310	sopen:(__path:*#c;__access:i;__shflag:i;:~;)Ci
+[stdlib.h]
+M18	__STDLIB_H
+M19	_INC_STDLIB
+[search.h]
+M18	__SEARCH_H
+v18	fcmp:*(:*#v;:*#v;)Ci
+p36	bsearch:(__key:*#v;__base:*#v;__nelem:"size_t";__width:"size_t";fcmp:*(:*#v;:*#v;)Ci;)C*v
+p40	lfind:(__key:*#v;__base:*#v;__num:*"size_t";__width:"size_t";fcmp:*(:*#v;:*#v;)Ci;)C*v
+p43	lsearch:(__key:*#v;__base:*v;__num:*"size_t";__width:"size_t";fcmp:*(:*#v;:*#v;)Ci;)C*v
+v47	__fcmp:*(:*#v;:*#v;)Ci
+p46	qsort:(__base:*v;__nelem:"size_t";__width:"size_t";__fcmp:*(:*#v;:*#v;)Ci;)Cv
+[stdlib.h]
+p36	__abs__:(:i;)Ci
+p37	___crotl__:(__value:+c;__count:i;)C+c
+p38	___crotr__:(__value:+c;__count:i;)C+c
+p39	___lrotl__:(__val:+l;__count:i;)C+l
+p40	___lrotr__:(__val:+l;__count:i;)C+l
+p41	___rotl__:(__value:+s;__count:i;)C+s
+p42	___rotr__:(__value:+s;__count:i;)C+s
+t68	S:div_t={quot:i;rem:i;}
+M64	_DIV_T
+t64	div_t="S:div_t"
+t76	S:ldiv_t={quot:l;rem:l;}
+M72	_LDIV_T
+t72	ldiv_t="S:ldiv_t"
+M79	MB_CUR_MAX\
+	__mb_cur_max
+M83	RAND_MAX\
+	0x7FFFU
+M87	LRAND_MAX\
+	0x7FFFFFFFU
+M89	EXIT_SUCCESS\
+	0
+M90	EXIT_FAILURE\
+	1
+t90	atexit_t=*()Cv
+M98	DOS_MODE\
+	0/* DOS 16-bit */
+M99	OS2_MODE\
+	1/* OS/2 16-bit */
+p99	abort:()Cv
+M109	__ABS_DEFINED
+M116	abs(__x)\
+	__abs__(__x)
+p116	abs:(__x:i;)Ci
+v122	__func:*()Cv
+p122	atexit:(__func:*()Cv;)Ci
+p123	atof:(__s:*#c;)Cd
+M238	atoi(__s)\
+	((int) atol(__s))
+p238	atoi:(__s:*#c;)Ci
+p125	atol:(__s:*#c;)Cl
+p126	calloc:(__nitems:"size_t";__size:"size_t";)C*v
+p127	div:(__numer:i;__denom:i;)C"div_t"
+p128	exit:(__status:i;)Cv
+p129	free:(__block:*v;)Cv
+p130	getenv:(__name:*#c;)C*c
+p131	labs:(__x:l;)Cl
+p132	ldiv:(__numer:l;__denom:l;)C"ldiv_t"
+p133	malloc:(__size:"size_t";)C*v
+p134	mblen:(__s:*#c;__n:"size_t";)Ci
+p135	mbstowcs:(__pwcs:*"wchar_t";__s:*#c;__n:"size_t";)C"size_t"
+p137	mbtowc:(__pwc:*"wchar_t";__s:*#c;__n:"size_t";)Ci
+p138	rand:()Ci
+p139	realloc:(__block:*v;__size:"size_t";)C*v
+p140	srand:(__seed:+i;)Cv
+p141	strtod:(__s:*#c;__endptr:**c;)Cd
+p142	strtol:(__s:*#c;__endptr:**c;__radix:i;)Cl
+p144	_strtold:(__s:*#c;__endptr:**c;)CD
+p145	strtoul:(__s:*#c;__endptr:**c;__radix:i;)C+l
+p147	system:(__command:*#c;)Ci
+p149	wcstombs:(__s:*c;__pwcs:*#"wchar_t";__n:"size_t";)C"size_t"
+p150	wctomb:(__s:*c;__wc:"wchar_t";)Ci
+p151	_wtof:(__s:*#"wchar_t";)Cd
+p152	_wtoi:(__s:*#"wchar_t";)Ci
+p153	_wtol:(__s:*#"wchar_t";)Cl
+p154	_wtold:(__s:*#"wchar_t";)CD
+p155	wcstod:(__s:*#"wchar_t";__endptr:**"wchar_t";)Cd
+p156	wcstol:(__s:*#"wchar_t";__endptr:**"wchar_t";__radix:i;)Cl
+p157	_wcstold:(__s:*#"wchar_t";__endptr:**"wchar_t";)CD
+p158	wcstoul:(__s:*#"wchar_t";__endptr:**"wchar_t";__radix:i;)C+l
+p159	_wsystem:(__command:*#"wchar_t";)Ci
+p160	_itow:(__value:i;__string:*"wchar_t";__radix:i;)C*"wchar_t"
+p161	_ltow:(__value:l;__string:*"wchar_t";__radix:i;)C*"wchar_t"
+p162	_ultow:(__value:+l;__string:*"wchar_t";__radix:i;)C*"wchar_t"
+p173	ltoa:(__value:l;__string:*c;__radix:i;)C*c
+p174	ecvt:(__value:d;__ndig:i;__dec:*i;__sign:*i;)C*c
+p175	fcvt:(__value:d;__ndig:i;__dec:*i;__sign:*i;)C*c
+p176	gcvt:(__value:d;__ndec:i;__buf:*c;)C*c
+v192	errno:i
+v193	_doserrno:i
+v197	__mb_cur_max:i
+M203	_WIN_MODE\
+	2/* Windows 16- or 32-bit */
+M204	_OS2_20_MODE\
+	3/* OS/2 32-bit */
+M205	_DOSX32_MODE\
+	4/* DOS 32-bit */
+M207	environ\
+	_environ
+v207	_environ:**c
+v212	_wenviron:**"wchar_t"
+v213	_fileinfo:i
+v214	_fmode:i
+v215	_osmajor:+c
+v216	_osminor:+c
+v217	_osmode:+c
+v218	_osversion:+i
+v219	_cmdline_escapes:i
+M223	sys_nerr\
+	_sys_nerr
+M224	sys_errlist\
+	_sys_errlist
+v224	_sys_errlist:[]*c
+v228	_sys_nerr:i
+M244	_MAX_PATH\
+	260
+M245	_MAX_DRIVE\
+	3
+M246	_MAX_DIR\
+	256
+M247	_MAX_FNAME\
+	256
+M248	_MAX_EXT\
+	256
+p248	_atold:(__s:*#c;)CD
+p256	_crotl:(__value:+c;__count:i;)C+c
+p257	_crotr:(__value:+c;__count:i;)C+c
+p259	_ecvt:(__value:d;__ndig:i;__dec:*i;__sign:*i;)C*c
+p261	_exit:(__status:i;)Cv
+p262	_fcvt:(__value:d;__ndig:i;__dec:*i;__sign:*i;)C*c
+p264	_fullpath:(__buf:*c;__path:*#c;__maxlen:"size_t";)C*c
+p266	_gcvt:(__value:d;__ndec:i;__buf:*c;)C*c
+p268	itoa:(__value:i;__string:*c;__radix:i;)C*c
+p270	_lrand:()Cl
+p271	_lrotl:(__val:+l;__count:i;)C+l
+p272	_lrotr:(__val:+l;__count:i;)C+l
+p274	_ltoa:(__value:l;__string:*c;__radix:i;)C*c
+p276	_makepath:(__path:*c;__drive:*#c;__dir:*#c;__name:*#c;__ext:*#c;)Cv
+p281	putenv:(__name:*#c;)Ci
+p283	_rotl:(__value:+s;__count:i;)C+s
+p284	_rotr:(__value:+s;__count:i;)C+s
+p286	_searchenv:(__file:*#c;__varname:*#c;__pathname:*c;)Cv
+p289	_searchstr:(__file:*#c;__ipath:*#c;__pathname:*c;)Cv
+p292	_splitpath:(__path:*#c;__drive:*c;__dir:*c;__name:*c;__ext:*c;)Cv
+p297	swab:(__from:*c;__to:*c;__nbytes:i;)Cv
+p298	ultoa:(__value:+l;__string:*c;__radix:i;)C*c
+p303	_wfullpath:(__buf:*"wchar_t";__path:*#"wchar_t";__maxlen:"size_t";)C*"wchar_t"
+p305	_wmakepath:(__path:*"wchar_t";__drive:*#"wchar_t";__dir:*#"wchar_t";__name:*#"wchar_t";__ext:*#"wchar_t";)Cv
+p310	_wsplitpath:(__path:*#"wchar_t";__drive:*"wchar_t";__dir:*"wchar_t";__name:*"wchar_t";__ext:*"wchar_t";)Cv
+p316	_wsearchenv:(__file:*#"wchar_t";__varname:*#"wchar_t";__pathname:*"wchar_t";)Cv
+p319	_wsearchstr:(__file:*#"wchar_t";__ipath:*#"wchar_t";__pathname:*"wchar_t";)Cv
+p322	_wgetenv:(__name:*#"wchar_t";)C*"wchar_t"
+p323	_wputenv:(__name:*#"wchar_t";)Ci
+M335	random(__num)\
+	(__num ? (int)(_lrand()%(__num)) : 0)
+p335	time:(:*l;)Cl
+M454	min(__a,__b)\
+	(((__a) < (__b)) ? (__a) : (__b))
+M451	max(__a,__b)\
+	(((__a) > (__b)) ? (__a) : (__b))
+M449	randomize()\
+	srand((unsigned)time(NULL))
+M470	__ARGV_DEFINED
+v470	_argc:i
+v472	_argv:**c
+M473	__argc\
+	_argc/* MSC Version */
+M474	__argv\
+	_argv/* MSC Version */
+[string.h]
+M18	__STRING_H
+M19	_INC_STRING
+[mem.h]
+M18	__MEM_H
+p18	__memchr__:(__s:*#v;__c:i;__n:"size_t";)C*v
+p40	__memcmp__:(__s1:*#v;__s2:*#v;__n:"size_t";)Ci
+p41	__memcpy__:(__dest:*v;__src:*#v;__n:"size_t";)C*v
+p42	__memset__:(__s:*v;__c:i;__n:"size_t";)C*v
+p48	memccpy:(__dest:*v;__src:*#v;__c:i;__n:"size_t";)C*v
+p50	memcmp:(__s1:*#v;__s2:*#v;__n:"size_t";)Ci
+p52	memcpy:(__dest:*v;__src:*#v;__n:"size_t";)C*v
+p54	memicmp:(__s1:*#v;__s2:*#v;__n:"size_t";)Ci
+p56	memmove:(__dest:*v;__src:*#v;__n:"size_t";)C*v
+p58	memset:(__s:*v;__c:i;__n:"size_t";)C*v
+p60	_wmemset:(__s:*v;__c:i;__n:"size_t";)C*v
+p61	_wmemcpy:(__dest:*v;__src:*#v;__n:"size_t";)C*v
+p72	memchr:(__s:*#v;__c:i;__n:"size_t";)C*v
+p73	_wmemchr:(__s:*#v;__c:i;__n:"size_t";)C*v
+M78	movmem(src,dest,length)\
+	(void)memmove(dest,src,length)
+M79	setmem(dest,length,value)\
+	(void)memset(dest,value,length)
+M82	_fmemccpy\
+	memccpy
+M83	_fmemchr\
+	memchr
+M84	_fmemcmp\
+	memcmp
+M85	_fmemcpy\
+	memcpy
+M86	_fmemicmp\
+	memicmp
+M87	_fmemmove\
+	memmove
+M88	_fmemset\
+	memset
+M89	_fmovmem\
+	movmem
+M90	_fsetmem\
+	setmem
+[string.h]
+M51	wcscmpi(s1,s2)\
+	_wcsicmp(s1,s2)
+M52	_wcscmpi(s1,s2)\
+	_wcsicmp(s1,s2)
+M53	wcsncmpi(s1,s2,n)\
+	_wcsnicmp(s1,s2,n)
+M54	_wcsncmpi(s1,s2,n)\
+	_wcsnicmp(s1,s2,n)
+p54	wcslen:(__s:*#"wchar_t";)C"size_t"
+p57	wcscpy:(__dst:*"wchar_t";__src:*#"wchar_t";)C*"wchar_t"
+p58	wcscat:(__dest:*"wchar_t";__src:*#"wchar_t";)C*"wchar_t"
+p59	wcschr:(__s:*#"wchar_t";__c:i;)C*"wchar_t"
+p60	wcscmp:(__s1:*#"wchar_t";__s2:*#"wchar_t";)Ci
+p218	wcscoll:(__s1:*#"wchar_t";__s2:*#"wchar_t";)Ci
+p62	wcscspn:(__s1:*#"wchar_t";__s2:*#"wchar_t";)C"size_t"
+p63	_wcsdup:(__s:*#"wchar_t";)C*"wchar_t"
+p64	wcsncmp:(__s1:*#"wchar_t";__s2:*#"wchar_t";__maxlen:"size_t";)Ci
+p65	wcsncpy:(__dest:*"wchar_t";__src:*#"wchar_t";__maxlen:"size_t";)C*"wchar_t"
+p66	_wcsnset:(__s:*"wchar_t";__ch:"wchar_t";__n:"size_t";)C*"wchar_t"
+p67	wcspbrk:(__s1:*#"wchar_t";__s2:*#"wchar_t";)C*"wchar_t"
+p68	wcsrchr:(__s:*#"wchar_t";__c:"wchar_t";)C*"wchar_t"
+p69	_wcsrev:(__s:*"wchar_t";)C*"wchar_t"
+p70	_wcsset:(__s:*"wchar_t";__ch:"wchar_t";)C*"wchar_t"
+p71	wcsspn:(__s1:*#"wchar_t";__s2:*#"wchar_t";)C"size_t"
+p72	wcsstr:(__s1:*#"wchar_t";__s2:*#"wchar_t";)C*"wchar_t"
+p73	wcstok:(__s1:*"wchar_t";__s2:*#"wchar_t";)C*"wchar_t"
+p74	wcsncat:(__dest:*"wchar_t";__src:*#"wchar_t";__maxlen:"size_t";)C*"wchar_t"
+p75	wcspcpy:(__dest:*"wchar_t";__src:*#"wchar_t";)C*"wchar_t"
+p76	_wcspcpy:(__dest:*"wchar_t";__src:*#"wchar_t";)C*"wchar_t"
+p77	_wcsicmp:(__s1:*#"wchar_t";__s2:*#"wchar_t";)Ci
+p78	_wcsnicmp:(__s1:*#"wchar_t";__s2:*#"wchar_t";__maxlen:"size_t";)Ci
+p79	_wcslwr:(__s:*"wchar_t";)C*"wchar_t"
+p80	_wcsupr:(__s:*"wchar_t";)C*"wchar_t"
+p81	_lwcslwr:(__s:*"wchar_t";)C*"wchar_t"
+p82	_lwcsupr:(__s:*"wchar_t";)C*"wchar_t"
+p84	strcat:(__dest:*c;__src:*#c;)C*c
+p85	strcmp:(__s1:*#c;__s2:*#c;)Ci
+p86	strcpy:(__dest:*c;__src:*#c;)C*c
+p87	strcspn:(__s1:*#c;__s2:*#c;)C"size_t"
+p89	strlen:(__s:*#c;)C"size_t"
+p90	strncat:(__dest:*c;__src:*#c;__maxlen:"size_t";)C*c
+p92	strncmp:(__s1:*#c;__s2:*#c;__maxlen:"size_t";)Ci
+p94	strncpy:(__dest:*c;__src:*#c;__maxlen:"size_t";)C*c
+p96	strspn:(__s1:*#c;__s2:*#c;)C"size_t"
+p97	strtok:(__s1:*c;__s2:*#c;)C*c
+M103	strcmpi(s1,s2)\
+	stricmp(s1,s2)
+M104	strncmpi(s1,s2,n)\
+	strnicmp(s1,s2,n)
+p104	_lstrlwr:(__s:*c;)C*c
+p107	_lstrupr:(__s:*c;)C*c
+p108	stpcpy:(__dest:*c;__src:*#c;)C*c
+p109	_stpcpy:(__dest:*c;__src:*#c;)C*c
+p110	strdup:(__s:*#c;)C*c
+p111	stricmp:(__s1:*#c;__s2:*#c;)Ci
+p112	strlwr:(__s:*c;)C*c
+p113	strnicmp:(__s1:*#c;__s2:*#c;__maxlen:"size_t";)Ci
+p115	strnset:(__s:*c;__ch:i;__n:"size_t";)C*c
+p116	strrev:(__s:*c;)C*c
+p117	strset:(__s:*c;__ch:i;)C*c
+p118	strupr:(__s:*c;)C*c
+p135	strchr:(__s:*#c;__c:i;)C*c
+p136	strrchr:(__s:*#c;__c:i;)C*c
+p137	strpbrk:(__s1:*#c;__s2:*#c;)C*c
+p138	strstr:(__s1:*#c;__s2:*#c;)C*c
+p149	__stpcpy__:(__dest:*c;__src:*#c;)C*c
+p150	__strcat__:(__dest:*c;__src:*#c;)C*c
+p151	__strchr__:(__s:*#c;__c:i;)C*c
+p152	__strcmp__:(__s1:*#c;__s2:*#c;)Ci
+p153	__strcpy__:(__dest:*c;__src:*#c;)C*c
+p154	__strlen__:(__s:*#c;)C"size_t"
+p155	__strncat__:(__dest:*c;__src:*#c;__maxlen:"size_t";)C*c
+p157	__strncmp__:(__s1:*#c;__s2:*#c;__maxlen:"size_t";)Ci
+p159	__strncpy__:(__dest:*c;__src:*#c;__maxlen:"size_t";)C*c
+p161	__strnset__:(__s:*c;__ch:i;__n:"size_t";)C*c
+p162	__strrchr__:(__s:*#c;__c:i;)C*c
+p163	__strset__:(__s:*c;__ch:i;)C*c
+p202	_lstrcoll:(__s1:*#c;__s2:*#c;)Ci
+p203	_lstricoll:(__s1:*#c;__s2:*#c;)Ci
+p204	_lstrncoll:(__s1:*#c;__s2:*#c;__len:#i;)Ci
+p205	_lstrnicoll:(__s1:*#c;__s2:*#c;__len:i;)Ci
+p206	_lstrxfrm:(__s1:*c;__s2:*#c;__n:"size_t";)C"size_t"
+p207	strcoll:(__s1:*#c;__s2:*#c;)Ci
+p208	_stricoll:(__s1:*#c;__s2:*#c;)Ci
+p209	_strncoll:(__s1:*#c;__s2:*#c;__n:"size_t";)Ci
+p210	_strnicoll:(__s1:*#c;__s2:*#c;__len:i;)Ci
+p211	strxfrm:(__s1:*c;__s2:*#c;__n:"size_t";)C"size_t"
+p213	_lwcscoll:(__s1:*#"wchar_t";__s2:*#"wchar_t";)Ci
+p214	_lwcsicoll:(__s1:*#"wchar_t";__s2:*#"wchar_t";)Ci
+p215	_lwcsncoll:(__s1:*#"wchar_t";__s2:*#"wchar_t";__len:#i;)Ci
+p216	_lwcsnicoll:(__s1:*#"wchar_t";__s2:*#"wchar_t";__len:i;)Ci
+p217	_lwcsxfrm:(__s1:*"wchar_t";__s2:*#"wchar_t";__n:"size_t";)C"size_t"
+p219	_wcsicoll:(__s1:*#"wchar_t";__s2:*#"wchar_t";)Ci
+p220	_wcsncoll:(__s1:*#"wchar_t";__s2:*#"wchar_t";__n:"size_t";)Ci
+p221	_wcsnicoll:(__s1:*#"wchar_t";__s2:*#"wchar_t";__len:i;)Ci
+p222	wcsxfrm:(__s1:*"wchar_t";__s2:*#"wchar_t";__n:"size_t";)C"size_t"
+M226	_fstrcat\
+	strcat
+M227	_fstrchr\
+	strchr
+M228	_fstrcmp\
+	strcmp
+M229	_fstrcpy\
+	strcpy
+M230	_fstrcspn\
+	strcspn
+M231	_fstrdup\
+	strdup
+M232	_fstricmp\
+	stricmp
+M233	_fstrlen\
+	strlen
+M234	_fstrlwr\
+	strlwr
+M235	_fstrncat\
+	strncat
+M236	_fstrncmp\
+	strncmp
+M237	_fstrncpy\
+	strncpy
+M238	_fstrnicmp\
+	strnicmp
+M239	_fstrnset\
+	strnset
+M240	_fstrpbrk\
+	strpbrk
+M241	_fstrrchr\
+	strrchr
+M242	_fstrrev\
+	strrev
+M243	_fstrset\
+	strset
+M244	_fstrspn\
+	strspn
+M245	_fstrstr\
+	strstr
+M246	_fstrtok\
+	strtok
+M247	_fstrupr\
+	strupr
+[7zcrc.h]
+M4	__7Z_CRC_H
+[stddef.h]
+M18	__STDDEF_H
+M19	_INC_STDDEF
+[7ztypes.h]
+M4	__COMMON_TYPES_H
+M10	UInt32\
+	unsigned int
+M15	Byte\
+	unsigned char
+M19	UInt16\
+	unsigned short
+M29	UInt64\
+	unsigned __int64
+M43	CFileSize\
+	UInt32
+M47	SZ_RESULT\
+	int
+M49	SZ_OK\
+	(0)
+M50	SZE_DATA_ERROR\
+	(1)
+M51	SZE_OUTOFMEMORY\
+	(2)
+M52	SZE_CRC_ERROR\
+	(3)
+M54	SZE_NOTIMPL\
+	(4)
+M55	SZE_FAIL\
+	(5)
+M57	SZE_ARCHIVE_ERROR\
+	(6)
+M59	RINOK(x)\
+	{ int __result_ = (x); if(__result_ != 0) return __result_; }
+v59	g_CrcTable:[256]+i
+[7zcrc.h]
+p11	InitCrcTable:()v
+p13	CrcInit:(crc:*+i;)v
+p14	CrcGetDigest:(crc:*+i;)+i
+p15	CrcUpdateByte:(crc:*+i;v:+c;)v
+p16	CrcUpdateUInt16:(crc:*+i;v:+s;)v
+p17	CrcUpdateUInt32:(crc:*+i;v:+i;)v
+p18	CrcUpdateUInt64:(crc:*+i;v:+8;)v
+p19	CrcUpdate:(crc:*+i;data:*#v;size:"size_t";)v
+p21	CrcCalculateDigest:(data:*#v;size:"size_t";)+i
+p22	CrcVerifyDigest:(digest:+i;data:*#v;size:"size_t";)i
+[7zin.h]
+M4	__7Z_IN_H
+[7zheader.h]
+M4	__7Z_HEADER_H
+M8	k7zSignatureSize\
+	6
+v8	k7zSignature:[6]+c
+M11	k7zMajorVersion\
+	0
+M13	k7zStartHeaderSize\
+	0x20
+t13	E:EIdEnum={k7zIdEnd;k7zIdHeader;k7zIdArchiveProperties;k7zIdAdditionalStreamsInfo;k7zIdMainStreamsInfo;k7zIdFilesInfo;k7zIdPackInfo;k7zIdUnPackInfo;k7zIdSubStreamsInfo;k7zIdSize;k7zIdCRC;k7zIdFolder;k7zIdCodersUnPackSize;k7zIdNumUnPackStream;k7zIdEmptyStream;k7zIdEmptyFile;k7zIdAnti;k7zIdName;k7zIdCreationTime;k7zIdLastAccessTime;k7zIdLastWriteTime;k7zIdWinAttributes;k7zIdComment;k7zIdEncodedHeader;k7zIdStartPos;}
+e17	k7zIdEnd=0
+e19	k7zIdHeader=+(k7zIdEnd,1)
+e21	k7zIdArchiveProperties=+(k7zIdHeader,1)
+e23	k7zIdAdditionalStreamsInfo=+(k7zIdArchiveProperties,1)
+e24	k7zIdMainStreamsInfo=+(k7zIdAdditionalStreamsInfo,1)
+e25	k7zIdFilesInfo=+(k7zIdMainStreamsInfo,1)
+e27	k7zIdPackInfo=+(k7zIdFilesInfo,1)
+e28	k7zIdUnPackInfo=+(k7zIdPackInfo,1)
+e29	k7zIdSubStreamsInfo=+(k7zIdUnPackInfo,1)
+e31	k7zIdSize=+(k7zIdSubStreamsInfo,1)
+e32	k7zIdCRC=+(k7zIdSize,1)
+e34	k7zIdFolder=+(k7zIdCRC,1)
+e36	k7zIdCodersUnPackSize=+(k7zIdFolder,1)
+e37	k7zIdNumUnPackStream=+(k7zIdCodersUnPackSize,1)
+e39	k7zIdEmptyStream=+(k7zIdNumUnPackStream,1)
+e40	k7zIdEmptyFile=+(k7zIdEmptyStream,1)
+e41	k7zIdAnti=+(k7zIdEmptyFile,1)
+e43	k7zIdName=+(k7zIdAnti,1)
+e44	k7zIdCreationTime=+(k7zIdName,1)
+e45	k7zIdLastAccessTime=+(k7zIdCreationTime,1)
+e46	k7zIdLastWriteTime=+(k7zIdLastAccessTime,1)
+e47	k7zIdWinAttributes=+(k7zIdLastWriteTime,1)
+e48	k7zIdComment=+(k7zIdWinAttributes,1)
+e50	k7zIdEncodedHeader=+(k7zIdComment,1)
+e52	k7zIdStartPos=+(k7zIdEncodedHeader,1)
+[7zitem.h]
+M4	__7Z_ITEM_H
+[7zmethodid.h]
+M4	__7Z_METHOD_ID_H
+M8	kMethodIDSize\
+	15
+t8	S:_CMethodID={ID:[15]+c;IDSize:+c;}
+t14	CMethodID="S:_CMethodID"
+p16	AreMethodsEqual:(a1:*"CMethodID";a2:*"CMethodID";)i
+[7zbuffer.h]
+M4	__7Z_BUFFER_H
+t4	S:_CSzByteBuffer={Capacity:"size_t";Items:*+c;}
+t13	CSzByteBuffer="S:_CSzByteBuffer"
+p15	SzByteBufferInit:(buffer:*"CSzByteBuffer";)v
+v16	allocFunc:*(size:"size_t";)*v
+p16	SzByteBufferCreate:(buffer:*"CSzByteBuffer";newCapacity:"size_t";allocFunc:*(size:"size_t";)*v;)i
+[7zin.h]
+v27	freeFunc:*(:*v;)v
+[7zbuffer.h]
+p17	SzByteBufferFree:(buffer:*"CSzByteBuffer";freeFunc:*(:*v;)v;)v
+[7zitem.h]
+t10	S:_CCoderInfo={NumInStreams:+i;NumOutStreams:+i;MethodID:"CMethodID";Properties:"CSzByteBuffer";}
+t16	CCoderInfo="S:_CCoderInfo"
+p18	SzCoderInfoInit:(coder:*"CCoderInfo";)v
+p19	SzCoderInfoFree:(coder:*"CCoderInfo";freeFunc:*(p:*v;)v;)v
+t21	S:_CBindPair={InIndex:+i;OutIndex:+i;}
+t25	CBindPair="S:_CBindPair"
+t27	S:_CFolder={NumCoders:+i;Coders:*"CCoderInfo";NumBindPairs:+i;BindPairs:*"CBindPair";NumPackStreams:+i;PackStreams:*+i;UnPackSizes:*+i;UnPackCRCDefined:i;UnPackCRC:+i;NumUnPackStreams:+i;}
+t40	CFolder="S:_CFolder"
+p42	SzFolderInit:(folder:*"CFolder";)v
+p46	SzFolderGetUnPackSize:(folder:*"CFolder";)+i
+p44	SzFolderFindBindPairForInStream:(folder:*"CFolder";inStreamIndex:+i;)i
+p45	SzFolderGetNumOutStreams:(folder:*"CFolder";)+i
+t50	S:_CFileItem={Size:+i;FileCRC:+i;Name:*c;IsFileCRCDefined:+c;HasStream:+c;IsDirectory:+c;IsAnti:+c;}
+t70	CFileItem="S:_CFileItem"
+p72	SzFileInit:(fileItem:*"CFileItem";)v
+t74	S:_CArchiveDatabase={NumPackStreams:+i;PackSizes:*+i;PackCRCsDefined:*+c;PackCRCs:*+i;NumFolders:+i;Folders:*"CFolder";NumFiles:+i;Files:*"CFileItem";}
+t84	CArchiveDatabase="S:_CArchiveDatabase"
+p86	SzArchiveDatabaseInit:(db:*"CArchiveDatabase";)v
+p87	SzArchiveDatabaseFree:(db:*"CArchiveDatabase";freeFunc:*(:*v;)v;)v
+[7zalloc.h]
+M4	__7Z_ALLOC_H
+t4	S:_ISzAlloc={Alloc:*(size:"size_t";)*v;Free:*(address:*v;)v;}
+v10	Alloc:*(size:"size_t";)*v
+v11	Free:*(address:*v;)v
+t12	ISzAlloc="S:_ISzAlloc"
+p14	SzAlloc:(size:"size_t";)*v
+p15	SzFree:(address:*v;)v
+p17	SzAllocTemp:(size:"size_t";)*v
+p18	SzFreeTemp:(address:*v;)v
+[7zin.h]
+t10	S:_CInArchiveInfo={StartPositionAfterHeader:+i;DataStartPosition:+i;}
+t14	CInArchiveInfo="S:_CInArchiveInfo"
+t16	S:_CArchiveDatabaseEx={Database:"CArchiveDatabase";ArchiveInfo:"CInArchiveInfo";FolderStartPackStreamIndex:*+i;PackStreamStartPositions:*+i;FolderStartFileIndex:*+i;FileIndexToFolderIndexMap:*+i;}
+t24	CArchiveDatabaseEx="S:_CArchiveDatabaseEx"
+p26	SzArDbExInit:(db:*"CArchiveDatabaseEx";)v
+p27	SzArDbExFree:(db:*"CArchiveDatabaseEx";freeFunc:*(:*v;)v;)v
+p28	SzArDbGetFolderStreamPos:(db:*"CArchiveDatabaseEx";folderIndex:+i;indexInFolder:+i;)+i
+p29	SzArDbGetFolderFullPackSize:(db:*"CArchiveDatabaseEx";folderIndex:+i;)+i
+t31	S:_ISzInStream={Read:*(object:*v;buffer:*v;size:"size_t";processedSize:*"size_t";)i;Seek:*(object:*v;pos:+i;)i;}
+v43	Read:*(object:*v;buffer:*v;size:"size_t";processedSize:*"size_t";)i
+v45	Seek:*(object:*v;pos:+i;)i
+t46	ISzInStream="S:_ISzInStream"
+p49	SzArchiveOpen:(inStream:*"ISzInStream";db:*"CArchiveDatabaseEx";allocMain:*"ISzAlloc";allocTemp:*"ISzAlloc";)i
+[7zextract.h]
+M4	__7Z_EXTRACT_H
+p4	SzExtract:(inStream:*"ISzInStream";db:*"CArchiveDatabaseEx";fileIndex:+i;blockIndex:*+i;outBuffer:**+c;outBufferSize:*"size_t";offset:*"size_t";outSizeProcessed:*"size_t";allocMain:*"ISzAlloc";allocTemp:*"ISzAlloc";)i
+[7zmain.c]
+t15	S:_CFileInStream={InStream:"ISzInStream";File:*"FILE";}
+t19	CFileInStream="S:_CFileInStream"
+p41	SzFileReadImp:(object:*v;buffer:*v;size:"size_t";processedSize:*"size_t";)i{(
+	auto(s$2:*"CFileInStream"=#@(PCFileInStream,object$1));
+	auto(processedSizeLoc$2:"size_t"=((fread,buffer$1,1,size$1,->(s$2,File)));
+	if(!=(processedSize$1,0);=(->(processedSize$1),processedSizeLoc$2););
+	return(0);
+};
+;
+p52	SzFileSeekImp:(object:*v;pos:+i;)i{(
+	auto(s$2:*"CFileInStream"=#@(PCFileInStream,object$1));
+	auto(res$2:i=((fseek,->(s$2,File),#@(fpos_t,pos$1),0));
+	if(==(res$2,0);return(0););
+	return(5);
+};
+;
+p61	PrintError:(sz:*c;)v{(
+	((printf,"\nERROR: %s\n",sz$1);
+};
+;
+p66	main:(numargs:i;
+	args:[]*c;
+	)i{(
+	auto(archiveStream$2:"CFileInStream");
+	
+	auto(db$2:"CArchiveDatabaseEx");
+	
+	auto(res$2:i);
+	
+	auto(allocImp$2:"ISzAlloc");
+	
+	auto(allocTempImp$2:"ISzAlloc");
+	
+	((printf,"\n7z ANSI-C Decoder 4.30  Copyright (c) 1999-2005 Igor Pavlov  2005-11-20\n");
+	
+	if(==(numargs$1,1);
+	{(
+		((printf,"\nUsage: 7zDec <command> <archive_name>\n\n<Commands>\n  e: Extract files from archive\n  l: List contents of archive\n  t: Test integrity of archive\n");
+	
+		return(0);
+	
+	};
+	);
+	
+	if(<(numargs$1,3);
+	{(
+		((PrintError,"incorrect command");
+	
+		return(1);
+	
+	};
+	);
+	
+	=(.(archiveStream$2,File),((fopen,[(args$1,2),"rb"));
+	
+	if(==(.(archiveStream$2,File),0);
+	{(
+		((PrintError,"can not open input file");
+	
+		return(1);
+	
+	};
+	);
+	
+	=(.(.(archiveStream$2,InStream),Read),SzFileReadImp);
+	
+	=(.(.(archiveStream$2,InStream),Seek),SzFileSeekImp);
+	
+	=(.(allocImp$2,Alloc),SzAlloc);
+	
+	=(.(allocImp$2,Free),SzFree);
+	
+	=(.(allocTempImp$2,Alloc),SzAllocTemp);
+	
+	=(.(allocTempImp$2,Free),SzFreeTemp);
+	
+	((InitCrcTable);
+	
+	((SzArDbExInit, &(db$2));
+	
+	=(res$2,((SzArchiveOpen, &(.(archiveStream$2,InStream)), &(db$2), &(allocImp$2), &(allocTempImp$2)));
+	
+	if(==(res$2,0);
+	{(
+		auto(command$6:*c=[(args$1,1));
+	
+		auto(listCommand$6:i=0);
+	
+		auto(testCommand$6:i=0);
+	
+		auto(extractCommand$6:i=0);
+	
+		if(==(((strcmp,command$6,"l"),0);
+	=(listCommand$6,1);
+	);
+	
+		if(==(((strcmp,command$6,"t"),0);
+	=(testCommand$6,1);
+	 if(==(((strcmp,command$6,"e"),0);
+	=(extractCommand$6,1);
+	);
+	);
+	
+		if(listCommand$6;
+	{(
+			auto(i$7:+i);
+	
+			for(=(i$7,0);
+	<(i$7,.(.(db$2,Database),NumFiles));
+	++(i$7);
+	{(
+				auto(f$8:*"CFileItem"=+(.(.(db$2,Database),Files),i$7));
+	
+				((printf,"%10d  %s\n",#@(ptrdiff_t,->(f$8,Size)),->(f$8,Name));
+	
+			};
+	);
+	
+		};
+	 if(||(testCommand$6,extractCommand$6);
+	{(
+			auto(i$9:+i);
+	
+			auto(blockIndex$9:+i=0xFFFFFFFF);
+	
+			auto(outBuffer$9:*+c=0);
+	
+			auto(outBufferSize$9:"size_t"=0);
+	
+			((printf,"\n");
+	
+			for(=(i$9,0);
+	<(i$9,.(.(db$2,Database),NumFiles));
+	++(i$9);
+	{(
+				auto(offset$10:"size_t");
+	
+				auto(outSizeProcessed$10:"size_t");
+	
+				auto(f$10:*"CFileItem"=+(.(.(db$2,Database),Files),i$9));
+	
+				if(->(f$10,IsDirectory);
+	((printf,"Directory ");
+	((printf,?(testCommand$6,"Testing   ","Extracting"));
+	);
+	
+				((printf," %s",->(f$10,Name));
+	
+				if(->(f$10,IsDirectory);
+	{(
+					((printf,"\n");
+	
+					continue;
+	
+				};
+	);
+	
+				=(res$2,((SzExtract, &(.(archiveStream$2,InStream)), &(db$2),i$9, &(blockIndex$9), &(outBuffer$9), &(outBufferSize$9), &(offset$10), &(outSizeProcessed$10), &(allocImp$2), &(allocTempImp$2)));
+	
+				if(!=(res$2,0);
+	break;
+	);
+	
+				if(!(testCommand$6);
+	{(
+					auto(outputHandle$12:*"FILE");
+	
+					auto(processedSize$12:+i);
+	
+					auto(fileName$12:*c=->(f$10,Name));
+	
+					auto(nameLen$12:"size_t"=((strlen,->(f$10,Name)));
+	
+					for(;
+	>(nameLen$12,0);
+	--(nameLen$12);
+	if(==([(->(f$10,Name),-(nameLen$12,1)),'/');
+	{(
+						=(fileName$12,+(->(f$10,Name),nameLen$12));
+	
+						break;
+	
+					};
+	);
+	);
+	
+					=(outputHandle$12,((fopen,fileName$12,"wb+"));
+	
+					if(==(outputHandle$12,0);
+	{(
+						((PrintError,"can not open output file");
+	
+						=(res$2,5);
+	
+						break;
+	
+					};
+	);
+	
+					=(processedSize$12,((fwrite,+(outBuffer$9,offset$10),1,outSizeProcessed$10,outputHandle$12));
+	
+					if(!=(processedSize$12,outSizeProcessed$10);
+	{(
+						((PrintError,"can not write output file");
+	
+						=(res$2,5);
+	
+						break;
+	
+					};
+	);
+	
+					if(((fclose,outputHandle$12);
+	{(
+						((PrintError,"can not close output file");
+	
+						=(res$2,5);
+	
+						break;
+	
+					};
+	);
+	
+				};
+	);
+	
+				((printf,"\n");
+	
+			};
+	);
+	
+			((.(allocImp$2,Free),outBuffer$9);
+	
+		};
+	{(
+			((PrintError,"incorrect command");
+	
+			=(res$2,5);
+	
+		};
+	);
+	);
+	
+	};
+	);
+	
+	((SzArDbExFree, &(db$2),.(allocImp$2,Free));
+	
+	((fclose,.(archiveStream$2,File));
+	
+	if(==(res$2,0);
+	{(
+		((printf,"\nEverything is Ok\n");
+	
+		return(0);
+	
+	};
+	);
+	
+	if(==(res$2,2);
+	((PrintError,"can not allocate memory");
+	((printf,"\nERROR #%d\n",res$2);
+	);
+	
+	return(1);
+	
+};
+	
+;
+	

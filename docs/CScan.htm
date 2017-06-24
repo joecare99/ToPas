@@ -1,0 +1,517 @@
+<!DOCTYPE html PUBLIC "-//w3c//dtd html 4.0 transitional//en">
+<html>
+<head>
+  <meta http-equiv="Content-Type"
+ content="text/html; charset=iso-8859-1">
+  <meta name="Author" content="DrDiettrich">
+  <meta name="GENERATOR"
+ content="Mozilla/4.6 [en] (Win98; I) [Netscape]">
+  <title>CScan Scanner and Preprocessor</title>
+</head>
+<body>
+<h1>
+CScan - a Scanner and Preprocessor for C<br>
+</h1>
+<center>
+<h3>(a.d. 2004, by DoDi)</h3>
+</center>
+This project is another attempt to implement an C scanner and
+preprocessor,
+compatible with various C dialects (gcc, MSVC, BC...). This document
+describes
+the general and particular operation of an C scanner and preprocessor.
+The API and usage of this project is described in a separate <a
+ href="UsingCScan.htm">users
+guide</a>. A parser and further information is presented in the ToPas
+project.<br>
+&nbsp;applica for type declarations is described <a href="CParser.htm">elsewhere</a>.
+<p>Comments, suggestions, contributions and error reports are welcome
+(VBDis@aol.com).
+</p>
+<p></p>
+<hr width="100%">
+<p>The implementation is split into various units, which can be
+modified
+to match the needs of various applications. You may notice my very
+personal
+naming and coding conventions in many places &lt;g&gt;.
+<br>
+The core implementation consists of:
+</p>
+<ul>
+  <li>
+uTablesPrep - the string and symbol tables, for the scanner and
+preprocessor<br>
+  </li>
+  <li>
+uXStrings, uHashList - a dictionary implementation with hashed strings
+and stack behaviour</li>
+  <li>
+uTokenC - the token definition</li>
+  <li>
+uScanC - the basic C scanner and preprocessor</li>
+  <li>
+uMacros - all #define handling</li>
+  <li>
+uFiles - file list, include path, find #include files</li>
+</ul>
+<h2>
+Specs</h2>
+Various C "standards" define different and not always compatible
+behaviour
+of the scanner and preprocessor. While in the first C versions the
+preprocessor
+was a stand-alone program, newer standards require that the
+preprocessor
+is part of the scanner.
+<p>A C prepropcessor scanner recognizes comments and line ends, header
+names, number-, string- and character-literals, identifiers, operators
+and punctuators, as well as characters that don't fit into these
+categories.
+The basic scanner, for use by the preprocessor, doesn't perform keyword
+lookup nor does it interpret preprocessor number literals.
+</p>
+<p>A homebrew extension: The scanner can deliver tokens for comments
+and
+(continued) lines, where the (newer) standards require that comments
+map
+into whitespace.
+</p>
+<h3>2.1 Phases of translation</h3>
+A scanner and preprocessor must act according to several rules. An
+implementation
+must behave as if the following steps were implemented:
+<h4>2.1.1 Character mapping</h4>
+Characters in the source file are mapped into the (single byte) base
+character
+set.
+<br>
+End-of-line indicators are mapped into newline characters.
+<br>
+Trigraph character sequences are converted into base characters.
+<br>
+Characters outside the base character set are replaced by their
+universal-character-name;
+this is a weak requirement, it's sufficient that all these characters
+are
+handled in the same way, regardless of their actual internal
+representation.
+<br>
+(This stage is not implemented in the fast scanner. End-of-line is
+mapped into #0 or #10)
+<h4>2.1.2 Line splicing</h4>
+All lines ending in a backslash ('\') and immediately followed by a
+newline
+character are joined with the next line in the source file forming
+logical
+lines from the physical lines. Unless it is empty, a source file must
+end
+in a newline character that is not preceded by a backslash.
+<br>
+(Lines are not spliced in the fast scanner, the scanner returns BOL
+tokens for new lines, or NoEol for escaped EOLs).
+<h4>2.1.3 Tokenization</h4>
+The source file is broken into preprocessing tokens and white-space
+characters.
+<br>
+Comments in the source file are replaced with one space character each.
+<br>
+Newline characters are retained.
+<br>
+(Comments are retained, whitespace is flagged in the next token,
+newline
+handling see Line splicing)
+<h4>2.1.4 Preprocessing</h4>
+Preprocessing <a href="#Directives">directives</a> are executed and
+macros
+are expanded into the source file. The #include statement invokes
+translation
+starting with the preceding three translation steps on any included
+text.
+<br>
+(These actions are implemented in several branches and layers of the
+preprocessor)
+<h4>2.1.5 Character-set mapping</h4>
+All source character set members and escape sequences are converted to
+their equivalents in the execution character set.
+<br>
+(no character set mapping is performed)
+<h4>2.1.6 String concatenation</h4>
+All adjacent string and wide-string literals are concatenated.
+<br>
+(String concatenation, if desired,&nbsp; must be implemented in a user
+filter)
+<h4>2.1.7-9 Translation</h4>
+The preprocessor tokens are converted into language specific tokens.
+<br>
+Newline and whitespace characters are discarded.
+<br>
+Preprocessor numbers are mapped into integer and floating point numbers
+or, if this is impossible, into error tokens. (This may have happened
+already,
+when such tokens have been evaluated in a preprocessor constant
+expression).
+<br>
+Language specific keywords are recognized.
+<br>
+All tokens are analyzed syntactically and semantically.
+<br>
+(All this is up to the user)
+<h3>Implementation Considerations</h3>
+The scanner in uScanC.pas is not fully conforming to the C specs.
+Deviations
+have been choosen for the intended use as a cross compiler front end.
+Some
+rarely used features (trigraphs...) are not implemented, trigraphs in
+detail
+would have an considerable impact on the currently implemented string
+handling.
+<p>The most important optimization topic is memory management,
+resulting
+both in memory consumption and memory managment operations(time). The
+scanner
+uses the following optimization techniques:
+</p>
+<p>The overall amount of strings is minimized. Predefined strings are
+reused
+wherever possible. Files are read in line-by-line, into TStringLists,
+and
+all tokens have references into these lines for non-predefined strings.
+Exceptions to this rule are:
+</p>
+<ul>
+  <li>
+    <b>Identifiers/Symbols</b>: All symbols are stored in the
+preprocessor
+dictionary.</li>
+  <li>
+    <b>Strings</b>: All string literals are stored in a string table,
+after
+escape sequence substitution. Wide strings are stored as AnsiStrings,
+special
+treatment of wide characters is up to the user (handling of \u and \U
+escape
+sequences...).</li>
+</ul>
+Characters outside the base character set are stored as error tokens.
+Inside
+string literals and comments no such substitution is required, provided
+that wide chars only occur in wide string literals. Optionally string
+literals
+may be specified to be UTF-8 encoded, so that both strings and wide
+strings
+can be stored as AnsiStrings (not implemented).
+<p>The scanner uses pointers into the source lines during scanning.
+This
+limits the lookahead across continuation lines and the handling of
+trigraphs.
+</p>
+<p>Comments are retained as references into the source file lines, and
+are possibly broken into multiple tokens for multi-line comments. The
+application
+filter can discard these tokens.
+</p>
+<p>Numbers are immediately scanned as integer or floating point
+numbers.
+This option may produce wrong results in very special situations (token
+pasting).
+</p>
+<p>A full blown scanner would require much more strings:
+</p>
+<p>The source file lines are not normally reusable, due to character
+set
+mapping (trigraphs...), comment substitution, and line splicing.
+Possibly
+the source files should be read by characters, not by lines, so that no
+source line strings must be stored. Instead every token contains a
+direct
+string reference to the according textual representation of the token.
+A string table only is required for wide string literals, since
+WideString
+references are incompatible with AnsiString references, and both
+references
+are illegal in variant (token) records.
+</p>
+<p>The handling of continuation lines (line splicing) is incompatible
+with
+retaining comments. When comments are requested in the full blown
+scanner,
+they should be attached to the immediately preceding token, increasing
+the overall token record size. At the same time the token, following an
+comment, must be flagged as being preceded by whitespace, or the
+fWhiteBefore
+token attribute should be changed into fWhiteAfter. This handling then
+requires some non trivial changes in the scanner.
+<br>
+&nbsp;
+</p>
+<h3>Preprocessor&nbsp;<a name="Directives"></a>Directives</h3>
+Preprocessor directives start at the begin of a line, optionally
+preceded
+only by whitespace. The trigger character is '#', followed by the name
+of the directive. The whole line, including possible continuation
+lines,
+is considered to be part of the directive. The specs require that all
+directive
+lines are fully scanned, so that multi-line comments can be recognized
+as part of the directive.
+<p>Directives can be subdivided into macro definition, conditional
+compilation,
+file inclusion, and other directives.
+</p>
+<p>Macros are defined with #define, and the definition can be removed
+with
+#undef. Macros can have arguments, in which case an opening parenthese
+'(' must immediately follow the macro name; no whitespace is allowed in
+between, otherwise the '(' would become part of the macro body.
+</p>
+<p>Conditional compilation is implemented by #if, #ifdef, #ifndef,
+#elif,
+#else and #endif. The #if(n)def directives test whether the given macro
+name is (not) #defined, whereas the #if and #elif directives have
+constant
+expressions for the condition. Conditions can be nested, and I have
+found
+an simple procedure to track, during file scanning, whether the tokens
+currently have to be skipped. Older preprocessors could simply skip
+whole
+lines, without scanning, but the handling of continuation lines and
+multi-line
+comments requires that a new preprocessor must also parse the
+conditionally
+excluded parts of the source files. Directives in excluded parts also
+must
+be handled, at least the conditional directives.
+</p>
+<p>The inclusion of related files comes in various forms. The
+traditional
+#include directive expects either an "ordinary" file, or an
+&lt;system&gt;
+file, or a macro that evaluates to one of these file name formats. The
+use of '&lt;' as the delimiters for system file names requires special
+scanning of the input! "Ordinary" files are searched in the current
+directory
+(of the file with the #include directive), then in all directories of
+ancestor
+files of the current file, and finally in the include path, which also
+(only) is searched for the system files. Another form is the
+#include_next
+directive, which starts the search in the search path at the component
+which follows the directory in which the currently processed file was
+found.
+This convention can result in multiple occurences of the same directory
+in the search path, and none of these duplicates can be removed!
+</p>
+<p>The other directives are used to create errors (#error), fake file
+names
+and line numbers from which the following code was created by some
+other
+tool (#line), and to set compiler options (#pragma).
+</p>
+<h3>Macros</h3>
+Macro arguments and expansion are subject to several rules. Macros
+without
+arguments expand to the (constant) token stream of their definition
+(TMacro.Body).
+Macros with arguments deserve a much more complex expansion, see the
+comments
+on TMacroFunc.Expand in uMacro.pas.
+<h3>Preprocessor Operators</h3>
+Preprocessor operators can occur only in macro bodies.
+<p>'#' is the stringizer, which converts the following token into a
+string
+literal. This operator is used with macro arguments, to provide the
+name
+of the argument as a string, for output purposes. All tokens of the
+actual
+argument are converted into a single string literal. According to the
+specs,
+the quotes around and all backslashes in string literals should be
+escaped.
+This is not done in the implemented scanner, because the resulting
+string
+is stored with embedded control characters instead of escape sequences.
+All strings have to be converted during textual output, according to
+the
+syntax of the target language.
+</p>
+<p>'#@' is the charizer, a Microsoft extension, which converts the
+following
+token into a character literal.
+</p>
+<p>'##' is the token paster, which combines the token names to its left
+and right into an new identifier.
+</p>
+<p>Another special "operator" in conditional preprocessor expressions
+is
+'defined', which evaluates to a boolean (0..1) value indicating whether
+the following identifier has been #defined before. This operator can
+come
+in two flavours, as a prefix operator to the following symbol, or in
+function-like
+form with the symbol enclosed in parentheses.
+</p>
+<h2>Tokens</h2>
+The scanner tokens are not intended for use in an application. The user
+interface should implement an translator from scanner tokens into
+application
+specific tokens.
+<p>The scanner tokens are somewhat language independent, in detail
+keywords
+are not recognized by the basic scanner. Instead all identifiers are
+mapped
+in a preprocessor symbol table, where every symbol can be associated
+with
+an object. One kind of symbol objects is used to implement macros,
+other
+classes can be used to map keywords or hold other parser specific
+information.
+Unfortunately it's allowed that even C/C++ keywords can be #defined,
+like
+"#define int int". Since the preprocessor has to find the #define
+first,
+under all circumstances, it's not easily possible to add symbols other
+than for #defines to the preprocessor symbol table. One possible
+solution,
+to prevent the search for keywords in another table, is a map from
+symbol
+indices, in the preprocessor symbol table, into language keywords. Then
+this map can be constructed when the keyword names are added to the
+preprocessor
+symbol table, what can be done before the scanner starts to add
+#defined
+names to the symbol table. Once a symbol name is added to the
+preprocessor
+symbol table, it is never moved around or removed; #define then only
+attaches
+an object to the alredy existing entry, and #undef only removes and
+destroys
+these objects, but leaves the symbol table entry and its name intact.
+</p>
+<p>Some pseudo tokens allow the creation of pretty printers and other
+applications,
+which require more than the C/C++ specific tokens. These tokens are
+created
+for:
+</p>
+<ul>
+  <li>
+BOL (or EOL)</li>
+  <li>
+NoEOL</li>
+  <li>
+Comments</li>
+</ul>
+Some considerations herefore:
+<p>- The preprocessor is line-oriented, besides for multi-line comments
+which by definition have to be interpreted as a single blank
+(whitespace),
+regardless of embedded EOLs. The tokenizer therefore should return a
+single
+token even for multiline comments. OTOH every line should be scanned
+somewhat
+independently from continuation lines, so that the comment text can be
+implemented by references into specific lines, and no memory allocation
+is required for multi-line comments. Then skipped or otherwise unwanted
+comments impose no runtime penalty on an application.
+</p>
+<p>- Only the first non-white character in a line should be inspected
+for
+'#' to determine the presence of a preprocessor directive. The
+distinction
+between various scanner modes (also ASM...) is vital, because every
+language
+has different implications and requires different scanners.
+</p>
+<p>- Most applications require indications about the file, line and
+possibly
+column of every token. The file and line number is added to BOL and
+NoEol
+tokens, and also the indentation of the source lines.
+<br>
+#line directives are not yet implemented.
+</p>
+<p>- Column information is not normally required, besides for error
+messages
+and the exact position of declarations and definitions in an file. The
+column information can be extracted from the top level source file
+state,
+but #line and lookahead can make that information unreliable.
+</p>
+<p>- Parsers, which retain comments, should attach comments to another
+(non-pseudo) token. It's suggested that a comment is treated as a
+postfix
+of that token, so that comment-only lines can be attached to the BOL
+token.
+</p>
+<p>- Token lookahead will not normally occur in a scanner, but the
+preprocessor
+deserves some lookahead for the preprocessor operators. Since such
+operators
+can occur only inside macro definitions, the lookahead can occur on the
+token stream that makes up the body of a macro.
+</p>
+<p>- String concatenation, in the last step of the C
+scanner/preprocessor,
+does not fit together with multi-line comments. A combined string token
+can not be created when comments between the strings shall be reported
+as distinct tokens.
+</p>
+<h2>Scanner and Preprocessor Interaction</h2>
+The recognition of preprocessor directives must respect the BOL
+placement
+of the '#' prefix, as well as the occurence of that character inside or
+outside macro definitions. When a different "parser" is used for macro
+definitions (TMacro._Define), then it's sufficient when the scanner
+returns
+the same general '#' token for both directives and the preprocessor
+operator.
+This token then is interpreted by the macro parser as an operator, and
+by the directive parser as a directive prefix. Improper placement of
+'#'
+tokens in the source code, not at the BOL or outside macro definitions,
+should be considered as an syntax error, which is not handled and not
+even
+checked by the current scanner/preprocessor.
+<p>The preprocessor implements an stack of token streams, where a token
+stream can be a source file or a macro expansion. A TTokenStream
+implements
+two functions to retrieve the next token, where nextRaw() returns the
+next
+unprocessed token, whereas nextToken() returns the next "cooked" token,
+after eventual preprocessing. The preprocessing in source file streams
+includes directive handling and the suppression of conditionally
+excluded
+parts of the files, in macro expansion streams no difference exists
+between
+both functions.
+</p>
+<p>Two more functions can be used as token filters, where nextNoEof()
+handles
+switching from a macro expansion back to the preceding token stream, or
+from #included files back to the preceding file. nextNoWhite suppresses
+all "white" tokens, for use e.g. in the expression evaluator. Both
+functions
+can be called in raw (preprocessor) or cooked (parser) mode.
+</p>
+<p>The evaluation of constant expressions, required for #if directives,
+is implemented for reuse by the application (evaluation of enum and
+other
+initializers). A "preprocessor" flag must be passed to the expression
+evaluator,
+if different handling of e.g. macro substitution is required. The
+handling
+of high-level constant values, as opposed to #defines, is not yet
+implemented;
+most probably an application-supplied callback function will be used in
+the future.
+</p>
+<p>The macro substitution checker sits on the top of all preprocessor
+levels.
+Special conditions, preventing the expansion of a macro, are handled in
+the macro expander itself.
+<br>
+&nbsp;
+</p>
+</body>
+</html>

@@ -1,0 +1,229 @@
+<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+   <meta name="Author" content="DrDiettrich">
+   <meta name="GENERATOR" content="Mozilla/4.6 [en] (Win98; I) [Netscape]">
+   <title>CScan Users Guide</title>
+</head>
+<body>
+
+<center>
+<h1>
+CScan Users Guide</h1></center>
+
+<center>
+<h3>
+(a.d. 2004, by DoDi)</h3></center>
+The CScan project implements an scanner and preprocessor for C source files,
+intended for the use in cross compilers and other tools. The implementation
+has been tested with Windows.h and various GNU/gcc header files. This document
+describes the API and usage of CScan. Information on the general and particular
+operation of an C scanner and preprocessor can be found in the <a href="CScan.htm">project
+description</a> page.
+<p>The CScan project is provided as open source code. Feel free to use
+it in your own private or open source projects. Further copyright and license
+details will be specified when the project is ready for use.
+<p>Comments, suggestions, contributions and error reports are welcome (VBDis@aol.com).
+<p>
+<hr WIDTH="100%">
+<h2>
+The CScan API</h2>
+This is a short and possibly incomplete overview of the CScan application
+interface. Please use it to find the according declarations and descriptions
+in the supplied source code.
+<p><b>uScanC.pas </b>(eventually renamed into uCScan.pas) exports the following:
+<p>function&nbsp; ScanFile(const fn: string): TFile;
+<br>function&nbsp; nextTokenC: eToken;
+<br>function&nbsp; TokenText(const t: RPreToken): string;
+<br>function&nbsp; TokenString(fFirst: boolean = False): string;
+<p>var
+<br>&nbsp; ScanToken: RPreToken;
+<br>&nbsp; ScanString: string; //for symbols, string literals...
+<br>&nbsp; ScanSym:&nbsp; TSymbol;&nbsp; //for symbols
+<br>&nbsp; fVerbose: boolean;&nbsp; //log source lines?
+<p><b>uTokenC.pas </b>defines the preprocessor token record:
+<p>type
+<br>&nbsp; RPreToken = record
+<br>&nbsp; eToken = (&lt;enum>)
+<br>&nbsp; eTokenAttrs = (&lt;enum>)
+<p><b>uTables.pas </b>exports:
+<p>type
+<br>&nbsp; eSymbolKind = (&lt;enum>) //subject to removal
+<br>&nbsp; TSymbol = class(TDictEntry)
+<br>&nbsp; TSymList = class(TDict)
+<p>var
+<br>&nbsp; Symbols:&nbsp; TSymList;
+<br>&nbsp; StringTable:&nbsp; TStringList;
+<p><b>uFiles.pas </b>exports:
+<p>type
+<br>&nbsp; TFile = class(TStringList)
+<br>&nbsp; TFileList = class(THashList)
+<p>var
+<br>&nbsp; fIncludeOnlyOnce: boolean;&nbsp; //include files only once?
+<br>&nbsp; Files:&nbsp; TFileList;
+<br>&nbsp; IncludePath:&nbsp; TStringList;
+<p>function&nbsp; AddIncludeDir(dir: string): integer;
+<p><b>uUI.pas </b>contains the GUI interface:
+<p>type
+<br>&nbsp; eLogKind = (&lt;enum>)
+<br>&nbsp;TLog = procedure(const msg: string; kind: eLogKind = lkProgress)
+of object;
+<br>var
+<br>&nbsp; Log: TLog;
+<p>
+<hr WIDTH="100%">
+<h2>
+Head Start</h2>
+Refer to the sample projects FlexScan (console) or WinScan (GUI) for details.
+In uParseC.pas a real parser for C declarations is implemented. Your parser
+code has to perform the following tasks.
+<ol>
+<li>
+Create an stub file with your preferred settings, and #include the file
+to parse.</li>
+
+<li>
+Open the main source file with ScanFile(filename).</li>
+
+<li>
+Retrieve tokens with nextTokenC(), until it returns t_eof.</li>
+
+<li>
+Done!</li>
+</ol>
+In uParseC.pas you'll find an more illustrative sample parser (data type
+converter).
+<p>Before I forget to mention this, a GUI application ($APPTYPE GUI) has
+to supply a callback method in the uUI.Log variable. This method will receive
+all diagnostic output from the scanner. See fScanLog for a possible implementation
+of such a method.
+<h3>
+AddIncludeDir(path)</h3>
+Calling this procedure is no more required. Instead include directories
+can be specified with #pragma Include.
+<p>Specify to the preprocessor the directories, where #included header
+files shall be searched. These directories later are searched in the order
+of the calls to AddIncludeDir.
+<p>Every path shall end with a '\', but otherwise a backslash is automatically
+appended. Even '/' can be used for directory separators, because all file
+names are internally unified to lower case and '\' separators.
+<h3>
+ScanFile(filename)</h3>
+Start the scanner for this C source file.
+<h3>
+nextTokenC()</h3>
+This function stores the next token record in the ScanToken, ScanSym and
+ScanString variables, and returns the token kind.
+<h2>
+Token Record</h2>
+The RPreToken record contains the fixed fields .kind and .attrs, with the
+token kind (enum eToken) and an set of token attributes (sTokenAttrs).
+The pc and len fields refer to the token text in the input file. The values
+in the remaining fields depend on the token kind. Please refer to uTokenC.pas
+for the actual values of these and all the other fields.
+<p>There exist several token classes, which you'll have to treat differently.
+The simple cases are:
+<ul>
+<li>
+<b>operators</b> and <b>punctuators</b>, the meaning should be obvious</li>
+
+<li>
+<b>symbols</b> (t_sym), the associated string and symbol object (TSymbol)
+is stored in the ScanString resp. ScanSym variables.</li>
+
+<li>
+<b>literals</b> (t_int, t_flt, t_str, t_car), for integral and floating
+point numbers, string and character constants.</li>
+</ul>
+You may wonder where the C keywords are? Keywords are not recognized by
+the scanner, they are returned as symbols instead. Your parser will typically
+have to implement its own token record or class type, together with a converter
+from the preprocessor token definition to your application specific token
+type. In that conversion all the preprocessor symbols can be translated
+into application specific identifiers, keywords, typenames, and names for
+constants, variables or procedures. You also may have to translate ambiguous
+names, which only differ in case - C is a case sensitive language, Pascal
+is case insensitive.
+<p>Some of the remaining token kinds are used internally by the scanner/preprocessor.
+You may have to recognize the following token kinds:
+<ul>
+<li>
+<b>t_eof</b> signifies the end of the scanned source file.</li>
+
+<li>
+<b>t_bol</b> indicates the begin of a source code line, the file number,
+line number and indentation.</li>
+
+<li>
+<b>t_rem</b> is a comment, which typically is skipped by an parser.</li>
+
+<li>
+<b>t_err</b> indicates invalid characters in the source file, what should
+never occur.</li>
+
+<li>
+<b>t_empty</b> indicates an already processed token, either by the preprocessor
+or by your own parser.</li>
+</ul>
+Some helper functions return a textual representation of a token:
+<h3>
+function&nbsp; TokenText(const t: RPreToken): string;</h3>
+TokenText returns the token value as text, with string literals in the
+"internal" format, i.e. with possibly embedded control characters, and
+without quotes.
+<h3>
+function&nbsp; TokenString(fFirst: boolean = False): string;</h3>
+TokenString is not so useful in an parser, more in a pretty printer. It
+returns strings in the original C format and quoting, and with a leading
+space if fFirst is False and the token was preceded by whitespace.
+<h2>
+Scanner Flags</h2>
+Various boolean variables or constants modify the handling of certain tokens.
+Please refer to the actual source code for these variables and their meaning.
+<p>The related declarations may be moved into the uTokenC unit in the next
+version...
+<h2>
+Sample Applications</h2>
+Two sample applications are provided, with a console (FlexScan) or graphical
+(WinScan) UI. You'll have to adopt the source file and searchdir names
+to your system, in FlexScan.dpr or fScanLog.pas.
+<p>The wintest.c file contains some #defines which are required to process
+windows.h. These and other symbols normally are provided by the C compiler,
+but since CScan is not a compiler you may want to use your own standard
+root files. In a future CScan version it shall be possible to specify the
+search directories and other settings by a #pragma, then all adaptations
+can be made in the root file(s), without recompiling the applications.
+Then the root file can be used like an INI or Make file, with the option
+to #include further files with commonly used settings. Yes, I'm too lazy
+to implement command line argument handling myself ;-)
+<p>I hope that some last-minute changes don't cause trouble...
+<h2>
+Outlook</h2>
+The CScan project is still under development. Please consult the actual
+source code in case of differences from the beforementioned behaviour.
+The current preview version mainly is supplied for demonstration and debugging,
+please report all observed errors to VBDis@aol.com. The code was implemented
+and compiled with Delphi 4, please also report problems and possible solutions
+with FreePascal and other compilers.
+<p>The next project is the implementation of an data type converter, from
+C to Pascal/Delphi. This project now has become part of WinScan, the FlexScan
+project was not updated accordingly. During the development of this project
+some more missing features will be implemented in the scanner, making it
+a really usable library package. I plan to only implement a very rudimentary
+framework around the scanner myself, just sufficient to debug the scanner.
+Feel free to contribute your own more elaborated framework, with a handler
+for command line switches or options dialogs etc.
+<p>My final project will be a C to Pascal cross compiler, which may require
+the addition of some more features to the scanner. This cross compiler
+can be extended with back-ends for other languages or compilers, and possibly
+with front-ends for languages other than C. But I don't plan to implement
+such extensions myself, please contact me if you want to implement such
+extensions yourself, so that I can provide the according documentation
+and assistance. I could imagine that the Delphi back-end can be extended
+into back-end for Borland Pascal, FreePascal or VisualPascal, and I'm willing
+to coordinate all further development in these directions.
+<p>DoDi
+<br>(Dr. H.-P. Diettrich, February 2004)
+</body>
+</html>

@@ -1,0 +1,309 @@
+<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+   <meta name="Author" content="DrDiettrich">
+   <meta name="GENERATOR" content="Mozilla/4.6 [en] (WinNT; I) [Netscape]">
+   <title>C Parser</title>
+</head>
+<body>
+
+<h1>
+C Parser</h1>
+This project is based on an old C parser for header files, written 1986
+in GFA-Basic. The purpose was the extraction of type information from C
+header files, now extended into part of an cross-compiler.
+<h2>
+Scanner</h2>
+The scanner and preprocessor is taken from the <a href="CScan.htm">CScan</a>
+project. This scanner doesn't recognize keywords, instead all keywords
+are recognized by a filter between the scanner and parser. The parser also
+maintains its own symbol tables, extensible into multiple scopes.
+<h2>
+Parser</h2>
+The basic parser understands C declarations, only the syntax of blocks
+(compound statements) is missing. The parser is a handcrafted top down
+parser, with a slightly reorganized C grammar that better fits the semantics
+of C declarations than the typical C standard grammars.
+<h2>
+Declarations</h2>
+C declarations are hard to parse. Every declaration consists of up to 4
+parts: type-specifier, declarator prefix, declarator name, and declarator
+postfix. The declared name sits beween the declarator pre- and postfix,
+possibly in a nested declaration with separate pre- and postfix parts.
+All these parts must be puzzled together in the correct order. One specifier
+can be followed by multiple declarators, which can add their own modifiers
+to the common type specifier. Much information is hidden in missing declaration
+parts, so that the real types can be determined only very late in the parsing
+process.
+<h3>
+Declaration Specifiers</h3>
+Declaration specifiers describe the storage class, base type, and type
+attributes and modifiers, of a declaration. The only important storage
+class (typedef) is not a storage class in C terminology, because it definitely
+marks the following specification as a type declaration. A type specification
+is broken in the RType object into
+<ul>
+<li>
+storageClass (token)</li>
+
+<li>
+signed (token)</li>
+
+<li>
+sized (tokens)</li>
+
+<li>
+spectoken</li>
+
+<li>
+attrs (tokens)</li>
+
+<li>
+calling convention (token) and inline flag, when procedures are involved</li>
+</ul>
+The storage class token can be {0..1}[auto, register, static, extern, const,
+typedef], with const and typedef being added willingly to this set.
+<br>The signed token can be {0..1}[signed, unsigned], and applies only
+to int and char types.
+<br>The sized enum of [short, long, longlong] is constructed from {0..2}[short,
+long] tokens, and applies to int and double types.
+<br>The spectoken describes the base type [char, wchar_t, int, __int8,
+__int16, __int32, __int64, float, double, struct, union, enum, void, t_sym],
+where t_sym represents a typename reference, and int is the default base
+type.
+<br>The attrs set can contain {0..2}[const, volatile], further (16 bit
+Windows) attributes [__near, __far, __based] are ignored in the current
+32 bit implementation.
+<br>The calling convention {0..1}[ __cdecl, __fastcall, __stdcall] is an
+important Windows specific attribute.
+<br>The {0..1}[__inline] modifier has no really defined place in a declaration,
+but it is so important that it is remembered in a dedicated field.
+<br>More Windows specific attributes may be added, like [__dllimport, __dllexport]
+etc.
+<br>Also GNU/Java specific attributes [__ATTR, __THROW...] can be implemented
+later, in a dynamic attributes list.
+<h3>
+Declarators</h3>
+The specification part is finished when a declarator name, pointer symbol,
+or nested declarator is found. At this point a missing spectoken is substituted
+by int, and the specification is compiled into an base type (spec string).
+For type references and complex types a basetype reference is created in
+the basetype field. For simple types then the declarator pre- [pointer]
+and postfixes [array, argument-list] are collected and compiled into pre
+and post string fields, together with further [const, volatile] attributes.
+For complex types [struct, union, enum] the remaining declarator parts
+are parsed differently. Finally the overall type of the declaration is
+determined, and classified into [type, var, const, procedure] declarations,
+and an optionally following initializer part is parsed according to this
+type.
+<p>Please note that every declarator must be parsed completely, before
+a procedure can be distinguished from a variable declaration. In the case
+of a procedure the type specifier describes the result type of the procedure,
+as well as attributes of the procedure, not attributes of the result type.
+A __inline procedure also can be followed by some kind of initializer,
+in this case the body (compound statement) of the procedure. Old style
+procedure declarations only describe the types of the parameters, in the
+full definition a parameter declaration section can occur between the procedure
+declaration and procedure body.
+<p>While procedure declarations can be determined by the presence of a
+parameter list, variables and constants must be distinguished by the existence
+of a const attribute in the specification. This separation is important
+in so far as constants can occur in constant expressions, so that their
+values must be known then; initialized variables can have a similar declaration,
+but they can not occur in constant expressions. Enum members also can occur
+in constant expressions, so every enum member must be stored twice, as
+a member in the enum declaration and as a named constant. Simple constants
+can be of type [char, wchar_t, int, float, double, enum, string], where
+string is a pointer to char. All these constants, with the exception of
+strings, have an numerical value. Due to the possibly complex initializers
+for complex constants, only simple non-string constants are implemented
+in the type parser, for now.
+<h2>
+Persistent Type Description</h2>
+In the first attempt strings are used to describe all declarations. All
+declarations are entered into lists of types, variables, constants and
+procedures. A declaration consists of a reference name and definition,
+and an optional initialized value. Anonymous types are inlined into the
+definition, named types are substituted by references into the type list.
+A definition is an ASCII string that can be parsed in both directions;
+this format allows to parse from the base type to the final type, or from
+the topmost type specifier down to the base type. The type definition grammar
+is as follows:
+<p>Type = Qualifier | Array | Pointer | Procedure | Struct_Union | Enum
+| Typename | Bitfield | Basetype.
+<br>Qualifier = [ "!" ] ( "#" | "V" ) Type. /*!=static, #=const (locked)
+or V=volatile */
+<br>Array = "[" ExprList "]" Type.
+<br>Pointer = "*" Type.
+<br>Procedure = "(" { Param } [ ":~," ] ")" [CallConv] Type. /* ":~," stands
+for a "..." variable argument list */
+<br>&nbsp;&nbsp;&nbsp; Param = [ name ] [ ":" Type ] [ "=" Value ] ","
+. /* either name or Type must be specified */
+<br>&nbsp;&nbsp;&nbsp; CallConv = { "I" | "F" | "C" }. /* Inline, Fastcall,
+Cdecl, default: not inlined, Stdcall */
+<br>/* final types */
+<br>Struct_Union = ( "S" | "U" ) ( ( ":" tagname ) | ( "{" { Field ","
+}"}" ) ).
+<br>&nbsp; Field = [ name ] ":"&nbsp; [ Bitfield ] Type. /* only here a
+Bitfield type is allowed */
+<br>&nbsp;&nbsp;&nbsp; Bitfield = "&lt;" Expr ">". /* Type is assumed to
+be a Basetype */
+<br>Enum = "E" "{" { name [ "=" Value ] "," } "}".
+<br>Typename = '"' name '"'. /* in double quotes */
+<br>/* basic types are: void, char, short, int, long, "long long", float,
+double, "long double", "..." */
+<br>Basetype = [ "+" /* unsigned */ | "-" /* signed */ ] ( <b>num</b> |
+"v" | "c" | "s" | "i" | "l" | "L" | "f" | "d" | "D" | "~" ).
+<br>&nbsp;&nbsp;&nbsp; /* <b>num</b> means: number of bytes [1,2,4,8],
+must be preceded by "+" or "-" for unsigned/signed integers */
+<br>Value = ( number | string | char | identifier | [ operator ] "(" {
+Value } ")" ) ";" .
+<br>
+<hr WIDTH="100%">
+<br>???
+<br>Value can be any expression, up to a non-expression token: : ; , ]
+} ) #0.
+<br>A cast type can be appended as ":" Type?
+<br>Value = "{" Expr "}".
+<br>Expr = ( number | string | char | identifier | [ operator ] "(" [ ExprList
+] ")" | Stmt ) .
+<br>ExprList = Expr { ";" Expr }
+<br>Stmt = ... .
+<br>
+<hr WIDTH="100%">
+<br>A "!" prefix indicates a static declaration (proc, var...).
+<br>All(?) values have [ "=" Value ";" ] syntax, Value may be a symbol.
+<br>Tagged struct/unions are stored as types, all typenames refer to this
+tag-type.
+<br>Anonymous types have numbers as names (symbol number, struct/union
+only?).
+<br>&nbsp;&nbsp;&nbsp; Inside struct/union: inlined, no global typedef!
+<br>Procedures *must* have a parameter list, even if empty.
+<p>Symbols are stored in sections (may change!?)
+<br>VarSym = name [ ":" Type ] [ "=" Value ";" ].
+<br>TypeSym = Typename "=" Type. //"=" because TypeName can contain ":"!
+<br>&nbsp;&nbsp;&nbsp; TypeName = name | S:nn | U:nn | E:nn.&nbsp;&nbsp;&nbsp;
+//nn = name or type-symbol-number
+<br>
+<hr WIDTH="100%">
+<br>Currently all list members (params...) are terminated by the list separator
+",". This may change if found not required or useful.
+<p>Names of members (proc, struct, union, enum) may be enclosed in single
+quotes, to allow for easy bidirectional parsing, and as a distinction from
+type names (in double quotes).
+<p>Initializers may exist for const or variable declarations. The initializers
+are stored as attributes of the symbols, not as part of the (type) declaration.
+For the usage of enum members and const variables, as constants, a separate
+list of constant declarations is maintained.
+<p>Tagged definitions of structs etc. are treated as type declarations,
+with the type indicator prefixed to the tag name (e.g. "E:MyEnum"). The
+embedded punctuator makes these names distinct from regular typedef names.
+<p>The <a href="MetaExpressions.htm">representation of constant expressions</a>,
+as e.g. initializers, is not yet specified. For the use in a cross compiler
+the expression should be preserved, as either a token stream (language
+specific) or as a parse tree. For now all constant expressions in type
+declarations are evaluated, and the result is stored as a literal (number).
+<p>A full-fledged C parser requires a distinction between type identifiers
+and other symbols. For the use as a header parser, with possibly unresolved
+include files, heuristics can be used to classify yet undefined names as
+typenames, or the user can be asked for an appropriate classification.
+<h2>
+Tokens</h2>
+The scanner creates tokens for keywords, operators and punctuators, symbols,
+literals (numeric, char and string), as well as some special tokens for
+preprocessing and other purposes:
+<br>&nbsp;
+<table BORDER >
+<tr>
+<td>t_empty</td>
+
+<td>Means: token consumed</td>
+</tr>
+
+<tr>
+<td>t_error</td>
+
+<td>Illegal chars in input</td>
+</tr>
+
+<tr>
+<td>t_eof</td>
+
+<td>No more input available (this source)</td>
+</tr>
+
+<tr>
+<td>t_bol</td>
+
+<td>Begin of line, for preprocessor and listing purposes</td>
+</tr>
+
+<tr>
+<td>t_NoEol</td>
+
+<td>Escaped end of line, for macro definitions and listing purposes</td>
+</tr>
+
+<tr>
+<td>t_rem</td>
+
+<td>Various tokens for comments, text as a single string</td>
+</tr>
+</table>
+
+<p>For tokens with explicit string values (symbols, string and char literals)
+a string is created by the scanner. The consumer can retrieve comment and
+BOL strings, if these are required e.g. in a pretty printer. String literals
+are stored in a specific string table, whereas char literals are stored
+in the token record.
+<p>The lookup and transformation of typenames and keywords must be done
+by the parser, the preprocessor does not impose any special meaning on
+symbols other than macro names.
+<h2>
+Complications</h2>
+The various C "standards" result in some complications, which affect the
+handling of macros, as well as the handling of preprocessor operators and
+directives. Also the handling of multi-line comments and column information
+requires that the files are scanned entirely, it's impossible to simply
+skip over excluded lines.
+<h3>
+Constant Expressions</h3>
+The evaluation of constant expressions slightly differs between preprocessor
+and application.
+<br>A preprocessor expression ends on EOL, which token is ignored by a
+higher level parser.
+<br>The preprocessor also must recognize "defined", possibly with the ugly
+syntax without parentheses.
+<br>In all other cases macro symbols should be expanded, but empty definitions
+should result in a value of zero, not in nothing!
+<br>For the retrieval of non-preprocessor constants a callback function
+to the parser is used by the expression evaluator.
+<p>In a future version only the preprocessor conditions will be evaluated
+immediately. The parser instead will create an <a href="MetaExpressions.htm">parse
+tree</a> for every expression, which then can be handled by the application
+(compiler...). Such trees also can be evaluated after their construction,
+with the advantage that unavailable values (sizeof...) can be detected
+and handled without the risk of breaking the parsing process on possible
+errors (zero divide...). These trees also allow for post-processing of
+initializers for complex data types.
+<h3>
+Lookahead</h3>
+Both the preprocessor and parser deserve some limited lookahead. Currently
+both kinds of lookahead are implemented differently, where the parser lookahead
+is restricted to a single token, following a symbol; when such lookahead
+was required, the symbol name is passed to the parser subroutines, which
+deal with that name before proceeding to the lookahead token. The preprocessor
+lookahead is required to distinguish expandable from non-expandable functional
+macro invocations. Here all tokens are recorded in a temporary stream,
+until either a "(" or a non-white token is found. A "(" indicates the begin
+of the list of actual macro arguments, in which case the macro has to be
+expanded. Otherwise the macro is not expanded, and the recorded tokens
+are made available to the parser.
+<h2>
+Parser Output</h2>
+The declarations of all variables, constants, types, procedures and macros
+can be stored in an text file. Such a file later can be loaded again, e.g.
+for a transformation into a different language module.
+</body>
+</html>

@@ -1,0 +1,125 @@
+#1.2
+[7zmain.c]
+p41	SzFileReadImp:(object:*v;buffer:*v;size:"size_t";processedSize:*"size_t";)i{(
+	auto(s$2:*"CFileInStream"=#@(PCFileInStream,object$1));
+	auto(processedSizeLoc$2:"size_t"=((fread,buffer$1,1,size$1,->(s$2,File)));
+	if(!=(processedSize$1,0);=(->(processedSize$1),processedSizeLoc$2););
+	return(0);
+};
+;
+p52	SzFileSeekImp:(object:*v;pos:+i;)i{(
+	auto(s$2:*"CFileInStream"=#@(PCFileInStream,object$1));
+	auto(res$2:i=((fseek,->(s$2,File),#@(fpos_t,pos$1),0));
+	if(==(res$2,0);return(0););
+	return(5);
+};
+;
+p61	PrintError:(sz:*c;)v{(
+	((printf,"\nERROR: %s\n",sz$1);
+};
+;
+p66	main:(numargs:i;args:[]*c;)i{(
+	auto(archiveStream$2:"CFileInStream");
+	auto(db$2:"CArchiveDatabaseEx");
+	auto(res$2:i);
+	auto(allocImp$2:"ISzAlloc");
+	auto(allocTempImp$2:"ISzAlloc");
+	((printf,"\n7z ANSI-C Decoder 4.30  Copyright (c) 1999-2005 Igor Pavlov  2005-11-20\n");
+	if(==(numargs$1,1);{(
+		((printf,"\nUsage: 7zDec <command> <archive_name>\n\n<Commands>\n  e: Extract files from archive\n  l: List contents of archive\n  t: Test integrity of archive\n");
+		return(0);
+	};);
+	if(<(numargs$1,3);{(
+		((PrintError,"incorrect command");
+		return(1);
+	};);
+	=(.(archiveStream$2,File),((fopen,[(args$1,2),"rb"));
+	if(==(.(archiveStream$2,File),0);{(
+		((PrintError,"can not open input file");
+		return(1);
+	};);
+	=(.(.(archiveStream$2,InStream),Read),SzFileReadImp);
+	=(.(.(archiveStream$2,InStream),Seek),SzFileSeekImp);
+	=(.(allocImp$2,Alloc),SzAlloc);
+	=(.(allocImp$2,Free),SzFree);
+	=(.(allocTempImp$2,Alloc),SzAllocTemp);
+	=(.(allocTempImp$2,Free),SzFreeTemp);
+	((InitCrcTable);
+	((SzArDbExInit, &(db$2));
+	=(res$2,((SzArchiveOpen, &(.(archiveStream$2,InStream)), &(db$2), &(allocImp$2), &(allocTempImp$2)));
+	if(==(res$2,0);{(
+		auto(command$6:*c=[(args$1,1));
+		auto(listCommand$6:i=0);
+		auto(testCommand$6:i=0);
+		auto(extractCommand$6:i=0);
+		if(==(((strcmp,command$6,"l"),0);=(listCommand$6,1););
+		if(==(((strcmp,command$6,"t"),0);=(testCommand$6,1); if(==(((strcmp,command$6,"e"),0);=(extractCommand$6,1);););
+		if(listCommand$6;{(
+			auto(i$7:+i);
+			for(=(i$7,0);<(i$7,.(.(db$2,Database),NumFiles));++(i$7);{(
+				auto(f$8:*"CFileItem"=+(.(.(db$2,Database),Files),i$7));
+				((printf,"%10d  %s\n",#@(ptrdiff_t,->(f$8,Size)),->(f$8,Name));
+			};);
+		}; if(||(testCommand$6,extractCommand$6);{(
+			auto(i$9:+i);
+			auto(blockIndex$9:+i=0xFFFFFFFF);
+			auto(outBuffer$9:*+c=0);
+			auto(outBufferSize$9:"size_t"=0);
+			((printf,"\n");
+			for(=(i$9,0);<(i$9,.(.(db$2,Database),NumFiles));++(i$9);{(
+				auto(offset$10:"size_t");
+				auto(outSizeProcessed$10:"size_t");
+				auto(f$10:*"CFileItem"=+(.(.(db$2,Database),Files),i$9));
+				if(->(f$10,IsDirectory);((printf,"Directory ");((printf,?(testCommand$6,"Testing   ","Extracting")););
+				((printf," %s",->(f$10,Name));
+				if(->(f$10,IsDirectory);{(
+					((printf,"\n");
+					continue;
+				};);
+				=(res$2,((SzExtract, &(.(archiveStream$2,InStream)), &(db$2),i$9, &(blockIndex$9), &(outBuffer$9), &(outBufferSize$9), &(offset$10), &(outSizeProcessed$10), &(allocImp$2), &(allocTempImp$2)));
+				if(!=(res$2,0);break;);
+				if(!(testCommand$6);{(
+					auto(outputHandle$12:*"FILE");
+					auto(processedSize$12:+i);
+					auto(fileName$12:*c=->(f$10,Name));
+					auto(nameLen$12:"size_t"=((strlen,->(f$10,Name)));
+					for(;>(nameLen$12,0);--(nameLen$12);if(==([(->(f$10,Name),-(nameLen$12,1)),'/');{(
+						=(fileName$12,+(->(f$10,Name),nameLen$12));
+						break;
+					};););
+					=(outputHandle$12,((fopen,fileName$12,"wb+"));
+					if(==(outputHandle$12,0);{(
+						((PrintError,"can not open output file");
+						=(res$2,5);
+						break;
+					};);
+					=(processedSize$12,((fwrite,+(outBuffer$9,offset$10),1,outSizeProcessed$10,outputHandle$12));
+					if(!=(processedSize$12,outSizeProcessed$10);{(
+						((PrintError,"can not write output file");
+						=(res$2,5);
+						break;
+					};);
+					if(((fclose,outputHandle$12);{(
+						((PrintError,"can not close output file");
+						=(res$2,5);
+						break;
+					};);
+				};);
+				((printf,"\n");
+			};);
+			((.(allocImp$2,Free),outBuffer$9);
+		};{(
+			((PrintError,"incorrect command");
+			=(res$2,5);
+		};););
+	};);
+	((SzArDbExFree, &(db$2),.(allocImp$2,Free));
+	((fclose,.(archiveStream$2,File));
+	if(==(res$2,0);{(
+		((printf,"\nEverything is Ok\n");
+		return(0);
+	};);
+	if(==(res$2,2);((PrintError,"can not allocate memory");((printf,"\nERROR #%d\n",res$2););
+	return(1);
+};
+;

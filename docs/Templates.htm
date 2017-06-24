@@ -1,0 +1,201 @@
+<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+   <meta name="Author" content="DrDiettrich">
+   <meta name="GENERATOR" content="Mozilla/4.6 [en] (Win98; I) [Netscape]">
+   <title>Macros and Templates</title>
+</head>
+<body>
+
+<h1>
+Macros and Templates</h1>
+C macros (#defines) typically are entirely expanded by the preprocessor,
+so that the declarations of the macros become inaccessible to the parser
+and compiler. In C++ inline procedures and templates allow to define some
+kind of less transparent macros, whose definitions are accessible to the
+compiler. A cross compiler from C into other languages also should be capable
+of accessing macro definitions, so that macros can be translated into named
+constants, procedures or other elements of the target language. This document
+describes an attempt to wrap C macros into some kind of templates.
+<h2>
+General Idea</h2>
+The general idea is a multi-level macro definition and evaluation, with
+a template-like wrapper around a macro. The wrapper has 2 purposes:
+<ul>
+<li>
+Convert the macro definition into some high level construct.</li>
+
+<li>
+Expand the macro according to the selected high level construct.</li>
+</ul>
+
+<h3>
+Macro Definition</h3>
+The macro definition is recorded according to the C specs, and then is
+wrapped into a template. After the definition a one-time expansion of the
+definition may be required, so that the parser can e.g. recognize the macro
+as the definition of a named constant or (inline) procedure.
+<h3>
+Macro Expansion</h3>
+In most cases a wrapped macro is never expanded again, instead the name
+and optional argument lists are passed through to the parser without modifications.
+This mechanism disallows the use of preprocessor operators (# and ##) in
+the macro bodies, because such operators are evaluated during macro expansion.
+One workaround for this restriction might result in additional arguments
+to the original macro argument list, which receive the evaluated expressions.
+The macro wrapper then must evaluate the preprocessor expressions and put
+the results into the extended macro argument list. Then the macro identifier
+and the extended argument list can be passed to the parser, just as the
+expanded macro would be passed for not-wrapped macros. Currently no such
+special treatment will be implemented, because it would be easier to write
+according wrappers as already available C macros.
+<p>The occurence of a wrapped macro symbol in the source code will usually
+trigger no special actions, no macro expansion is required.
+<h3>
+Operation Sequence</h3>
+A macro can be wrapped before or after its definition. Wrapping <b>before</b>
+definition may sound strange, but that's just the preferable way. When
+the wrapping occurs somewhere between the macro definition and its first
+use, then the according instructions (#pragma) must be inserted into the
+source files, best immediately following the macro definition. But when
+then another version of the same source file becomes available, all the
+changes must be inserted into that new file again. That's a lot of work
+&lt;sigh, I know that>, which is not required when macros can be wrapped
+before their definition.
+<p>So the macro wrappers shall be constructed first and entered into the
+preprocessor symbol table, as placeholders for the macro definitions to
+come. After a subsequent macro definition the existence of an wrapper of
+the same name can be detected, whereupon the definition is inserted into
+the wrapper, not into the symbol table. An #undef must be handled in the
+same way.
+<p>The wrapper definitions can be separated from the related source files,
+e.g. the wrappers for foo.h can be placed into foo.h.wrap. When then a
+source file is #included, the preprocessor can automagically detect the
+existence of an associated wrapper file, and can process that wrapper file
+before the source file.
+<p>As outlined above, the definition of a wrapped macro will result in
+a one-time expansion of the wrapper and macro, in a form that is understandable
+to the C parser.
+<h2>
+Syntax</h2>
+The C++ template definitions are hard to parse, due to the overloaded uses
+of angle brackets '&lt;' and '>'. Since I don't want to implement an C++
+parser now, the #define syntax also should be used with macro wrappers.
+The most obvious modification is the substitution of "#define" by e.g.
+"#pragma Define", the remaining parts (argument list and body) can be treated
+as with #define. Inside the wrapper definition special tokens must be reserved
+or defined, for references to the macro name and the macro body. Herefore
+the already defined preprocessor operators can be overloaded, with '#'
+for the macro name and '##' for the macro body.
+<p>Another pragma may be useful to define standard wrappers, so that the
+translation of a macro definition must not be repeated for every single
+#define. This pragma can be named #pragma Template.
+<p>Here some examples for the intended use of macro wrappers:
+<h3>
+Simple Named Constants</h3>
+<tt>#pragma Template __Const const # = ##;</tt>
+<br><tt>#pragma Define ACONST __Const</tt>
+<br><tt>#define ACONST 88</tt>
+<p>will result in
+<p><tt>const ACONST = 88;</tt>
+<h3>
+Typed Constants</h3>
+<tt>#pragma Template __TypedConst(t) const t # = ##;</tt>
+<br><tt>#pragma Define TCONST __TypedConst(char *)</tt>
+<br><tt>#define TCONST "version 1.5"</tt>
+<p>will result in
+<p><tt>const char * TCONST = "version 1.5";</tt>
+<p>For more complex types the macro name placeholder may be inserted explicitly
+into the type specification:
+<p><tt>#pragma Template __ComplexConst(n) const n = ##;</tt>
+<br><tt>#pragma Define TCONST __ComplexConst(char *#[dim])</tt>
+<p>It may be useful do specifiy the types of the wrapper arguments, so
+that e.g. "type t" can be recognized and treated like an anonymous declarator.
+But then the type specification must be parsed by the preprocessor, so
+that the argument name can be inserted in the appropriate place.
+<h3>
+Procedures</h3>
+For procedures the definition of the appropriate result type and argument
+types may be required. This can be done in arguments to the Define pragma,
+which either can be position dependent, or which can be distinguished by
+parentheses around the argument list. When an argument list is specified,
+it is automatically inserted after the macro name placeholder.
+<p><tt>#pragma Template __Proc inline void # {##; };</tt>
+<br><tt>#pragma Template __Func(t) inline t # { return ##; };</tt>
+<br><tt>#pragma Define foo __Proc((const char *s))</tt>
+<br><tt>#pragma Define min __Func(int, (int a, int b))</tt>
+<br><tt>#define foo(s) puts(s)</tt>
+<br><tt>#define min(a,b) (a) &lt;= (b) ? (a) : (b)</tt>
+<p>will result in
+<p><tt>inline void foo(s) { puts(s); };</tt>
+<br><tt>inline int min(int a, int b) { return (a) &lt;= (b) ? (a) : (b);
+};</tt>
+<p>Alternatively the old-style procedure declaration syntax can be used,
+with only argument names in the argument list, and argument declarations
+being inserted between the procedure declarator and body.
+<p><tt>#pragma Template __Func(t, args...) inline t # args { return ##;
+};</tt>
+<br><tt>#pragma Define min __Func(int, int a;, int b;)</tt>
+<p>resulting in
+<p><tt>inline int min(a, b) int a; int b; { return (a) &lt;= (b) ? (a)
+: (b); };</tt>
+<p>But then both the Define and the expansion don't look very nice.
+<h2>
+Implementation</h2>
+According to the above suggestions the following items have to be implemented:
+<p>Pragma recognition
+<br>Treatment of #defines
+<br>Wrapper templates
+<br>Wrapper arguments and placeholders
+<br>Wrapper expansion
+<br>Handling of constant expressions
+<p>In a first implementation the wrapper templates will be implemented
+as macros, which are expanded when the wrapper is expanded.
+<p>A #pragma "Define" must be recognized, which triggers the usual processing
+for a #define. The type of the crated macro object must be an appropriate
+wrapper object (subclass of the macro class). The wrapper object is specially
+marked in the preprocessor symbol table, for appropriate handling of a
+subsequent #define of the same name.
+<p>The wrapper arguments and placeholders may require modifications of
+the standard macro methods, both during the definition and expansion of
+an wrapper. Wrapper arguments may not be subject to a prescan or automatical
+expansion, the arguments themselves can be wrapped into an expander macro
+whenever an expansion may be required, e.g. #define _(x) x. During wrapper
+expansion the wrapper placeholders have a special meaning, perhaps best
+implemented in virtual methods of the macro/wrapper classes.
+<p>Wrapper objects are automatically expanded after a #define of the same
+name. The macro object, created by the #define, is stored in a field inside
+the wrapper object.
+<p>The handling of constant expressions in the preprocessor and parser
+may deserve modifications. The preprocessor should access the expanded
+values of all macros, even when the macros are wrapped. The parser instead
+should not normally try to evaluate constant expressions, instead expressions
+should be parsed literally to the compiler, with unexpanded wrapped macros.
+Unwrapped macros of course are expanded by the preprocessor, it's up to
+the user to specifiy which macros deserve expansion by the preprocessor,
+and which macros should be wrapped for handling in the compiler. With regards
+to the preprocessor, the handling of wrapped macros can be reduced to the
+mere fact that wrapped macros never must be expanded. All further handling
+of wrapped macros then can be implemented in the compiler. OTOH the compiler
+then must know about the macro objects, as created by the preprocessor.
+This requires at least a specific macro interface for use by the compiler,
+and then the usability of the already existing macro methods by the compiler
+is desireable.
+<h2>
+Extensions</h2>
+Some extensions to the outlined wrapping mechanism can be useful. A first
+extension should allow to convert multiple #defines into an Enum. The implementation
+of such a feature requires one or two additional pragmas, indicating the
+begin and end of the synthetic enum definition. The #defines for the enum
+members deserve special handling, so that the final enum definition can
+be passed to the parser in correct C syntax. OTOH it may be easier to construct
+the enum on the fly, bypassing the C parser.
+<p>A related extension is the definition of Sets, when the target language
+supports both enums and sets. In this case all related #defines with values
+of 2^n are converted into enum members of ordinality n. Other values must
+be translated into set constants of the underlaying enum.
+<br>&nbsp;
+<br>&nbsp;
+</body>
+</html>

@@ -1,0 +1,438 @@
+<!DOCTYPE html PUBLIC "-//w3c//dtd html 4.0 transitional//en">
+<html>
+<head>
+  <meta http-equiv="Content-Type"
+ content="text/html; charset=iso-8859-1">
+  <meta name="Author" content="DoDi">
+  <meta name="GENERATOR"
+ content="Mozilla/4.6 [en] (WinNT; I) [Netscape]">
+  <title>CGrammar</title>
+</head>
+<body>
+<h1>
+C Grammar</h1>
+This is an annotated and partially modified grammar, based on MSC, gcc
+and other sources.
+<p></p>
+<hr width="100%"><a name="translation_unit"></a><tt>translation_unit :
+{<a href="#external_declaration">external_declaration</a>}</tt>
+<p><a name="external_declaration"></a><tt>external_declaration
+:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+/* Allowed only at external (file) scope */</tt>
+<br>
+<tt>&nbsp;&nbsp;&nbsp; <a href="#function_definition">function_definition</a></tt>
+<br>
+<tt>&nbsp; | <a href="#declaration">declaration</a></tt>
+</p>
+<p><a name="declaration"></a><tt>declaration :</tt>
+<br>
+<tt>&nbsp;&nbsp;&nbsp; <a href="#declaration_specifiers">declaration_specifiers</a>
+[<a href="#attribute_seq">attribute_seq</a>] [<a
+ href="#init_declarator_list">init_declarator_list</a>]
+";"</tt>
+</p>
+<p><a name="attribute_seq"></a><tt>attribute_seq
+:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+/* attribute_seq is Microsoft Specific */</tt>
+<br>
+<tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {__asm | __fastcall
+| __based | __inline | __cdecl | __stdcall }</tt>
+</p>
+<p><a name="init_declarator_list"></a><tt>init_declarator_list : <a
+ href="#init_declarator">init_declarator</a>
+{"," init_declarator}</tt>
+<br>
+<a name="init_declarator"></a><tt>init_declarator : declarator ["="
+initializer] /* For scalar initialization */</tt>
+</p>
+<p><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; initializer :</tt>
+<br>
+<tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+assignment_expression</tt>
+<br>
+<tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | "{"
+initializer_list
+[","] "}"&nbsp; /* For aggregate initialization */</tt>
+</p>
+<p><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+initializer_list : initializer {"," initializer}</tt>
+</p>
+<p><a name="declaration_specifiers"></a><tt>declaration_specifiers :</tt>
+<br>
+<tt>&nbsp;&nbsp;&nbsp; +{<a href="#storage_class_specifier">storage_class_specifier</a>
+| <a href="#type_specifier">type_specifier</a> | <a
+ href="#type_qualifier">type_qualifier</a>}</tt>
+</p>
+<p><a name="storage_class_specifier"></a><tt>storage_class_specifier :</tt>
+<br>
+<tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; auto | register | static
+| extern | typedef</tt>
+<br>
+<tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | __declspec "("
+extended_decl_modifier_seq
+")" /* Microsoft Specific */</tt>
+</p>
+<p><a name="declarator"></a><tt>declarator : [<a href="#pointer">pointer</a>]
+<a href="#direct_declarator">direct_declarator</a></tt>
+<br>
+<a name="direct_declarator"></a><tt>direct_declarator :</tt>
+<br>
+<tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; identifier</tt>
+<br>
+<tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | "(" declarator ")"</tt>
+<br>
+<tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | direct_declarator "["
+[constant_expression]
+"]"</tt>
+<br>
+<tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | direct_declarator "("
+parameter_type_list
+")"&nbsp;&nbsp; /* New_style declarator */</tt>
+<br>
+<tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | direct_declarator "("
+[identifier_list]
+")"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; /* Obsolete_style declarator */</tt>
+</p>
+<p><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; identifier_list :
+identifier
+{"," identifier}</tt>
+</p>
+<p><a name="abstract_declarator"></a><tt>abstract_declarator
+:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+/* Used with anonymous declarators */</tt>
+<br>
+<tt>&nbsp;&nbsp;&nbsp; pointer</tt> [ <tt><a
+ href="CGrammar.html#direct_abstract_declarator">direct_abstract_declarator</a></tt>
+]
+<br>
+<tt>&nbsp; | <a href="#direct_abstract_declarator">direct_abstract_declarator</a></tt>
+</p>
+<p><a name="direct_abstract_declarator"></a><tt>direct_abstract_declarator
+:</tt>
+<br>
+<tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "(" abstract_declarator
+")"</tt>
+<br>
+<tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | [direct_abstract_declarator] "["
+[constant_expression] "]"</tt>
+<br>
+<tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | [direct_abstract_declarator] "("
+[parameter_type_list] ")"</tt>
+</p>
+<p><tt>parameter_type_list : parameter_list ["," | "..."]</tt>
+</p>
+<p><tt>parameter_list : parameter_declaration {","
+parameter_declaration}</tt>
+</p>
+<p><tt>parameter_declaration :</tt>
+<br>
+<tt>&nbsp;&nbsp;&nbsp; <a href="#declaration_specifiers">declaration_specifiers</a>
+<a href="#declarator">declarator</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+/* Named declarator */</tt>
+<br>
+<tt>&nbsp; | declaration_specifiers [<a href="#abstract_declarator">abstract_declarator</a>]
+/* Anonymous declarator */</tt>
+</p>
+<p><a name="pointer"></a><tt>pointer : +{"*" {<a href="#type_qualifier">type_qualifier</a>}
+}&nbsp;&nbsp;&nbsp; //???really multiple???</tt>
+</p>
+<p><a name="type_qualifier"></a><tt>type_qualifier : const | volatile</tt>
+</p>
+<p><a name="type_specifier"></a><tt>type_specifier :</tt>
+<br>
+<tt>&nbsp;&nbsp;&nbsp; void | char | short | int | long | float |
+double
+| signed | unsigned</tt>
+<br>
+<tt>&nbsp; | __int8 | __int16 | __int32 |
+__int64&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+/* Microsoft Specific */</tt>
+<br>
+<tt>&nbsp; | <a href="#struct_or_union_specifier">struct_or_union_specifier</a></tt>
+<br>
+<tt>&nbsp; | <a href="#enum_specifier">enum_specifier</a></tt>
+<br>
+<tt>&nbsp; | typedef_name&nbsp;&nbsp;&nbsp; //identifier from typedef</tt>
+</p>
+<p><a name="specifier_qualifier_list"></a><tt>specifier_qualifier_list
+: +{ <a href="#type_specifier">type_specifier</a> | <a
+ href="#type_qualifier">type_qualifier</a>
+}</tt>
+</p>
+<p></p>
+<hr width="100%">
+<p><a name="enum_specifier"></a><tt>enum_specifier :</tt>
+<br>
+<tt>&nbsp;&nbsp;&nbsp; "enum" enumerator_list</tt><br>
+<tt>&nbsp; | "enum" identifier [</tt><tt>enumerator_list]</tt>
+</p>
+<p><tt>&nbsp;&nbsp;&nbsp; enumerator_list : "{" enumerator {","
+enumerator}</tt>&nbsp;
+"}"<br>
+<tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; enumerator : identifier
+["=" constant_expression]</tt>
+</p>
+<p><a name="struct_or_union_specifier"></a><tt>struct_or_union_specifier
+:</tt>
+<br>
+<tt>&nbsp;&nbsp;&nbsp; struct_or_union [identifier] "{"
+struct_declaration_list
+"}"</tt>
+<br>
+<tt>&nbsp; | struct_or_union identifier</tt>
+</p>
+<p><tt>&nbsp;&nbsp;&nbsp; struct_or_union : struct | union</tt>
+</p>
+<p><tt>&nbsp;&nbsp;&nbsp; struct_declaration_list :
++{struct_declaration}</tt>
+<br>
+<tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; struct_declaration :
+specifier_qualifier_list struct_declarator_list ";"</tt>
+<br>
+<tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+struct_declarator_list : struct_declarator {"," struct_declarator}</tt>
+<br>
+<tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+struct_declarator :</tt>
+<br>
+<tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<a href="#declarator">declarator</a></tt>
+<br>
+<tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+| <a href="#type_specifier">type_specifier</a> [declarator] ":"
+constant_expression
+//bitfield!</tt>
+</p>
+<p></p>
+<hr width="100%"><br>
+<a name="function_definition"></a><tt>function_definition :</tt>
+<br>
+<tt>&nbsp;&nbsp;&nbsp; [<a href="#declaration_specifiers">declaration_specifiers</a>]
+<a href="#declarator">declarator</a>
+{<a href="#declaration">declaration</a>} compound_statement</tt>
+<br>
+<tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; //missing
+declaration_specifiers
+default to "int"</tt>
+<br>
+<tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; //declarator here is
+the function declarator</tt>
+<br>
+<tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; //declaration_list for
+old style definition (arguments)</tt>
+<p><a name="compound_statement"></a><tt>compound_statement : "{"
+[declaration_list]
++{statement} "}"</tt>
+</p>
+<p><a name="statement"></a><tt>statement :</tt>
+<br>
+<tt>&nbsp;&nbsp;&nbsp; <a href="#labeled_statement">labeled_statement</a></tt>
+<br>
+<tt>&nbsp; | <a href="#compound_statement">compound_statement</a></tt>
+<br>
+<tt>&nbsp; | <a href="#expression_statement">expression_statement</a></tt>
+<br>
+<tt>&nbsp; | <a href="#selection_statement">selection_statement</a></tt>
+<br>
+<tt>&nbsp; | <a href="#iteration_statement">iteration_statement</a></tt>
+<br>
+<tt>&nbsp; | <a href="#jump_statement">jump_statement</a></tt>
+<br>
+<tt>&nbsp; | <a href="#try_statement">try_statement</a></tt>
+</p>
+<p><a name="labeled_statement"></a><tt>labeled_statement :</tt>
+<br>
+<tt>&nbsp;&nbsp;&nbsp; identifier ":" statement</tt>
+<br>
+<tt>&nbsp; | "case" constant_expression ":" statement</tt>
+<br>
+<tt>&nbsp; | "default" ":" statement</tt>
+</p>
+<p><a name="jump_statement"></a><tt>jump_statement :</tt>
+<br>
+<tt>&nbsp;&nbsp;&nbsp; "goto" identifier ";"</tt>
+<br>
+<tt>&nbsp; | "continue;"</tt>
+<br>
+<tt>&nbsp; | "break;"</tt>
+<br>
+<tt>&nbsp; | "return" [expression] ";"</tt>
+</p>
+<p><a name="expression_statement"></a><tt>expression_statement :
+[expression]
+";"</tt>
+</p>
+<p><a name="iteration_statement"></a><tt>iteration_statement :</tt>
+<br>
+<tt>&nbsp;&nbsp;&nbsp; "while" "(" expression ")" statement</tt>
+<br>
+<tt>&nbsp; | "do" statement "while" "(" expression ");"</tt>
+<br>
+<tt>&nbsp; | "for" "(" [expression] ";" [expression] ";" [expression]
+")" statement</tt>
+</p>
+<p><a name="selection_statement"></a><tt>selection_statement :</tt>
+<br>
+<tt>&nbsp;&nbsp;&nbsp; "if" "(" expression ")" statement ["else"
+statement]</tt>
+<br>
+<tt>&nbsp; | "switch" "(" expression ")" statement</tt>
+</p>
+<p><a name="try_statement"></a><tt>try_statement :&nbsp;&nbsp; /*
+Microsoft
+Specific */</tt>
+<br>
+<tt>&nbsp;&nbsp;&nbsp; "__try" compound_statement "__except" "("
+expression
+")" compound_statement</tt>
+<br>
+<tt>&nbsp; | "__try" compound_statement "__finally" compound_statement</tt>
+<br>
+</p>
+<hr width="100%">
+<p><a name="expression"></a><tt>expression : assignment_expression {
+","
+assignment_expression }</tt>
+<br>
+<tt>//argument_expression_list : assignment_expression { ","
+assignment_expression
+}</tt>
+</p>
+<p><tt>assignment_expression :</tt>
+<br>
+<tt>&nbsp;&nbsp;&nbsp; conditional_expression&nbsp;&nbsp;&nbsp; //not
+recursive!</tt>
+<br>
+<tt>&nbsp; | unary_expression assignment_operator assignment_expression</tt>
+<br>
+<tt>&nbsp; | logical_OR_expression assignment_operator
+assignment_expression&nbsp;&nbsp;&nbsp;
+//C99!!!</tt>
+</p>
+<p><tt>&nbsp;&nbsp;&nbsp; assignment_operator :
+"="|"*="|"/="|"%="|"+="|"-="|"&lt;&lt;="|"&gt;&gt;="|"&amp;="|"^="|"|="</tt>
+</p>
+<p><tt>constant_expression : conditional_expression</tt>
+</p>
+<p><tt>conditional_expression : logical_OR_expression [ "?" expression
+":" conditional_expression ]</tt>
+<br>
+<tt>logical_OR_expression : logical_AND_expression { "||"
+logical_AND_expression
+}</tt>
+<br>
+<tt>logical_AND_expression : inclusive_OR_expression { "&amp;&amp;"
+inclusive_OR_expression }</tt>
+<br>
+<tt>inclusive_OR_expression : exclusive_OR_expression { "|"
+exclusive_OR_expression
+}</tt>
+<br>
+<tt>exclusive_OR_expression : AND_expression { "^" AND_expression }</tt>
+<br>
+<tt>AND_expression : equality_expression { "&amp;" equality_expression
+}</tt>
+<br>
+<tt>equality_expression : relational_expression { ("==" | "!=")
+relational_expression
+}</tt>
+<br>
+<tt>relational_expression : shift_expression { ("&lt;" | "&gt;" |
+"&lt;="
+| "&gt;=") shift_expression }</tt>
+<br>
+<tt>shift_expression : additive_expression { ("&lt;&lt;" | "&gt;&gt;")
+additive_expression
+}</tt>
+<br>
+<tt>additive_expression : multiplicative_expression { ("+" | "-")
+multiplicative_expression
+}</tt>
+<br>
+<tt>multiplicative_expression : cast_expression { ( "*" | "/" | "%")
+cast_expression }</tt>
+</p>
+<p><a name="cast_expression"></a><tt>cast_expression : { "(" type_name
+")" } unary_expression</tt>
+</p>
+<p><tt>unary_expression :</tt>
+<br>
+<tt>&nbsp;&nbsp;&nbsp; "++" unary_expression</tt>
+<br>
+<tt>&nbsp; | "--" unary_expression</tt>
+<br>
+<tt>&nbsp; | unary_operator <a href="#cast_expression">cast_expression</a></tt>
+<br>
+<tt>&nbsp; | postfix_expression</tt>
+</p>
+<p><tt>&nbsp;&nbsp;&nbsp; unary_operator : "&amp;" | "*" | "+" | "-" |
+"~" | "!"</tt>
+</p>
+<p><tt>postfix_expression :</tt>
+<br>
+<tt>&nbsp;&nbsp;&nbsp; <a href="#primary_expression">primary_expression</a></tt>
+<br>
+<tt>&nbsp;&nbsp;&nbsp; {&nbsp;&nbsp;&nbsp;&nbsp; "[" expression "]"</tt>
+<br>
+<tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |&nbsp;&nbsp; "(" [expression]
+")"&nbsp;&nbsp;&nbsp;
+//=argument_expression_list!!!</tt>
+<br>
+<tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |&nbsp;&nbsp; "." identifier</tt>
+<br>
+<tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |&nbsp;&nbsp; "-&gt;" identifier</tt>
+<br>
+<tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |&nbsp;&nbsp; "++"</tt>
+<br>
+<tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |&nbsp;&nbsp; "--"</tt>
+<br>
+<tt>&nbsp;&nbsp;&nbsp; }</tt>
+<br>
+<a name="primary_expression"></a><tt>primary_expression :</tt>
+<br>
+<tt>&nbsp;&nbsp;&nbsp; identifier | constant | string_literal</tt>
+<br>
+<tt>&nbsp; | "sizeof" unary_expression</tt>
+<br>
+<tt>&nbsp; | "sizeof" "(" type_name ")"</tt>
+<br>
+<tt>&nbsp; | "(" expression ")"</tt>
+</p>
+<p><tt>type_name : <a href="#specifier_qualifier_list">specifier_qualifier_list</a>
+[<a href="#abstract_declarator">abstract_declarator</a>]</tt>
+<br>
+<tt>&nbsp;&nbsp;&nbsp; //use: in sizeof and cast_expression</tt>
+</p>
+<p>/* occurences of "("
+<br>
+&nbsp;&nbsp;&nbsp; in cast_expression: (type_name) repeatable!!!
+<br>
+&nbsp;&nbsp;&nbsp; in postfix_expression: as (expression), followed
+by (argument_expression_list) repeatable
+<br>
+-&gt; in cast_expression, if NOT followed by type_name -&gt;
+postfix_expression
+[flag: "(" already consumed]???
+<br>
+*/
+<br>
+</p>
+<hr width="100%">
+<p><tt>extended_decl_modifier_seq : /*&nbsp;&nbsp; Microsoft Specific */</tt>
+<br>
+<tt>{extended_decl_modifier}</tt>
+</p>
+<p><tt>extended_decl_modifier :&nbsp;&nbsp; /* Microsoft Specific */</tt>
+<br>
+<tt>thread</tt>
+<br>
+<tt>naked</tt>
+<br>
+<tt>dllimport</tt>
+<br>
+<tt>dllexport</tt>
+</p>
+<p>f&ouml;laksjdfladf
+</p>
+</body>
+</html>

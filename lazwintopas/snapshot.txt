@@ -1,0 +1,66 @@
+#1.1
+7FB8	7FB8	pScreenShot:(hwnd:"HWND";)"HBITMAP"{(
+	auto(hdcScreen$2:"HDC"=CreateDCA("DISPLAY",0,0,0));
+	auto(hdcCompatible$2:"HDC"=CreateCompatibleDC(hdcScreen$2));
+	auto(hbmScreen$2:"HBITMAP"=CreateCompatibleBitmap(hdcScreen$2,GetDeviceCaps(hdcScreen$2,8),GetDeviceCaps(hdcScreen$2,10)));
+	if(==(hbmScreen$2,0); return(0););
+	if(!(SelectObject(hdcCompatible$2,hbmScreen$2)); return(0););
+	ShowWindow(hwnd,0);
+	if(!(BitBlt(hdcCompatible$2,0,0,.(bmp,bmWidth),.(bmp,bmHeight),hdcScreen$2,0,0,#@(ULONG,0x00CC0020))); return(0););
+	ShowWindow(hwnd,5);
+	return(hbmScreen$2);
+};
+;
+7FBD	7FBD	pCreateBitmapInfoStruct:(hwnd:"HWND";hBmp:"HBITMAP";)"PBITMAPINFO"{(
+	auto(bmp$2:"BITMAP");
+	auto(pbmi$2:"PBITMAPINFO");
+	auto(cClrBits$2:"WORD");
+	if(!(GetObjectA(hBmp,sizeof(__T12108),#@(LPTCH, &(bmp$2)))); return(0););
+	=(cClrBits$2,#@(FSHORT,*(.(bmp$2,bmPlanes),.(bmp$2,bmBitsPixel))));
+	if(==(cClrBits$2,1);=(cClrBits$2,1); if(<=(cClrBits$2,4);=(cClrBits$2,4); if(<=(cClrBits$2,8);=(cClrBits$2,8); if(<=(cClrBits$2,16);=(cClrBits$2,16); if(<=(cClrBits$2,24);=(cClrBits$2,24);=(cClrBits$2,32););););););
+	if(!=(cClrBits$2,24);=(pbmi$2,#@(__T12109,LocalAlloc(|(0x0000,0x0040),+(sizeof(__T12110),*(sizeof(__T12111),<<(1,cClrBits$2))))));=(pbmi$2,#@(__T12109,LocalAlloc(|(0x0000,0x0040),sizeof(__T12110)))););
+	=(.(->(pbmi$2,bmiHeader),biSize),sizeof(__T12110));
+	=(.(->(pbmi$2,bmiHeader),biWidth),.(bmp$2,bmWidth));
+	=(.(->(pbmi$2,bmiHeader),biHeight),.(bmp$2,bmHeight));
+	=(.(->(pbmi$2,bmiHeader),biPlanes),.(bmp$2,bmPlanes));
+	=(.(->(pbmi$2,bmiHeader),biBitCount),.(bmp$2,bmBitsPixel));
+	if(<(cClrBits$2,24);=(.(->(pbmi$2,bmiHeader),biClrUsed),<<(1,cClrBits$2)););
+	=(.(->(pbmi$2,bmiHeader),biCompression),0L);
+	=(.(->(pbmi$2,bmiHeader),biSizeImage),*(/(&(+(*(.(->(pbmi$2,bmiHeader),biWidth),cClrBits$2),31),~(31)),8),.(->(pbmi$2,bmiHeader),biHeight)));
+	=(.(->(pbmi$2,bmiHeader),biClrImportant),0);
+	return(pbmi$2);
+};
+;
+7FC5	7FC5	pCreateBMPFile:(hwnd:"HWND";pszFile:"LPTSTR";pbi:"PBITMAPINFO";hBMP:"HBITMAP";hDC:"HDC";)v{(
+	auto(hf$2:"HANDLE");
+	auto(hdr$2:"BITMAPFILEHEADER");
+	auto(pbih$2:"PBITMAPINFOHEADER");
+	auto(lpBits$2:"LPBYTE");
+	auto(dwTotal$2:"DWORD");
+	auto(cb$2:"DWORD");
+	auto(hp$2:*"BYTE");
+	auto(dwTmp$2:"DWORD");
+	=(pbih$2,#@(__T12113,pbi));
+	=(lpBits$2,#@(__T12114,GlobalAlloc(0x0000,->(pbih$2,biSizeImage))));
+	if(!(lpBits$2); return(0););
+	if(!(GetDIBits(hDC,hBMP,0,#@(FSHORT,->(pbih$2,biHeight)),lpBits$2,pbi,0));{(
+		 return(0);
+	};);
+	=(hf$2,CreateFileA(pszFile,|(0x80000000L,0x40000000L),#@(ULONG,0),0,2,0x00000080,#@(HGLOBAL,0)));
+	if(==(hf$2,#@(HGLOBAL, -(1))); return(0););
+	=(.(hdr$2,bfType),0x4d42);
+	=(.(hdr$2,bfSize),#@(ULONG,+(+(+(sizeof(__T12115),->(pbih$2,biSize)),*(->(pbih$2,biClrUsed),sizeof(__T12111))),->(pbih$2,biSizeImage))));
+	=(.(hdr$2,bfReserved1),0);
+	=(.(hdr$2,bfReserved2),0);
+	=(.(hdr$2,bfOffBits),+(+(#@(ULONG,sizeof(__T12115)),->(pbih$2,biSize)),*(->(pbih$2,biClrUsed),sizeof(__T12111))));
+	if(!(WriteFile(hf$2,#@(WIN_TRUST_SUBJECT, &(hdr$2)),sizeof(__T12115),#@(__T12116, &(dwTmp$2)),0));{(
+		 return(0);
+	};);
+	if(!(WriteFile(hf$2,#@(WIN_TRUST_SUBJECT,pbih$2),+(sizeof(__T12110),*(->(pbih$2,biClrUsed),sizeof(__T12111))),#@(__T12116, &(dwTmp$2)),0)); return(0););
+	=(=(dwTotal$2,cb$2),->(pbih$2,biSizeImage));
+	=(hp$2,lpBits$2);
+	if(!(WriteFile(hf$2,#@(LPTCH,hp$2),#@(ptrdiff_t,cb$2),#@(__T12116, &(dwTmp$2)),0)); return(0););
+	if(!(CloseHandle(hf$2)); return(0););
+	GlobalFree(#@(HOLEMENU,lpBits$2));
+};
+;

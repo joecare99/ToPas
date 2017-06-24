@@ -1,0 +1,189 @@
+object ScanLog: TScanLog
+  Left = 134
+  Height = 535
+  Top = 97
+  Width = 494
+  Caption = 'ToPas'
+  ClientHeight = 535
+  ClientWidth = 494
+  Font.Height = -11
+  Font.Name = 'MS Sans Serif'
+  Menu = MainMenu1
+  OnCreate = FormCreate
+  LCLVersion = '0.9.29'
+  object Splitter1: TSplitter
+    Cursor = crVSplit
+    Left = 0
+    Height = 4
+    Top = 249
+    Width = 494
+    Align = alTop
+    ResizeAnchor = akTop
+  end
+  object lbMsg: TListBox
+    Left = 0
+    Height = 220
+    Top = 29
+    Width = 494
+    Align = alTop
+    ItemHeight = 0
+    OnClick = lbMsgClick
+    TabOrder = 0
+  end
+  object lbSrc: TListBox
+    Left = 0
+    Height = 267
+    Top = 253
+    Width = 494
+    Align = alClient
+    Font.CharSet = ANSI_CHARSET
+    Font.Height = -11
+    Font.Name = 'Courier New'
+    Font.Pitch = fpFixed
+    IntegralHeight = True
+    ItemHeight = 0
+    OnMouseUp = LinkPush
+    ParentFont = False
+    TabOrder = 1
+  end
+  object StatusBar: TStatusBar
+    Left = 0
+    Height = 15
+    Top = 520
+    Width = 494
+    Panels = <    
+      item
+        Text = '00000'
+        Width = 50
+      end    
+      item
+        Width = 50
+      end>
+  end
+  object Panel1: TPanel
+    Left = 0
+    Height = 29
+    Top = 0
+    Width = 494
+    Align = alTop
+    Caption = 'Panel1'
+    ClientHeight = 14
+    ClientWidth = 479
+    TabOrder = 3
+    object Label1: TLabel
+      Left = 9
+      Height = 16
+      Top = 8
+      Width = 19
+      Caption = 'File'
+      ParentColor = False
+    end
+    object edFile: TEdit
+      Left = 32
+      Height = 22
+      Top = 4
+      Width = 406
+      Anchors = [akTop, akLeft, akRight]
+      TabOrder = 0
+      Text = 'wintest.c'
+    end
+    object udLinks: TUpDown
+      Left = 445
+      Height = 16
+      Top = 8
+      Width = 25
+      Anchors = [akTop, akRight]
+      Min = 0
+      Orientation = udHorizontal
+      Position = 0
+      TabOrder = 1
+      Wrap = False
+      OnClick = udLinksClick
+    end
+  end
+  object MainMenu1: TMainMenu
+    left = 216
+    top = 124
+    object File1: TMenuItem
+      Caption = '&File'
+      object mnuFileSel: TMenuItem
+        Caption = '&Select'
+        OnClick = mnuFileSelClick
+      end
+      object Preprocess1: TMenuItem
+        Caption = 'Pr&eprocess'
+        object mnuPrepTrad: TMenuItem
+          Caption = '&traditional'
+          OnClick = Preprocess1Click
+        end
+        object mnuPrepLock: TMenuItem
+          Caption = '&locklevel'
+          OnClick = mnuPrepLockClick
+        end
+      end
+      object mnuParse: TMenuItem
+        Caption = '&Parse'
+        OnClick = mnuWinTestClick
+      end
+      object LoadTest1: TMenuItem
+        Caption = 'Convert &Types'
+        OnClick = LoadTest1Click
+      end
+      object mnuSaveMetadata: TMenuItem
+        Caption = 'Save &Metadata'
+        OnClick = mnuSaveMetadataClick
+      end
+      object N1: TMenuItem
+        Caption = '-'
+      end
+      object Stop1: TMenuItem
+        Caption = 'St&op'
+        OnClick = Stop1Click
+      end
+      object Exit1: TMenuItem
+        Caption = 'E&xit'
+        OnClick = Exit1Click
+      end
+    end
+    object View1: TMenuItem
+      Caption = '&View'
+      object Config1: TMenuItem
+        Caption = '&Config'
+        OnClick = Config1Click
+      end
+      object N2: TMenuItem
+        Caption = '&Macros'
+        OnClick = N2Click
+      end
+      object Scopes1: TMenuItem
+        Caption = '&Scopes'
+        OnClick = Scopes1Click
+      end
+      object mnuViewSymbols: TMenuItem
+        Caption = 'S&ymbols'
+        OnClick = mnuViewSymbolsClick
+      end
+      object mnuViewTypes: TMenuItem
+        Caption = '&Types'
+        OnClick = mnuViewTypesClick
+      end
+    end
+    object Test1: TMenuItem
+      Caption = '&Test'
+      object mnuTestScan: TMenuItem
+        Caption = '&Scanner'
+        OnClick = mnuTestScanClick
+      end
+      object mnuTestParse: TMenuItem
+        Caption = '&Parser'
+        OnClick = mnuParseClick
+      end
+    end
+  end
+  object dlgOpen: TOpenDialog
+    Filter = 'C files (*.c, *.h)|*.c;*.h|All files (*.*)|*.*'
+    Options = [ofReadOnly, ofFileMustExist, ofEnableSizing]
+    left = 104
+    top = 124
+  end
+end

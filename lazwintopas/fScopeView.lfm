@@ -1,0 +1,89 @@
+object ScopeView: TScopeView
+  Left = 342
+  Height = 465
+  Top = 116
+  Width = 578
+  Caption = 'Scope Viewer'
+  ClientHeight = 465
+  ClientWidth = 578
+  Font.Height = -11
+  Font.Name = 'MS Sans Serif'
+  OnActivate = FormActivate
+  LCLVersion = '0.9.29'
+  object Splitter1: TSplitter
+    Left = 161
+    Height = 432
+    Top = 33
+    Width = 5
+  end
+  object lbSyms: TListBox
+    Left = 0
+    Height = 432
+    Top = 33
+    Width = 161
+    Align = alLeft
+    ItemHeight = 0
+    OnClick = lbSymsClick
+    TabOrder = 0
+  end
+  object Panel1: TPanel
+    Left = 0
+    Height = 33
+    Top = 0
+    Width = 578
+    Align = alTop
+    ClientHeight = 18
+    ClientWidth = 563
+    TabOrder = 1
+    object swSorted: TCheckBox
+      Left = 8
+      Height = 18
+      Top = 8
+      Width = 61
+      Caption = 'sorted'
+      OnClick = swSortedClick
+      TabOrder = 0
+    end
+    object lbScopes: TTabControl
+      Left = 192
+      Height = 25
+      Top = 4
+      Width = 363
+      Anchors = [akTop, akLeft, akRight]
+      OnChange = lbScopesChange
+      TabOrder = 1
+      TabStop = False
+    end
+    object buTranslate: TButton
+      Left = 64
+      Height = 17
+      Top = 8
+      Width = 73
+      Caption = 'Translate'
+      OnClick = buTranslateClick
+      TabOrder = 2
+    end
+    object buUnit: TButton
+      Left = 144
+      Height = 17
+      Top = 8
+      Width = 41
+      Caption = 'Unit'
+      OnClick = buUnitClick
+      TabOrder = 3
+    end
+  end
+  object edDef: TMemo
+    Left = 166
+    Height = 432
+    Top = 33
+    Width = 412
+    Align = alClient
+    Font.CharSet = ANSI_CHARSET
+    Font.Height = -11
+    Font.Name = 'Courier New'
+    ParentFont = False
+    ScrollBars = ssBoth
+    TabOrder = 2
+  end
+end

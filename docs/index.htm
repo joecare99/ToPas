@@ -1,0 +1,430 @@
+<!DOCTYPE html PUBLIC "-//w3c//dtd html 4.0 transitional//en">
+<html>
+<head>
+  <meta http-equiv="Content-Type"
+ content="text/html; charset=iso-8859-1">
+  <meta name="Author" content="DrDiettrich">
+  <meta name="GENERATOR"
+ content="Mozilla/4.6 [en] (WinNT; I) [Netscape]">
+  <title>Scanner and Parser for C</title>
+</head>
+<body>
+<center>
+<h1>Scanner and Parser for "C"</h1>
+</center>
+<center>
+<h3>(a.d. 2004, by DoDi)</h3>
+</center>
+This Delphi(4/7) project provides an scanner and parser for C source
+files, and an simple translator from C to Pascal.
+Information about scanning and parsing C and about the usage of the
+supplied
+projects and source files is scattered into several related documents:
+<ul>
+  <li>
+    <a href="#Quickstart">Quickstart</a> instructions for the impatient
+;-)</li>
+  <li>
+Scanner <a href="CScan.htm">technical information</a> and <a
+ href="UsingCScan.htm">users
+guide</a></li>
+  <li>
+Parser <a href="CParser.htm">overview</a></li>
+  <li>
+Sample <a href="#WinScan">applications</a></li>
+  <li>
+    <a href="Persist2-0.html">News</a></li>
+</ul>
+The impatient readers will (hopefully ;-) find the most important
+informations
+below.
+<h2><a name="WinScan"></a>The WinToPas Project</h2>
+This Delphi project is used during the implementation and debugging of
+the CScan scanner and CParse parser for C source files. The most
+interesting
+application of WinToPas.exe currently is the import of C header files,
+so
+that C libraries can be used in Delphi or other (FreePascal...)
+development
+environments.<br>
+<br>
+This is not a end-user project, the GUI is quite spartanic, but you can
+improve it yourself
+and contribute your efforts to this project. I for my part concentrate
+on the technical support of the scanner, parser, and on
+the Pascal output module. The program also is not reentrant,&nbsp; you
+should exit and restart before parsing the same or a different project.<br>
+<h3>The File Menu</h3>
+"Select" allows to select the file to be processed. You also can enter
+the full file name into the File field.
+<br>
+"Preprocess" produces an preprocessed *.i text file from the selected
+file.
+<br>
+"Parse" parses the selected file and creates an *.txt intermediate
+file.
+<br>
+"Convert Types" creates an *.pas unit from the *.txt intermediate file.
+<br>
+"Save Metadata" saves the *.txt intermediate file.
+<br>
+-
+<br>
+"Stop" may be used to abort the scanner or parser, in case of problems.
+<br>
+"Exit" should just do that ;-)
+<h3>The View Menu</h3>
+provides several dumps of the intermediate data, after parsing:
+<p>"Config" shows the just used *.def files.<br>
+"Macros" shows all defined macros.<br>
+"Scopes" shows the parsed modules, and the global symbol table.<br>
+"Symbols" shows all the macros and symbols.
+<br>
+"Types" shows all typedefs.
+</p>
+<h3>The Test Menu</h3>
+This menu only contains debug commands:
+<p>"Scanner" invokes the scanner for scantest.c.
+<br>
+"Parser" will parse the file parsetest.c.
+</p>
+<h2><a name="Quickstart"></a>Quickstart</h2>
+If you may want to convert existing C header files into Delphi import
+units,
+please follow these steps:
+<ol>
+  <li>
+edit your main project file (the default file is wintest.c)</li>
+  <li>
+run WinToPas and <b>Select</b> your file</li>
+  <li>
+select <b>Parse</b> to create the intermediate file</li>
+  <li>
+select <b>Convert Types</b> to produce the *.pas unit.</li>
+</ol>
+If you want to convert e.g. <b>sample.h</b> into <b>sample.pas</b>,
+create
+<b>sample.c</b>
+as your project file. The project file must contain at least the search
+path for the header files and a reference to the source file, e.g.:
+<p>#pragma Include "c:\mycompiler\include\"
+<br>
+#include "c:\myprojects\sampleproject\sample.h"
+</p>
+<p>Unfortunately such a simple setup may not be sufficient, and you'll
+have to use a more detailed setup. Then have a look at the supplied
+compiler
+specifications (e.g. BCB4.def, VC7.def). The VC7.def file may be used
+for
+various Microsoft C compilers. If you found an appropriate definition
+file,
+then move the #pragma Include line into the user.def file, and #include
+the *.def file instead. E.g.:
+</p>
+<p>#include "VC7.def"
+<br>
+#include "c:\myprojects\sampleproject\sample.h"
+</p>
+<p>If this still doesn't work, please read the instructions and
+explanations
+in the following sections.<br>
+</p>
+<p>Of course a set of standard header files, shipped with the program,
+would simplify the use of the converter. Any contributions? ;-)<br>
+</p>
+<h3>The Project Files</h3>
+The parser must know which file(s) to process, and which compiler to
+emulate.
+All project files must be valid C source files, which are #included
+into
+the project main file. The supplied files can be used as templates for
+your own projects, and the modifications should not require too much
+knowledge
+of C, I hope. The file extensions should reflect the contents of the
+files,
+e.g.:
+<br>
+*.c for C source files
+<br>
+*.def for settings specific to a project, compiler or installation<br>
+*.&lt;whatever you like&gt; for other settings
+<p>The names of the created files are derived from the project file,
+which
+you Selected in the Open dialog or entered manually in the edit box at
+the top of the WinToPas main window. The following files can be created
+from e.g. sample.c:
+<br>
+sample.txt - the intermediate file
+<br>
+sample.pas - the converted Pascal unit
+<br>
+sample.i - the preprocessed source file (traditional mode)
+<br>
+sample.l - a more verbose listing of the preprocessed file
+</p>
+<p>Let's start with <b>wintest.c</b>, the default project file. In the
+supplied version this file contains a list of compiler tests, similar
+to
+a Delphi project group file. Only one of these projects should be
+enabled
+at the same time.
+<br>
+In the <b>BCB4test.c</b> file you'll find two #includes, the first
+specifying the compiler, and the second specifying the source file(s)
+to
+process.
+<br>
+The <b>BCB4.def</b> file contains the settings which I found required
+to parse Windows.h as supplied with the Borland C++ Builder version 4.
+The supplied *.def files should need no modifications, except for the
+user.def
+file:<br>
+The <b>user.def</b> file contains the search pathes to your installed
+compiler(s). Please update all pathes as appropriate for your system.
+The
+compiler must not really be installed, it's sufficient that the
+directories
+with the compiler specific header files (*.h) exist somewhere on your
+disks.
+<br>
+The <b>W32.def</b> file contains some required settings for most
+Windows.h
+versions, regardless of any specific compiler.
+</p>
+<p>If you want to add another compiler definition, please follow these
+guidelines for the according file structure:
+<br>
+&lt;compiler&gt;&lt;version&gt;.def contains the version specific
+settings,
+and then includes the &lt;compiler&gt;.def file.
+<br>
+&lt;compiler&gt;.def contains all the #defines that are assumed
+(preset)
+by the compiler.
+<br>
+Of course you also can specify all settings in a single file, and don't
+worry about a separation into compiler family and version specific
+settings
+for now.
+</p>
+<h3>Pragmas</h3>
+#pragma directives are reserved for compiler specific purpose. For the
+C parser I added a <b>#pragma Include</b> for the specification of the
+search path for #include files. This pragma can have multiple
+arguments,
+where the first argument specifies an absolute path to the include
+directory,
+optionally followed by path fragments with references to
+subdirectories,
+in the form "+&lt;subdir&gt;". Typically standard header files in
+subdirectories
+are referred to by #include &lt;sys\types.h&gt;, so that the file is
+searched
+in the given subdirectory relative to the directories in the include
+path,
+but sometimes such a subdirectory specifier may be missing. Then you
+must
+locate that header file on your disk, and add the directory to the
+search
+path. If the directory is a subdirectory of an already specified
+directory
+in a #pragma Include, you can use the short syntax to append the
+subdirectory
+to that pragma.
+<br>
+More #pragma lines can be added for different directories (cumulative).
+<h3>Some Notes</h3>
+Be careful with the VC version number, newer VC versions (&gt;600) are
+very
+incompatible with C standards! Unless really required, I don't want to
+bloat the scanner and parser with compiler specific extensions.
+<p>I've been not very successfull with an set of Linux header files
+(gnutest.c),
+some header files seem to be missing. But besides for the missing
+#defines
+and type declarations, the parser seems to digest also the gcc specific
+constructs and aberrations from the C standards. The parser really
+should
+be tested on a working Linux system...
+</p>
+<p>Now you can run WinToPas and Parse the selected file. Be patient,
+parsing
+Windows.h and all further #included files can take some minutes, and
+the
+created wintest.txt file can require more than 2 MB on your hard disk.
+[ToDo: turn off progress log]
+Fortunately this lengthy operation is required only once, in most
+cases.
+In case of problems you may Stop the parser, edit the definitions in
+wintest.c,
+and restart the parser.
+</p>
+<p>Once a file with all declarations has been produced, you can invoke
+the type importer with Convert Types. Now the declarations in
+wintest.txt
+are converted into an wintest.pas unit, in a few seconds.
+</p>
+<p>Now you can use the created *.pas file in you own projects. Some
+circumstances
+may require editing of this file, because some differences between C
+and
+Pascal can not be resolved automagically, at least they can require
+much
+more conversion code.<br>
+</p>
+<h2>Known Problems</h2>
+Some of the detected problems are flagged with {???} or other comments
+in the created .pas file. The compiler may issue error messages around
+these places, and the comments may give you an idea of what is wrong.
+Then
+it's up to you to cure the problems, or to comment out the offending
+lines.
+<p>AFAIK Delphi 4 cannot call C procedures with a variable number of
+arguments,
+indicated in the C code by "..." or "va_list". Newer versions seem to
+support this construct.</p>
+<p>C bitfields also have no equivalent in Delphi. An intended solution
+is a change of the Record type into Object, with added properties and
+methods
+to emulate the access to bitfields.
+</p>
+<p>In earlier C standards nested structs and unions had to be given
+explicit
+names. This seems no more required nowadays(?), and in some situation
+the
+use of variant records is compatible with the omission of such member
+names.
+But at least two situations require more knowledge or modifications of
+the code:
+</p>
+<p>Delphi only allows for unions (variant record parts) at the end of
+an
+Record. Currently unnamed unions in the middle of an Record, followed
+by
+further fields, produce compiler errors. In these cases not only the
+misplaced
+unions have to be given some name and explicit Record types, but these
+names also have to be inserted into cross-compiled code on every access
+to these nested fields.
+</p>
+<p>One general problem can occur with the alignment in complex data
+structures.
+Such mismatches require a careful study of the original C code and the
+intended compiler; it's impossible to create properly aligned record
+layouts
+without knowledge about the struct layout as produced by the C
+compiler.
+No such problems can occur when the whole C code is translated into
+Pascal code, since then the Pascal compiler will produce an unique
+layout
+of the Record types.
+</p>
+<p>But C does not only allow for the omission of member names, but also
+for the omission of type declarations, in detail of struct
+declarations.
+In such cases the undefined structures only should be passed as untyped
+references
+(Const/Var parameters), and no references to the unknown Record fields
+are possible.
+</p>
+<p>The evaluation of "sizeof" currently results in a constant value
+(-1),
+which may result in negative array dimensions. This value was choosen
+to
+produce compiler errors for such constructs. In some future version the
+expressions may be converted into valid Pascal expressions, so that the
+compiler can evaluate "sizeof" and other macros.<br>
+</p>
+<p>Also related to the evaluation of constant expressions is the
+evaluation
+of the initializers for complex data types. Currently only the values
+of
+simple (ordinal) constants are evaluated properly, whereas variables or
+constants of string or more complex data types are typically
+represented
+as "= 0", resulting in syntax errors.</p>
+<p>A last known problem can arise from the ordering of type
+declarations.
+C compilers are somewhat lazy, and let it up to the linker to resolve
+missing
+or misplaced type declarations. In proper Pascal code instead Forward
+declarations
+must be inserted, or the declarations must be reordered to circumvent
+such
+forward declarations.
+</p>
+<h2>ToDo List</h2>
+Some improvements still have to be implemented in the type converter.
+In
+most cases it's not yet clear how to cure some of the known
+disabilities
+and omissions, these will hopefully be handled in some future version.
+<p>The handling of C macros (#defines) will be improved in one of the
+next
+versions. Currently all macros are expanded by the preprocessor, so
+that
+the names of all #defined constants are replaced by their defined
+values.
+This simplifies the evaluation of constant expressions, but in many
+cases
+it's desireable to retain the constant names or function calls in the
+converted
+code. A <a href="CScan/Templates.htm">possible solution</a> is
+described
+in a related document.
+</p>
+<p>Some more problems with macros:
+</p>
+<p>Macros with empty bodies can cause problems in conditional
+expressions,
+when a value is required. Currently the macro is expanded to ""
+(nothing)
+instead of an zero value "0". In some header files this situation is
+handled
+with constructs like:
+<br>
+&nbsp; #if sym + 0 &gt; 5
+<br>
+where the "+" is interpreted as an unary or binary operator, depending
+on whether "sym" expands to nothing or to some value.
+<br>
+A proper solution would require that the expression parser can
+determine
+when a macro expands to nothing, so that a synthetic value token (zero
+constant) can be substituted.
+</p>
+<p>The names of macro arguments are not checked for language conflicts
+in uToPas. In fact currently the macro text is copied into the output
+file
+without tokenization, so that no name substitution will ever occur.
+This
+should be changed in some future version, when macros really can be
+treated
+as procedures or functions.
+</p>
+<h1><a name="CrossCompiler"></a>Cross Compiler</h1>
+In the context of the C-To-Pascal translator, a Cross Compiler&nbsp; is
+a translator from one programming language into another one, on souce
+code level, not a compiler with binary output files.<br>
+<br>
+One step beyond the header converter is already implemented, now also
+the code in procedures is parsed and translated. Nonetheless the
+converter still does a 1:1 translation, with only minor modifications
+to the code, like collecting local variables into a single Var section.<br>
+<br>
+An improved translator will work with the parse trees, created from the
+C source files. The transformation of these trees requires different
+procedures, or even a different language, aimed at list processing. So
+the cross compiler will become a very new project, related to the
+current translator only by the use of the intermediate files, that are
+produced by WinToPas.<br>
+<br>
+The intended cross compiler
+shall be focused on GNU and other Open Source C code, so that the huge
+C source library can be converted into "native" Pascal code. Many
+facettes of such an translator can be implemented in self-contained
+projects, and I'll do my best to provide all required information and
+an interface for third-party projects. Any assistance
+is welcome!
+</body>
+</html>

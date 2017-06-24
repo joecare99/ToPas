@@ -1,0 +1,49 @@
+/* User environment and options, for and by "DoDi" <-- your name goes here!
+
+This file is included at the end of the compiler options.
+
+Test the compiler options (version names and values...) to select the
+  appropriate option section below.
+
+Keep a copy of your customized user.def file in a safe place,
+  for use with newer CScan/CParse versions.
+*/
+
+//Compiler specific search path and options
+
+#define ALDI 1
+#define K6 0
+
+#if __BORLANDC__ == 0x540
+//BCB4
+  #if ALDI
+    #pragma Include "G:\Program Files\Borland\CBuilder4\Include\" "+sys\"
+  #else  //K6
+    #pragma Include "D:\Programme\Borland\CBuilder4\Include\" "+sys\"
+  #endif
+
+#elif defined(_MSC_VER)
+  #if ALDI
+  //VC7 == 1300 (?)
+    #pragma Include "D:\Program Files\Microsoft Visual Studio.NET\Vc7\include\" "+sys\" 
+"+gl\"
+  #else //K6
+    #pragma Include "D:\Programme\DevStudio\VC5\include\" "+sys\" "+gl\"
+  #endif
+
+#elif defined __GNUC__
+//CygWin - what about MinGW?
+//ALDI
+  #pragma Include "F:\cygwin\usr\include\" "+w32api\" "+mingw\"
+  #pragma Include "F:\cygwin\lib\gcc-lib\i686-pc-cygwin\3.3.1\include\"
+
+#else
+//unknown compiler
+  #error Unknown compiler, please specify your include path!
+#endif
+
+//Further preferences...
+
+//signed char?
+#define _CHAR_UNSIGNED  1
+

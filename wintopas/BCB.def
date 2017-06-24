@@ -1,0 +1,36 @@
+/* BCB.def - general settings for Borland C++ Builder (all versions)
+
+This file should need no modifications.
+Your search path, preferences etc. go into your "user.def" file!
+*/
+
+//always compiling for Windows
+#include "W32.def"
+
+#ifndef __BORLANDC__
+//Note: the compiler version should be set in the calling BCB?.def file!
+  #define __BORLANDC__  0x0540  //BCB4
+#endif
+
+#define	__TURBOC	1
+#define __TURBOC__  __BORLANDC__
+
+#ifdef  __BCPLUSPLUS__
+  #define	__TCPLUSPLUS__	__BCPLUSPLUS__
+  #define __cplusplus
+#endif
+
+#define __MSDOS__ 1
+
+#ifdef  _WIN32
+  #define __FLAT__  1
+  #if __MT__
+    #define _MT
+  #endif
+  #define WIN32 1
+  #define __WIN32__	1
+  #define _Windows 1
+#endif
+
+#include  "user.def"
+

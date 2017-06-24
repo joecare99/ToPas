@@ -1,0 +1,559 @@
+<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+   <meta name="Author" content="DoDi">
+   <meta name="GENERATOR" content="Mozilla/4.6 [en] (WinNT; I) [Netscape]">
+   <title>Predefines</title>
+</head>
+<body>
+
+<h1>
+Predefines</h1>
+Every compiler has some predefined macros. Many of these macros must be
+defined before real source files can be processed with CScan. The following
+model and file structure is suggested for CScan projects:
+<ol>
+<li>
+Source stub - #includes the project settings, then the source file.</li>
+
+<li>
+Project settings - specifies the search path and #defines as desired, then
+#includes the compiler definitions.</li>
+
+<li>
+Compiler predefines - the first level #defines version specific settings,
+then #includes the general compiler definitions.</li>
+
+<li>
+Compiler general - contains the version independent compiler settings.</li>
+
+<li>
+Windows defaults - contains the definitely required settings to process
+the Windows header files.</li>
+
+<br>This file can be #included at the end of an project file for Windows
+projects.
+<li>
+User defaults - can contain pathes and other user specific preferences.</li>
+
+<br>Only this file should require user specific customization.</ol>
+
+<h3>
+Context Abbreviations</h3>
+ANSI - defined for ANSI C/C++.
+<br>BCB - Borland C++ Builder. (also specifies most TC defines)
+<br>GCC - GNU gcc. (only classification of symbols common with other compilers)
+<br>MSC - Microsoft C/C++. (also Visual C++, MSVC?)
+<br>TC - Borland Turbo C.
+<br>W32 - required to compile the 32 bit Windows headers, as supplied by
+Microsoft.
+<p>prj - project specific settings. (defaults should not override user
+specified settings)
+<h3>
+Defines</h3>
+For Windows (32) the following #defines have been found and (partially)
+classified.
+<br>Some symbols specify compiler options which can (and should) be ignored
+by a general parser. This can be accomplished with empty macro bodies.
+<br>Some symbols of the same meaning come in various forms. Only one of
+such symbols should be specified explicitly, all others should be equated
+to that primary definition. According to newer C specs the names with 2
+leading underscores are the primary symbols. All variations should be defined,
+to definitely prevent unrecognized identifiers.
+<p>The value (parser) applies to extensions which should be ignored if
+not handled by the parser. The primary symbol is defined as empty when
+the parser doesn't handle the symbol. All other symbols are equated to
+the primary symbol.
+<p>Symbols in alphabetic order, ignoring underscores and case:
+<br>&nbsp;
+<table BORDER >
+<tr>
+<td>Name</td>
+
+<td>Value</td>
+
+<td>Context</td>
+
+<td>Notes</td>
+</tr>
+
+<tr>
+<td>__BCOPT__</td>
+
+<td>1</td>
+
+<td>BCB</td>
+
+<td>Defined in any compiler that has an optimizer.</td>
+</tr>
+
+<tr>
+<td>__BCPLUSPLUS__</td>
+
+<td>__BORLANDC__</td>
+
+<td>BCB</td>
+
+<td>Defined if you've selected C++ compilation.</td>
+</tr>
+
+<tr>
+<td>__BORLANDC__</td>
+
+<td>0x0540 (BCB4)
+<br>0x0560 (BCB6)</td>
+
+<td>BCB</td>
+
+<td>Compiler version.</td>
+</tr>
+
+<tr>
+<td>__CDECL__</td>
+
+<td>1</td>
+
+<td>BCB prj</td>
+
+<td>Defined if Calling Convention is set to cdecl.</td>
+</tr>
+
+<tr>
+<td>cdecl
+<br>_cdecl
+<br>__cdecl</td>
+
+<td>(parser)</td>
+
+<td>W32</td>
+
+<td>Calling convention modifier.</td>
+</tr>
+
+<tr>
+<td>_CHAR_UNSIGNED</td>
+
+<td>1</td>
+
+<td>ANSI?
+<br>W32</td>
+
+<td>Default char type is unsigned.</td>
+</tr>
+
+<tr>
+<td>__CONSOLE__</td>
+
+<td>(no value)</td>
+
+<td>BCB</td>
+
+<td>When defined, the macro indicates that the program is a console application.</td>
+</tr>
+
+<tr>
+<td>__cplusplus</td>
+
+<td>1</td>
+
+<td>W32</td>
+
+<td>Defined if in C++ mode; otherwise, undefined.</td>
+</tr>
+
+<tr>
+<td>_CPPUNWIND</td>
+
+<td>1</td>
+
+<td>W32</td>
+
+<td>Enable stack unwinding, Exception handling enabled.</td>
+</tr>
+
+<tr>
+<td>__declspec(modifiers)</td>
+
+<td>(parser)</td>
+
+<td>W32</td>
+
+<td>MSC extension.
+<br>Define as empty to ignore the arguments.</td>
+</tr>
+
+<tr>
+<td>_DLL (MSC)</td>
+
+<td>(no value)</td>
+
+<td>MSC prj</td>
+
+<td>Compiling DLL.</td>
+</tr>
+
+<tr>
+<td>__DLL__</td>
+
+<td>1</td>
+
+<td>BCB prj</td>
+
+<td>Compiling DLL.</td>
+</tr>
+
+<tr>
+<td>_fastcall
+<br>__fastcall</td>
+
+<td>(parser)</td>
+
+<td>WIN32</td>
+
+<td>Calling convention modifier.</td>
+</tr>
+
+<tr>
+<td>__FLAT__</td>
+
+<td>1</td>
+
+<td>BCB</td>
+
+<td>Flat memory model.</td>
+</tr>
+
+<tr>
+<td>__forceinline</td>
+
+<td>__inline</td>
+
+<td>W32</td>
+
+<td></td>
+</tr>
+
+<tr>
+<td>IN</td>
+
+<td>(parser)</td>
+
+<td>W32</td>
+
+<td>Parameter extension.</td>
+</tr>
+
+<tr>
+<td>inline
+<br>_inline&nbsp;
+<br>__inline</td>
+
+<td>(parser)</td>
+
+<td>W32</td>
+
+<td>Inline modifier.</td>
+</tr>
+
+<tr>
+<td>_M_IX86</td>
+
+<td>300 (80386)
+<br>400 (80486)
+<br>500 (Pentium)
+<br>600 (newer)</td>
+
+<td>W32</td>
+
+<td>Target processor (machine)</td>
+</tr>
+
+<tr>
+<td>_MSC_VER</td>
+
+<td>1000</td>
+
+<td>W32</td>
+
+<td>MSC/VC compiler version.</td>
+</tr>
+
+<tr>
+<td>__MSDOS__</td>
+
+<td>1</td>
+
+<td>BCB</td>
+
+<td></td>
+</tr>
+
+<tr>
+<td>_MT</td>
+
+<td>(no value)</td>
+
+<td>W32</td>
+
+<td>Multi threaded.</td>
+</tr>
+
+<tr>
+<td>__MT__</td>
+
+<td>1</td>
+
+<td>BCB</td>
+
+<td>Specifies that the multithread library is to be linked.</td>
+</tr>
+
+<tr>
+<td>NDEBUG</td>
+
+<td>1</td>
+
+<td>W32</td>
+
+<td>Compile debug version.</td>
+</tr>
+
+<tr>
+<td>OUT</td>
+
+<td>(parser)</td>
+
+<td>W32</td>
+
+<td>Parameter extension.</td>
+</tr>
+
+<tr>
+<td>__PASCAL__</td>
+
+<td>1</td>
+
+<td>BCB</td>
+
+<td>Defined if default Calling Convention is set to Pascal.</td>
+</tr>
+
+<tr>
+<td>__STDC__</td>
+
+<td>1</td>
+
+<td>ANSI?</td>
+
+<td>Defined if compiling ANSI C/C++ only.</td>
+</tr>
+
+<tr>
+<td>__stdcall</td>
+
+<td>(parser)</td>
+
+<td>MSC</td>
+
+<td>Calling convention modifier.</td>
+</tr>
+
+<tr>
+<td>__TCPLUSPLUS__</td>
+
+<td>__BORLANDC__</td>
+
+<td>BCB (TC)</td>
+
+<td>Version number.</td>
+</tr>
+
+<tr>
+<td>__TEMPLATES__</td>
+
+<td>__cplusplus</td>
+
+<td>BCB</td>
+
+<td>Defined as 1 for C++ files (meaning that templates are supported);
+otherwise, it is undefined.</td>
+</tr>
+
+<tr>
+<td>__TLS__</td>
+
+<td>1</td>
+
+<td>BCB</td>
+
+<td>Thread Local Storage.</td>
+</tr>
+
+<tr>
+<td>__TURBOC</td>
+
+<td>1</td>
+
+<td>BCB (TC)</td>
+
+<td></td>
+</tr>
+
+<tr>
+<td>__TURBOC__</td>
+
+<td>__BORLANDC__</td>
+
+<td>BCB (TC)</td>
+
+<td></td>
+</tr>
+
+<tr>
+<td>__w64</td>
+
+<td>(no value)</td>
+
+<td>W32</td>
+
+<td>Found in .NET (VS7) Windows headers.
+<br>Mark data types whose size differs between 32 and 64 bit platforms.
+(diagnostic)</td>
+</tr>
+
+<tr>
+<td>_WCHAR_T</td>
+
+<td>_WCHAR_T_DEFINED</td>
+
+<td>ANSI?
+<br>BCB</td>
+
+<td>Defined only for C++ programs to indicate that wchar_t is an intrinsically
+defined data type.</td>
+</tr>
+
+<tr>
+<td>_WCHAR_T_DEFINED</td>
+
+<td>1</td>
+
+<td>ANSI W32</td>
+
+<td>Defined when wchar_t is defined by compiler option, or when
+<br><tt>typedef unsigned short wchar_t;</tt>
+<br>is executed in code (MSC).</td>
+</tr>
+
+<tr>
+<td>_WIN32</td>
+
+<td>(no value)</td>
+
+<td>W32</td>
+
+<td>Compiling for Windows 32.</td>
+</tr>
+
+<tr>
+<td>__WIN32__</td>
+
+<td>1</td>
+
+<td>BCB</td>
+
+<td>Compiling for Windows 32.</td>
+</tr>
+
+<tr>
+<td>_Windows</td>
+
+<td>(no value)</td>
+
+<td>BCB</td>
+
+<td>Compiling for Windows 32.</td>
+</tr>
+</table>
+
+<h2>
+MSC extensions</h2>
+
+<h3>
+Predefined Macros</h3>
+See <a href="Predefined_Macros.htm">Predefined Macros</a>.
+<h3>
+Keywords</h3>
+This is the list of all MSC C/C++ keywords, including Microsoft extensions
+to ANSI C/C++ (January 2004).
+<p>According to ANSI, identifiers with two leading underscores are reserved
+for compiler implementations. Therefore Microsoft convention is to precede
+Microsoft-specific keywords with double underscores.
+<p>For backward compatibility, single-underscore versions of all the double-underscored
+keywords except __except, __finally, __leave, and __try are supported.
+In addition, __cdecl is available with no leading underscore.
+<p>Notes:
+<br>1&nbsp;&nbsp; Extended attributes for the __declspec keyword.
+<br>2&nbsp;&nbsp; Applicable to Managed Extensions for C++ only.
+<br>3&nbsp;&nbsp; Intrinsic function used in event handling.
+<p>__abstract 2
+<br>__alignof __asm __assume
+<br>__based
+<br>__box 2
+<br>__cdecl __declspec
+<br>__delegate 2
+<br>__event __except __fastcall
+<br>__finally __forceinline
+<br>__gc 2
+<br>__hook 3
+<br>__identifier __if_exists __if_not_exists __inline
+<br>__int8 __int16 __int32 __int64
+<br>__interface __leave __m64 __m128
+<br>__m128d __m128i __multiple_inheritance
+<br>__nogc 2
+<br>__noop
+<br>__pin 2 __property 2
+<br>__raise
+<br>__sealed 2
+<br>__single_inheritance __stdcall __super
+<br>__try_cast 2
+<br>__try/__except,__try/__finally
+<br>__unhook 3
+<br>__uuidof
+<br>__value 2
+<br>__virtual_inheritance __w64 bool
+<br>break case catch char
+<br>class const const_cast continue
+<br>default delete
+<br>deprecated 1 dllexport 1 dllimport 1
+<br>do double dynamic_cast
+<br>else enum explicit extern
+<br>false float for friend
+<br>goto if inline int
+<br>long mutable
+<br>naked 1
+<br>namespace
+<br>new
+<br>noinline 1 noreturn 1 nothrow 1 novtable 1
+<br>operator private
+<br>property 1
+<br>protected public register reinterpret_cast
+<br>return
+<br>selectany 1
+<br>short signed
+<br>sizeof static static_cast struct
+<br>switch template this
+<br>thread 1
+<br>throw true try typedef
+<br>typeid typename union unsigned
+<br>using declaration,
+<br>using directive
+<br>uuid 1
+<br>virtual void
+<br>volatile
+<br>__wchar_t, wchar_t
+<br>while
+<br>&nbsp;
+</body>
+</html>

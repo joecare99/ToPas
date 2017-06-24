@@ -1,0 +1,12 @@
+/* Emulate VC7 (VS.NET) by DoDi
+
+This file should need no modifications.
+Your search path, preferences etc. go into your "user.def" file!
+*/
+
+#define _MSC_VER  1300
+
+//may need #include "MSC.def"?
+
+#include  "W32.def"
+#include  "user.def"

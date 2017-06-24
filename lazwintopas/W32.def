@@ -1,0 +1,31 @@
+/* W32.def - general settings for Windows
+
+This file should be included when compiling for Windows.
+It contains definitions for Microsoft extensions which are not standard C/C++.
+*/
+
+//calling conventions
+#define cdecl __cdecl
+#define _cdecl  __cdecl
+#define _fastcall __fastcall
+
+//__declspec has a list of modifiers
+#define __declspec(modifiers)
+
+//inline
+//#define inline  __inline
+#define _inline __inline
+#define __forceinline __inline
+
+#define IN
+
+#define _M_IX86 500	//Pentium
+
+//#define __MT
+
+#define OUT
+
+#define __w64
+
+#define _WIN32
+

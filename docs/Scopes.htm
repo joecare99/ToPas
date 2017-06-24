@@ -1,0 +1,386 @@
+<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+   <meta name="Author" content="DrDiettrich">
+   <meta name="GENERATOR" content="Mozilla/4.6 [en] (WinNT; I) [Netscape]">
+   <title>Scopes</title>
+</head>
+<body>
+
+<h1>
+Scopes</h1>
+A scope is a collection of declarations.
+<br>Scopes can be nested, i.e. every scope (except the Globals scope) refers
+to an outer (parent) scope.
+<br>The current (active) scope is searched first.
+<br>Visible are all symbols in the current (active) scope, and all symbols
+in its outer scopes.
+<br>Multiple distinct (non-nested) scopes can be visible at the same time,
+according to the uses clause in OPL, or #include in C.
+<p>Different sets of scopes can be used in the input (source language parsing)
+and output (target language transformation) phases. Both phases can be
+separated, with intermediate meta files holding the information from the
+input phase.
+<h2>
+Implementation</h2>
+The following implementation model is inspired by OPL, where symbols are
+classified as Var, Const, Label, Type and Procedure. Procedures here include
+all kinds of subroutines, i.e. procedures, functions, methods, constructors
+and destructors.
+<p>TSymbol represents a possibly anonymous declaration or definition. Various
+subclasses exist for special symbol kinds.
+<br>TScope is a container for symbols. The symbols are accessible by their
+scope index or by name.
+<br>TModule represents an translation unit, whose scope holds the definitions
+of that unit.
+<p>Definitions differ from declarations only in the presence of a symbol
+definition (.Def: string), holding a type definition, and an optional value
+(.StrVal: string). Procedure definitions have an additional .Body:TSymBlock,
+a TStrings with an added scope.
+<h3>
+Type Declarations</h3>
+Type definitions can be subdivided into basic types and derived simple
+or complex types.
+<br>Basic types are predefined self-contained types, as known to the compiler.
+<br>Simple types are derived from basic types by the application of type
+modifiers (array, pointer...), or as alias for other types.
+<br>Complex types include a member scope, containing the members of enums,
+records, classes, or the arguments of subroutines.
+<h3>
+Data Declarations</h3>
+Both variables and constants can have an type and value. The type definition
+can be missing with untyped variables, the value definition can be missing
+with uninitialized variables.
+<h3>
+Code Declarations and Definitions</h3>
+Code definitions are stored as TSymBlocks, essentially a string list containing
+statement strings in meta format.
+<br>Logical blocks of statements (compound_statement) are delimited parts
+of the statement list.
+<br>Local symbol definitions can appear at the begin of every logical block.
+<br>Labels have no special definition, they are defined by their occurence
+in statements.
+<h2>
+Units</h2>
+The following unit layout is used to prevent circular unit references:
+<ul>
+<li>
+uTokens contains the token definitions.</li>
+
+<li>
+uTablesPrep defines general symbols.</li>
+
+<li>
+[uParseTree defines parse trees and nodes, based on tokens and symbols.]</li>
+
+<li>
+uTablesC defines scopes and classes which are based on or refer to both
+trees and symbols.</li>
+</ul>
+Possibly a separate unit uStatements will contain specialized statement
+classes and subroutine definitions.
+<br>Note: parse trees are still unimplemented. The general parser will
+produce an string for every tree. See <a href="MetaExpressions.htm">MetaExpressions</a>
+and <a href="Persist2-0.html">Persistence</a>.
+<h2>
+Translation Units</h2>
+An OPL translation unit is a scope, containing all declarations of the
+interface section, with a sub-scope of all definitions in the implementation
+section. Both scopes include a list of further used translation units.
+Multiple units can coexist without problems, each provides an invariant
+set of symbol definitions.
+<p>Other languages, like C, do not allow for such a simple structure. An
+attempt has to be made to separate the declarations in the C header files
+into general (global) declarations and into translation unit specific declarations.
+The introduction of namespaces, in C++, does not resolve this problem,
+it only produces more overhead in the scope and unit management.
+<p>In an first translation approach all non-static declarations in C header
+files go into an Globals scope, eventual definitions go into the Globals
+or Statics (module related) scope. Every symbol contains a file based location
+of it's declaration or (if present) definition. Non-static symbols are
+copied from the Globals scope into the module specific scope. This way
+multiple translation units can be parsed in sequence, updating the location
+information of the symbols in the Globals scope.
+<p>In general several scopes have to be considered:
+<br>External scope (global)
+<br>&nbsp;&nbsp;&nbsp; [Typedef scope (global)]
+<br>&nbsp;&nbsp;&nbsp; Qualified scopes (structured types)
+<br>Module scope
+<br>&nbsp;&nbsp;&nbsp; Static scope
+<br>&nbsp;&nbsp;&nbsp; Local scopes
+<br>&nbsp;
+<h3>
+Globals Scope</h3>
+A unique Globals scope contains all external and non-static declarations.
+<br>Typedefs always go into the Global scope.
+<br>Enum members always go into the Global scope, as unqualified constants
+(as required for lookup by name).
+<h3>
+Module Scope</h3>
+This scope contains all module specific definitions. Non-static definitions
+can be copied from the Globals scope into the Statics scope. Module scopes
+(TModule) are collected in a common Modules list. A global Statics variable
+holds the scope of the current module.
+<h3>
+Qualified Scopes</h3>
+Members of structured types (struct, union...) go into static qualified
+scopes. These scopes need no special representation, apart from their text
+form.(???)->UniqueNames!
+<h3>
+Local Scopes</h3>
+Procedures have local scopes, for parameters (exported) and local blocks
+(not exported). Like for qualified scopes, no special scope lists are retained
+for procedure related scopes. (depending on...?)
+<p>Temporary parameter scopes at least are created for old style parameter
+lists, and are discarded after use.
+<h2>
+Unit Scopes</h2>
+Pascal unit scopes are equivalent to module scopes, but synthetic units
+can contain arbitrary symbols.
+<br>Somewhat different procedures may apply when original code is parsed,
+or when meta files are processed.
+<br>Note: procedure bodies are stored with meta-names!
+<h3>
+Output Scopes</h3>
+The disambiguation of symbol names requires several scopes, depending on
+the project kind:
+<ul>
+<li>
+imports (used in the interface or implementation section)</li>
+
+<li>
+exports (going into the interface section)</li>
+
+<li>
+module (implementation section)</li>
+
+<li>
+local (procedures)</li>
+</ul>
+Whenever the scanner detects an identifier, the according symbol must be
+searched.
+<br>Please note that the scanner does not create symbols by himself.
+<br>With mangled names for local symbols, these symbols can be detected
+immediately and assigned to the current procedure scope.
+<br>All other symbols must reside in their appropriate scope. The module
+scope should be populated with according symbols in a first pass over the
+unit, either when the original code is parsed, or when a meta file is loaded.
+Identifiers not found in this scope will go into the Imports scope.
+<p>In a first pass the translator populates the non-local scopes, with
+all identifiers found in the declarations or meta file.
+<br>The external (imported) symbols are used to construct the Uses list(s)
+of the unit, according to their file location. If desired, all global symbols
+can be assigned to synthetic units before. The Imports scope must contain
+at least all used external symbols, as detected by the scanner. All collissions
+with keywords of the target language must be detected (DupeCount).
+<br>In the next pass all collissions between names must be detected. This
+can be accomplished by a case-insensitive search for unit-specific names
+in the unit scope itself, in the Imports scope, as well as in the reserved
+words.
+<p>Name clashes can be handled in various ways:
+<ul>
+<li>
+imported symbols can be qualified with their unit name.</li>
+
+<li>
+parameter names can be prefixed by 'A' or 'The'.</li>
+
+<li>
+all names can be disambiguated by a '_n' postfix, based on their DupeCount
+n.</li>
+</ul>
+In the simplest model every symbol name is modified by addition of it's
+DupeCount. All non-local names (and the keywords) are added to a flat dupe
+list, for local names the dupes must be searched both inside the local
+scope and the common dupe list.
+<br>
+<hr WIDTH="100%">
+<h3>
+Scanner/Parser Problems</h3>
+The Symbols table always contains the symbol names as found in the source
+code (original or meta).
+<br>Source code names go into the Globals table and parameter lists.
+<p>Procedure bodies are parsed in a special mode (fMetaNames).
+<br>Parameter and Local scopes must contain original names for parser lookup,
+are destroyed at the end of the body parse. All these scopes are local
+to the body, in proc.Body.Scopes[].
+<br>A Params scope with mangled names can be retained in the procedure,
+for body parsers?
+<p>Meta output of procedures contains mangled names for parameters and
+locals -> new parameter list, eventually created from the Params scope?
+A flat Locals scope with all mangled names also can be maintained? (simplifies
+Pascal output!).
+<p>Body parsers must not necessarily use scopes, local names can be recognized
+as mangled names, and can be handled appropriately, even without scope
+lists. Otherwise the dedicated Params and Locals scopes can be used for
+symbol name lookup. When these scopes are not stored explicitly, they must
+be reconstructed when reading meta files!
+<p>For target output dedicated scopes should be created. Non-local scopes
+contain only unmangled (original) names, the DupeCount of the symbols can
+be determined whenever a symbol is added to such a scope (by inspection
+of all non-local scopes!).
+<p>Local scopes occur in subroutines, and contain the mangled names (for
+parser lookup). The handling of local scopes and symbols must be compatible
+with the persistent Params scope and symbols. Dedicated Params and Locals
+scopes should be used, either created and retained from the original code
+parse, or reconstructed from reading procedure bodies from meta files.
+<p>A prescan can be required to create all local scopes (Params, Locals),
+and to add all used external symbols to the frame scope(s). Only then the
+DupeCount of the loal symbols can be determined, by a comparison of their
+unmangled names with the names in the frame scopes. A local Externals scope
+can be added, holding all external names as used in the procedure body.
+[Not required, imported symbols always must go into the appropriate frame
+scopes]
+<h3>
+Pascal Projects</h3>
+A Pascal project is split into unit modules. A Publics table holds all
+global symbols, with references to their assigned units.
+<br>Every unit can/should/must(?) contain a Statics table, holding all
+(global and static) symbols, and at least a module/unit reference table,
+with indications whether names in a unit are used only in the implementation
+section, or also in the interface section.
+<p>The Publics table can be created on the fly, i.e. from the non-local
+symbols (with unmangled names), as found in the meta code of the modules.
+A dummy unit (name???) can be used to hold all symbols with no assigned
+unit.
+<br>
+<hr WIDTH="100%">
+<p>Parameter names are visible both inside and outside a procedure. Therefore
+they must not clash with imported and exported names, and also must be
+unique within the same parameter list. Various decorations can be used,
+depending on the actual DupeCount of the parameter symbol.
+<br>&nbsp;
+<p>For a translation into Pascal or similarly structured languages, another
+set of scopes is required. The module scope can be used as-is, but another
+Imports scope collects all external symbols. In a first pass, the whole
+translation unit is scanned for imported symbols. Once these symbols are
+collected, the list of used modules can be constructed, from the file locations
+of all imported symbols. If desired, the file locations of all global symbols
+can be updated before, to reflect their desired locations in unit files.
+<p>Also all names can be checked for collissions with keywords or homonyms
+of equivalent spelling. Herefore the reserved words of the target language
+are used to initialize the Imports scope. Whenever a symbol is added to
+an output scope, the number of conflicting names in the list is determined,
+and stored as DupeCount in the symbol object; this value is used later
+in the creation of an unique (decorated) name for every symbol. The symbols
+in the module scope must be checked for dupes in an explicit dupecheck.
+<p>Symbols in qualified scopes also deserve an special dupecheck, but only
+against reserved words and against dupes in their own scope. [This check
+is omitted, for now, it requires tracking of qualified scopes in the translator
+as well]
+<p>Symbols in subroutines deserve special handling. Since no persistent
+scopes are stored for local symbols, neither parameters nor local variables,
+according temporary scopes are created while translating a procedure. A
+parameter scope is created from the parameter names, which must be used
+in every presentation of the subroutine header. Local symbols go into another
+temporary scope. A local scope [stack of?] must be maintained as well,
+for the lookup of all local symbols. Every encountered symbol (definition)
+is pushed onto the local scope stack, the DupeCount is determined, and
+the symbol also is added to the temporary subroutine scope, for the construction
+of the lists of local declarations (var, const, label). [A stack simplifies
+the implementation, later a single scope can be used, with local symbols
+popped off on exit of an block]
+<p>In a final pass the translated code is emitted, consisting of::
+<ul>
+<li>
+eventual static variables</li>
+
+<li>
+procedure header with parameter list</li>
+
+<li>
+local definitions</li>
+
+<li>
+code, as prepared before</li>
+</ul>
+Then the temporary scopes and lists can be destroyed.
+<br>&nbsp;
+<h2>
+<a NAME="UniqueNames"></a>Unique Names</h2>
+The creation of unique names caused me some headache, and still causes
+:-(
+<br>The problems are:
+<ul>
+<li>
+reserved words cannot be used as symbol names</li>
+
+<li>
+case insensitive symbols in the target language require special name mangling</li>
+
+<li>
+imported names must be retained</li>
+
+<li>
+merging all local symbols into a single (procedure) scope</li>
+</ul>
+With case sensitive target languages the only problem are reserved words,
+which are not allowed as identifiers.
+<p>With case insensitive target languages the spelling of identifiers is
+ignored, so that multiple symbols of effectively the same name can exist.
+<p>In a full fledged version, distinct scopes must be used, for struct
+members, parameters and local variables. Members of these scopes only can
+collide with reserved names, and with names inside their own scope [iff
+case insensitivity is involved!]. Consequently all symbols must be checked
+individually, when the target language is known. To prevent excessive analysis,
+every symbol must reside in an appropriate scope, even struct and enum
+members. The parser should check for qualified names, i.e. follow "." and
+"->" references, to the appropriate symbol, and the qualified name of every
+symbol should be output into any textual representation.
+<p>It looks as a good idea to use prefixes, starting with a "$" for qualified
+names, followed by a list of scope identifiers, separated again by "$"s:
+ident ::= [ "$" { scope-id "$" } ] name.
+<br>where scope-id is any of:
+<br>globals: &lt;none>
+<br>statics: &lt;none> in file scope
+<br>enum-members: &lt;none> - are all globals!
+<br>struct-members: &lt;typeref>$name
+<br>parameters: &lt;procref>["$0"]
+<br>locals:&lt;procref>$&lt;scope-number/list>
+<br>static-locals: &lt;proc>$&lt;scope-id>$&lt;name>
+<p>It can be assumed that every visitor of the textual representation knows
+about the current scope, at least about the current procedure for parameters
+and local names. Care must be taken for structured types, where sub-scopes
+can occur just as in procedures!
+<br>Eventually a shortcut ("$$") can be used to identify names outside
+a local (proc) scope, and local symbols can be flagged with an scope identifier
+only.
+<p>Then it's up to the visitor, to maintain possibly different target-scopes
+(common to structs and procedures), with appropriate nesting. Within every
+target-scope, every unqualified name must be unique, and must not collide
+with a reserved word. It also must not hide <b>used </b>symbols in outer
+scopes! [For simplicity, it can be assumed that no case-sensitive name
+hides an name from an outer scope.]
+<p>
+<hr WIDTH="100%">
+<br>The first solution is based on an AllSymbols list, which is initialized
+with all reserved words (of the target language) and all global symbols.
+Whenever a name is added to this table, a DupeCount is assigned to the
+added symbol (computed from FindFirst/FindNext), which later is used in
+the construction of the UniqueName of the symbol. This procedure is okay
+for non-local symbols, i.e. not okay for struct members, parameters and
+local symbols in subroutines, residing in different scopes.
+<p>So weit - so gut ;-)
+<p>Next all struct members must be handled, but only when these conflict
+with reserved words. Otherwise unique member names are assumed. [C++: This
+will not hold for overloaded procedures, global or within classes].
+<p>Care must be taken to assign an DupeCount only once, to every symbol
+object, not whenever the list is modified later(?). The DupeCount depends
+on the target language, not on the source language!
+<p>In later steps all module (non-global) symbols are added, for the module
+to translate, and the local symbols for procedures to translate.
+<p>Local symbols need special considerations. Currently a procedure body
+is stored as a flat string list, with unrolled (but embedded) blocks. We
+can assume that only local symbols are defined within blocks, which can
+be removed on exit from an block. It must be assured that no external symbols
+prevent the removal of local symbols.
+<p>In a translation from C to Pascal, local symbols can be declared only
+on procedure level. Since variables in local blocks can have different
+types, a list of really all local variables is required. It were a good
+idea to have a flat list of all scopes, for the creation of such a list...
+<p>As a preliminary solution, all local variables are mangled into __&lt;scope#>_&lt;name>,
+so that they are all unique. The removal of the decoration can be handled
+later.
+</body>
+</html>

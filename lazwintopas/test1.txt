@@ -1,0 +1,24 @@
+#1.2
+[test1.c]
+v16	wctype_t:[256]+s
+v17	__threadid:i
+p20	private:!()v{(
+	((puts,"static");
+};
+;
+v30	fclose:[260]c
+c32	fflush:*#c=L"unicode"
+c33	fgetc:*#c='x'
+v36	fgetpos:i
+c37	fgets:#i=99
+v41	fgetws:i
+v42	lcllong:!l
+v43	fopen:VL
+p45	_wfopen:()v{(
+	((puts,"global");
+};
+;
+p47	fprintf:(v:i;)v{(
+	((puts,"test");
+};
+;

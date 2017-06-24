@@ -1,0 +1,18 @@
+#1.2
+[bcb6test.c]
+p	tolower:(__ch:i;)ICi{(
+	 return(((_ltolower,__ch$1));
+};
+;
+p	toupper:(__ch:i;)ICi{(
+	 return(((_ltoupper,__ch$1));
+};
+;
+p	towlower:(__ch:"wint_t";)IC"wint_t"{(
+	 return(((_ltowlower,__ch$1));
+};
+;
+p	towupper:(__ch:"wint_t";)IC"wint_t"{(
+	 return(((_ltowupper,__ch$1));
+};
+;

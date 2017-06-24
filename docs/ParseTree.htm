@@ -1,0 +1,122 @@
+<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+   <meta name="Author" content="DrDiettrich">
+   <meta name="GENERATOR" content="Mozilla/4.6 [en] (Win98; I) [Netscape]">
+   <title>ParseTree</title>
+</head>
+<body>
+
+<h1>
+Parse Tree</h1>
+The output of an parser often is stored as a tree. This tree reflects not
+only the tokens, input from the scanner, but also the grammar rules (productions)
+used while parsing that input. This document describes a parse tree structure
+for programming languages, and an according textual streaming format. The
+C and Delphi (OPL) languages are the first application for this structure,
+and a <a href="CScan.htm">C scanner</a> shall be used to read streamed
+parse trees. Therefore the terms are taken from these languages.
+<h2>
+Trees</h2>
+A tree consists of nodes with none or more child nodes. Every node has
+an name, type, and possibly more attributes. The node names and types correspond
+to the rules and terminals of a programming language grammar. For simplicity
+the node types are taken from the token types of the scanner, with only
+few added tokens. The bare scanner only produces an subset of the defined
+token types, in detail all identifiers are returned as general t_sym tokens;
+these tokens can be mapped by a language specific parser into keyword tokens
+of the language. A parser for parse trees can map the identifiers into
+keyword tokens of all languages, including the parse tree specific extensions.
+Therefore it's vital that the tree parser can distinguish tree specific
+keywords from identifiers of the parsed source code. This means that the
+grammar for parse trees is context sensitive, and the source code identifiers
+are quoted whenever they might be confused with tree specific keywords.
+<p>The root node (goal) of an parse tree is a <b>unit</b> node, whose children
+are declarations and definitions. Declarations and definitions only differ
+in the absence or presence of declarative or initialization information,
+the tree grammar and structure covers both declarations and definitions
+in the same descriptive construct. Descriptions cover abstract (type...)
+definitions and concrete (code, data...) declarations. An application maintains
+lists for all defined identifiers, separated into abstract (types...) and
+concrete identifiers (variables, constants, procedures...), which are used
+to determine the exact type of every identifier. The tree parser uses another
+list of tree specific identifiers (keywords).
+<p>The general parse tree syntax is:
+<p><tt>Node ::= Literal | Tree.</tt>
+<br><tt>Literal ::= '"' String '"' | "'" Char "'" | Number | Identifier
+| Comment.</tt>
+<br><tt>Tree ::= ANY "(" [ Nodelist ] ")".</tt>
+<br><tt>Nodelist ::= Node { "," Node } [ "," ].</tt>
+<p>The last optional "," in Nodelist allows to interpret a comma as either
+an list separator or an node terminator.
+<br>The ANY token in Tree must not conflict with other syntactically valid
+tokens in this place.
+<p>Unit ::= { Declaration }.
+<br>Declaration ::= ["static" | "implementation" | "extern" | "interface"
+]
+<br>&nbsp;&nbsp;&nbsp; ("type" TypeDefs | ( "const" | "var" ) DataDefs
+| "label" Identifiers | [ "procedure" ] ProcDefs ) ";".
+<br>TypeDefs ::= ( TypeDef )*","
+<br>TypeDef ::= Identifier "=" TypeSpec.
+<br>&nbsp; TypeSpec ::= { TypeMod } ( BaseType | StructType | EnumType
+| SetType | ProcType | '"' TypeId '"' ).
+<br>&nbsp;&nbsp;&nbsp; TypeMod ::= ArrayMod | ConstMod | VolatileMod |
+PointerMod.
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ArrayMod ::= "[" Expression "]".
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ConstMod ::= "const" | "#".
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; PointerMod ::= "*".
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; VolatileMod ::= "volatile" | "V".
+<p>BaseType ::= [ "unsigned" | "+" | "signed" | "-" ] ( Digit | Letter
+).
+<br>StructType ::= ( "struct" | "record" | "R" | "union" | "U" ) [ ":"
+TagName ] [ "{" { StructMember }*"," "}" ].
+<br>&nbsp; StructMember ::= [ Identifier ] ":" TypeSpec [ ":" Expression
+].
+<br>EnumType ::= ("enum" | "E") [ ":" TagName ] [ "{" { EnumMember }*","
+"}" ].
+<br>&nbsp; EnumMember ::= Identifier [ "=" Expression ].
+<br>SetType ::= ("set" | "S") [ ":" TagName ] [ "{" Ordinal [ ":" Ordinal
+] "}" ].
+<br>ProcType ::= "(" { Parameter }*";" ")" { ProcAttr } ":" TypeSpec.
+<br>&nbsp; Parameter ::= [ Identifier ] ":" [ ( TypeSpec | "..." | "~"
+) ].
+<br>&nbsp; ProcAttr ::= ("cdecl" | "C") | ("fastcall" | "F") | ("inline"
+| "I") | ("method" | "M").
+<p>DataDefs ::= { DataDef }*",".
+<br>DataDef ::= Identifier [ ":" TypeSpec ] [ "=" Initializer | "extern"
+].
+<br>&nbsp; Initializer ::= Expression | "{" { Initializer }*"," "}".
+<p>ProcDef ::= Identifier ProcType ( [ DataDefs ] Block | "extern" | "forward"
+).
+<br>&nbsp; Block ::= "{" [ Declarations ] { Statement } "}".
+<br>&nbsp;&nbsp;&nbsp; Statement ::= TransferStmt | LoopStmt | CondStmt
+| Block | Assignment ";".
+<br>TransferStmt ::= "break" [";"] | "continue" [";"] | "exit" [";"] |
+"goto" Label [";"] | "return" [ Expression ] ";".
+<br>&nbsp; /* "try", "raise"... */
+<br>LoopStmt ::= ("do" | "repeat") Statement [ "until" ] Expression ";"
+| "while" Expression [ "do" ] Statement
+<br>&nbsp;&nbsp;&nbsp; | "for" DataDefs ";" /*to*/ Expression ";" /*step*/
+Expressions ";" /*do*/ Statement.
+<br>CondStmt ::= "if" "(" Expression /*then*/ Statement [ /*else*/ Statement
+] ")" | ( "switch" | "case" "(" Expression ";" /*of*/ { Case } ")".
+<br>&nbsp; Case ::= CaseLabel { Statement }.
+<br>&nbsp;&nbsp;&nbsp; CaseLabel := { Ordinal [ (":" | "..") Ordinal ]
+} | "default".
+<br>Assignment ::= AssignOp "(" Designator ("," | ":=") Expression ")".
+<br>Designator ::= ( Identifier | Call | ArraySelector | MemberSelector
+| Deref ) { ":" TypeSpec }.
+<br>&nbsp; Call ::= "(" Designator [":"] Expressions ")".
+<br>&nbsp; ArraySelector ::=&nbsp; "[" Designator "," Expression "]".
+<br>&nbsp; MemberSelector ::= Punctuator "(" Designator Identifier ")".
+<br>&nbsp; Deref ::= "@" Designator.
+<br>&nbsp; /*Cast ::= ":" TypeSpec Designator.*/
+<br>Expressions ::= { Expression }*",".
+<br>&nbsp; Expression ::= ( Operator "(" Expressions ")" | Literal | Assignment
+) [ ":" TypeSpec ] | Designator.
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+</body>
+</html>

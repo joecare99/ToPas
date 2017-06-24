@@ -1,0 +1,153 @@
+<!DOCTYPE html PUBLIC "-//w3c//dtd html 4.0 transitional//en">
+<html>
+<head>
+  <meta http-equiv="Content-Type"
+ content="text/html; charset=iso-8859-1">
+  <meta name="Author" content="DoDi">
+  <meta name="GENERATOR"
+ content="Mozilla/4.6 [en] (WinNT; I) [Netscape]">
+  <title>Persistence 2.0</title>
+</head>
+<body>
+<h1>
+Persistence 2.0</h1>
+This is a revised version of the old parser persistence format.
+<h2>Symbols</h2>
+Symbols reside in a common preprocessor table (Symbols), and in high
+level symbol
+scopes (Globals, Statics, modules, procedures).
+<br>
+<br>
+The symbols in the preprocessor table can have several meanings, at the
+same time:<br>
+<ul>
+  <li>directives</li>
+  <li>pragmas</li>
+  <li>keywords (of the source language)</li>
+  <li>macros</li>
+  <li>symbols (in source code)<br>
+  </li>
+</ul>
+Directives, pragmas and keywords are implemented as appropriate to a
+source language.<br>
+Macros and symbols are added from the actual source code; only these
+symbols occur in meta-files.<br>
+<br>
+Macros (#define) can be classified further into:
+<ul>
+  <li>default - to be expanded by the preprocessor<br>
+  </li>
+  <li>dummy - when the body is empty</li>
+  <li>constant - when the body is a constant expression</li>
+  <li>type - when the body specifies an type</li>
+  <li>template - the macro is a generic subroutine<br>
+  </li>
+</ul>
+The preprocessor expands all default and dummy macros, so that no macro
+names occur in the meta-code, unless they are marked for special
+treatment (by the user). The default macros occur in meta files, so
+that the user can assign more appropriate types to each macro, for use
+in the next run of the parser.<br>
+<p>Meta files come in two flavours, either as module files
+&lt;module&gt;.txt, or as project files &lt;prj&gt;.txt.<br>
+Module files contain all symbols which are defined in the according
+module (*.c).<br>
+All other symbols, i.e. macros and undefined symbols, go into the
+project file.<br>
+</p>
+<p>Every symbol is stored as one or multiple lines.
+Macros are stored as found in the source files, i.e. all but the last
+line end with a backslash. Defined procedure symbols always are stored
+in multiple lines, the last line contains a single semicolon ";". Other
+symbols can be broken on a special character (currently ";"), when the
+lines are longer than allowed in the Delphi IDE.</p>
+<p>The first character in a non-continuation line indicates the symbol
+type:
+</p>
+<ul>
+  <li>typesym, structsym, various subclasses</li>
+  <li>varsym, constsym</li>
+  <li>procsym</li>
+  <li>labelsym(?)</li>
+  <li>macrosym, various subclasses</li>
+</ul>
+<tt>TypeSym ::= "t" (StructType | SimpleType) .<br>
+SimpleType ::= ident "=" Type .</tt>
+<br>
+<tt>StructType ::= ("E"|"S"|"U") ":" (ident|#) "=" "{" { Field ";" }
+"}" .</tt>
+<br>
+<tt>//everything to the left of "=" is part of the typename!</tt>
+<br>
+<tt>&nbsp;&nbsp;&nbsp; Field ::= [ident] ":" [Bitfield] Type ["="
+Expression] .</tt>
+<br>
+<tt>&nbsp;&nbsp;&nbsp; Bitfield ::= "{" Value "}" .</tt>
+<br>
+<tt>ProcSym ::= "p" ident ":" [Scope] ProcType [Block] </tt><tt>[";"] </tt><tt>
+.</tt>
+<br>
+<tt>&nbsp;&nbsp;&nbsp; ProcType ::= "(" {Param ";"} [":~;"] ")"
+[Call] [Type] .</tt>
+<br>
+<tt>&nbsp;&nbsp;&nbsp; Param ::= [ident]":"[Ref][Type][Values] .</tt>
+<br>
+<tt>&nbsp;&nbsp;&nbsp; Ref ::= "@"|"&amp;"|"#"|"?" .&nbsp;&nbsp;&nbsp;
+//var,ref,const,out - default: value</tt>
+<br>
+<tt>VarConstSym ::= ("v"|"c"|"e") [Scope] ident ":" Type
+[Values] .</tt>
+<br>
+<tt>//LabSym ::= "L" ident .</tt>
+<br>
+<tt>MacroSym ::= ("#"|"M"...) ident [ "(" { Ident"," } ")" ] [Body]
+.</tt><tt></tt>
+<p><tt>Type ::= Qualified | Array | Pointer | StructUnion | Enum |
+Typename
+| Basetype .</tt>
+<br>
+<tt>&nbsp;&nbsp;&nbsp; Qualified ::= ["#"|"V"] Type . //Const/Volatile</tt>
+<br>
+<tt>&nbsp;&nbsp;&nbsp; Array ::= "[" ExprList "]" Type .</tt>
+<br>
+<tt>&nbsp;&nbsp;&nbsp; Pointer ::= "*" Type .</tt>
+<br>
+<tt>&nbsp;&nbsp;&nbsp; StructUnion ::= ("S"|"U"|"I") (":"(ident|#)
+| "{" { Field "," } "}") .</tt>
+<br>
+<tt>&nbsp;&nbsp;&nbsp; Enum ::= "E" (":"(ident|#) | "{" { ident [Value]
+"," } "}") .</tt>
+<br>
+<tt>&nbsp;&nbsp;&nbsp; Typename ::= '"' ident '"' .</tt>
+<br>
+<tt>&nbsp;&nbsp;&nbsp; Basetype ::= ["+"|"-"]
+(num|"v"|"c"|"s"|"i"|"l"|"L"|"f"|"d"|"D"|"~")
+.</tt>
+<br>
+<tt>Value ::= (num|string|char|ident|[op]"(" ExprList ")" | ":" Type
+"="
+Value) .</tt>
+<br>
+<tt>//op is any C operator.</tt>
+<br>
+<tt>ExprList ::= { Value "," } .</tt>
+<br>
+<tt>Values ::= "=" Value .</tt>
+<br>
+<tt>Block ::= "{(" { (Value|stmt) ";"} "}" .</tt>
+</p>
+<p>Possibly expression lists should be enclosed in "[...]"?
+<br>
+-&gt; Intentionally ambigous with array type!
+<br>
+-&gt; Separate by "=" from preceding type.
+<br>
+Otherwise "[" could be used as array-index operator!
+<br>
+Blocks (with declarations and statements) instead are enclosed in
+"{...}".
+<br>
+<tt></tt>&nbsp;
+</p>
+</body>
+</html>

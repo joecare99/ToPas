@@ -1,0 +1,10 @@
+/* Emulate Borland C++ Builder 6 (BCB) by DoDi
+
+This file should need no modifications.
+Your search path, preferences etc. go into your "user.def" file!
+*/
+
+#define __BORLANDC__  0x0560	//BCB6
+
+#include  "BCB.def"
+

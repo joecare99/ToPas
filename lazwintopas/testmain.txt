@@ -1,0 +1,8 @@
+#1.1
+005D	005D	vlst:!**c
+005E	005E	vlnum:!i
+0065	0065	pmain:(argc:i;argv:*c;)i{(
+	if(!(=(lst,#@(PPCHAR,realloc(lst,*(+(lnum,1),sizeof(PCHAR))))));arcdie("too many file references"););
+	puts("test");
+};
+;

@@ -1,0 +1,277 @@
+<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+   <meta name="Author" content="DrDiettrich">
+   <meta name="GENERATOR" content="Mozilla/4.6 [en] (WinNT; I) [Netscape]">
+   <title>Meta Expressions</title>
+</head>
+<body>
+
+<h1>
+Meta Expressions</h1>
+The immediate evaluation of constant expressions in the preprocessor and/or
+parser has the disadvantage that all constant names are lost, and only
+the resulting (integer) value is preserved. For an cross compiler it should
+be possible to store all expressions in a language independent meta format.
+This is an attempt to describe such a meta language for expressions, with
+the option to extend the language with meta statements.
+<h2>
+General Idea</h2>
+A meta expression represents an <a href="Scopes.htm">parse tree</a>, with
+explicit operator precedence and grouping.
+<br>All expressions are stored in functional form, &lt;op>(&lt;args>).
+&lt;op> can either be an operator name or shortcut, as convenient.
+<br>The result is a list structure, with a general base syntax:
+<br><tt>Expr ::= Value | [ Operator ] "(" [ ExprList ] ")" | Stmt .</tt>
+<br><tt>ExprList ::= Expr { ";" Expr }</tt>
+<br><tt>Value ::= number | identifier | '"' string '"' | "'" character
+"'" .</tt>
+<br><tt>Stmt ::= ... //to be defined</tt><tt></tt>
+<p><tt>Declaration ::= TypeDecl | StructDecl | ProcDecl | VarDecl | MacroDecl
+| LabDecl .</tt>
+<br><tt>&nbsp;&nbsp;&nbsp; TypeDecl ::= "T" ID "=" Type .</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ID ::= "#" number |
+[ "{" ID "}" ] identifier [ "." ID ].</tt>
+<br><tt>&nbsp;&nbsp;&nbsp; StructDecl ::= StructID ID "{" { MemberDecl
+";" } "}" .</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; StructID ::= "E" | "S"
+| "U" | "I" .</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; MemberDecl ::= ("m"|"c"|"d"|"p")
+ID [ ":" Type ] [ "{" Expr "}" ]</tt>
+<br><tt>&nbsp;&nbsp;&nbsp; ProcDecl ::= ("F"|"P"|"M") identifier ProcType
+[ "{" [StmtList] "}" ] .</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ProcType ::= [Scope]
+["P"] "(" Params ")" [Call] [Type] .</tt>
+<br><tt>&nbsp;&nbsp;&nbsp; MacroDecl ::= ("#"|"X"|"M") identifier [ "("
+Params ")" ] "{" [StmtList] "}" .</tt>
+<br><tt>&nbsp;&nbsp;&nbsp; VarDecl ::= ("V"|"C") [Scope] identifier [ ":"
+Type ] [ "{" [ExprList] "}" ] .</tt>
+<br><tt>&nbsp;&nbsp;&nbsp; LabDecl ::= "L" identifier .</tt><tt></tt>
+<p><tt>DeclID = "T" | "E" | "S" | "U" | "F" | "P" | "V" | "C" | "L" .</tt>
+<br><tt>Item ::= [ Literal ] [ "(" { Item "," } ")" ] [ ":" Item ] [ "="
+Expr ] .</tt>
+<br><tt>Literal ::= number | identifier | '"' string '"' | "'" character
+"'" .</tt><tt></tt>
+<p><tt>VarConst ::= identifier [ ":" Type ] [ "{" ExprList "}" ] .</tt>
+<br><tt>Type ::= identifier "=" { TypeMod } ( '"' identifier '"' | BaseType
+) .</tt>
+<br><tt>TypeMod ::= "*" | "[" { ExprList } "]" | "(" ParamList ")" |</tt>
+<p>Identifiers can be alphanumeric or operator-shortcuts. They cannot begin
+with any of the other Literal item delimiters.
+<br>Parentheses always must be paired, unless they are embedded into a
+Literal. For optimized scanning the following set of paired delimiters
+should be used:
+<ul>
+<li>
+() - general purpose, nestable, can also contain:</li>
+
+<li>
+{} - comments</li>
+
+<li>
+"" - strings</li>
+
+<li>
+'' - characters</li>
+</ul>
+Inside Comment, String and Character (<b>Literal</b>) items none but the
+respective closing character have a special meaning. The closing character
+itself can be escaped by duplication. Sequences of literals with identical
+leading and trailing characters must be separated by some other character,
+a space by default. String and Character literals can be interpreted as
+names of types and variables, according to the Declaration syntax.
+<p>Commas "," inside item lists are definite item separators (terminators).
+Other list separators may be used to structure individual items. The suggested
+convention of item terminators instead of item separators simplifies the
+input and output procedures for list/tree structures.
+<p>Newline and whitespace characters are unspecific separators, with no
+special meaning, but they can occur only in places where other separators
+are allowed. Inside Literals all whitespace characters are part of the
+literal, but newline characters are not allowed.
+<p>The semantical interpretation of all Items is implied by the Item name.
+The part after the closing Item parentheses can have a special structure,
+as outlined above, but the exact interpretation depends on the actual context.
+<h3>
+Operators</h3>
+At least the following operators &lt;op> must exist for C expressions:
+<h4>
+unary operators: op(arg)</h4>
+not, neg, addr, deref, subexpression, selection, typecast, conversion
+<p>The C operators (!, ~, -, *, &amp;) can be used, where ambiguous unary/binary
+operators can be distinguished by the argument count.
+<br>Pre/postfix increment and decrement deserve different operators.
+<br>Subexpressions may have an empty operator, i.e. only the expression
+is stored inside parentheses.
+<p>Member selection (".", "->") can be expressed in the same syntax, with
+appropriate grouping.
+<br>Array selection can be expressed by an array operator [](array,index).
+<br>Explicit type casts and conversions should be specified by distinct
+cast and convert operators. Type conversions can be implied by specific
+operators, and possibly can be represented by an optional ":"&lt;type>
+postfix attribute. By convention a double-quoted typename can be used as
+an identifier for type conversions; this comes close to procedural type
+casts (C++, Delphi), but may lead to ambiguities. Explicit type casts must
+be retained in explicit Items, possibly with explicit source as well as
+target types.
+<h4>
+binary operators: op(lhs, rhs)</h4>
++ - * / &amp; &amp;&amp; | || (etc., as specified for C)
+<br>==, &lt;, > (etc.)
+<p>Assignment operators can be splitted into two operations: assign(lhs,op(lhs,rhs))
+<h4>
+ternary operator</h4>
+?(cond, true, false)
+<p>The same syntax can be used for conditional statements (if, switch),
+as long as statments can be distinguished from expressions.
+<h4>
+sequential operator</h4>
+seq(expr1,...,exprN)
+<p>This operator can be used to represent the C comma operator.
+<h4>
+function operator</h4>
+f(name, args...)
+<br>By convention the function name, enclosed in single quotes, can be
+used as the identifier for an function call.
+<h3>
+Operands</h3>
+Operands can be:
+<ul>
+<li>
+operations (recursive)</li>
+
+<li>
+symbols</li>
+
+<li>
+values (integral, floating point numbers, char and string literals)</li>
+</ul>
+Symbols can be attributed with values, values can be attributed with an
+explicit type, according to the <a href="CParser.htm">Declaration syntax</a>:
+<br>[name][:type][=value]
+<p>For numeric values more attributes can be inserted, to e.g. distinguish
+integral and floating point values, the original base of integeral values
+(decimal, octal...) etc.
+<h2>
+Statements</h2>
+Statements and operations sometimes can be represented in the same way
+(assignment...), as long as it's clear whether a statement or expression
+is expected.
+<h3>
+Operational Statements</h3>
+assignment, procedure-call, expression
+<p>These statements can use the according expression syntax of assignment,
+function-call and general expressions.
+<h3>
+Conditional Statements</h3>
+As mentioned above, the Ternary operator and If statements can be expressed
+in the same syntax, with an optional or possibly empty False (last) argument
+for If statements.
+<br>?(cond,true[,false])
+<p>A Switch can have discontiguous case values, i.e. none or one statement
+list can pertain to one or more values, so that a special syntax is required.
+A Switch also can have an default branch, and different fall-through behaviour.
+<p>switch(cond {,case(values,statement)} [,default(statement)]) /* C fall
+through convention */
+<br>select(&lt;same syntax>) /* Pascal else-if like convention */
+<p>The &lt;values> argument should be a list of explicit (constant) values,
+for single values the parentheses around the list may be omitted.
+<h3>
+Loops</h3>
+A general representation for loops should allow for the following attributes:
+<br>initialization, stepping, pre/post test.
+<br>position of the Continue label/part.
+<br>label (name) for directed Breaks.
+<p>Distinct loop types may be defined, to reflect e.g.:
+<ul>
+<li>
+counted loops</li>
+
+<li>
+C style for loops</li>
+
+<li>
+pre/post-tested loops (repeat/until)</li>
+</ul>
+Possibly both a pre- and post-test may be specified, each of which can
+be empty in endless loops.
+<br>for(init,pre-test,body,step/cont,post-test)
+<h3>
+Labels and Goto</h3>
+Labels and Gotos can be represented by:
+<br>label(name)
+<br>goto(label-expression)
+<h2>
+Block Statements</h2>
+Various kinds of block statements can occur:
+<ul>
+<li>
+compound statements, with/out local variables</li>
+
+<li>
+try-except/finally</li>
+
+<li>
+procedure definitions</li>
+</ul>
+Statement sequences and simple compound statements can share the same syntax:
+block(stmt{,stmt}).
+<br>Blocks with local variables will occur at least in procedure definitions.
+<br>A general Block structure can include a possibly empty list of local
+variables as the first argument: block(locals,stmts...).
+<p>The C setjmp/longjmp constructs should be represented by some try-except
+syntax, to reflect the irregular control flow for these constructs.
+<p>Procedure declarations should follow the Declaration syntax: (params)result-type.
+The parentheses should not be confused with list-delimiters, i.e. the declaration
+should be a positional argument of the procedure definition:
+<br>proc(name:params-and-type,compound-stmt)
+<h2>
+Other Items</h2>
+Constants, Variables, Initializers and Type Declarations already have been
+<a href="CParser.htm">specified</a>,
+what remains to specify are syntactical wrappers around all these items.
+<p>In all cases a distinction should be made between internal (local) and
+exported (public) declarations and definitions. This can be done in Delphi-like
+unit(...) blocks, with interface(...) and implementation(...) sections,
+as well as optional uses(...) and initialization(...) and finalization(...)
+sections, with type(...), const(...), var(...), proc(...) and inline(...)
+subsections. A distinction between Const and Var is not necessary, but
+IMO procedure declarations and definitions should be grouped into according
+blocks. Namespaces should be compact, i.e. a namespace (or scope) cannot
+be extended in other places or units. The Inline subsection is intended
+for C #defines, which can be interpreted as various higher level declarations
+(constants, inline procedures...).
+<p>Procedure definitions can be split into an procedure type, i.e. roughly
+the procedure declaration, and the specific implementation. Then the declaration
+part can be stored in the appropriate (public/local) scope, and the definition
+part only refers to that declaration, but does not repeat it entirely.
+<h3>
+Conditional Compilation</h3>
+Conditional compilation does not always fit together with a tree structure,
+when the various branches do not contain complete meta subtrees. In such
+situations the conditional branches should be completed with duplicates
+of all required items, and possibly more items until the common continuation
+point in the meta tree is reached. A parser then can select any (or none)
+applicable branch for interpretation. A cross compiler can determine the
+common tails of all branches, and move that common tail out of all branches
+into the main stream code.
+<h3>
+Formatting and other Sugar</h3>
+A cross compiler should retain some formatting information, about line
+breaks and comments. The placement of comments is not always trivial, when
+the control flow or declaration syntax of the target language is too different
+from the source language. Line breaks and indentation are less important
+and uncritical, the transformed code can be reformatted by some kind of
+pretty printer for the target language.
+<h2>
+Transformations</h2>
+For the use in an cross compiler it should be possible to define language
+specific statement and expression types, for both source and target languages.
+It should be possible to transform all source-language specific constructs
+into lower-level constructs, until either the consumer knows how to interpret
+a construct, or no transformation into the target language is possible
+at all. The transformation rules should be stored in their own general
+syntax.
+<br>&nbsp;
+</body>
+</html>
