@@ -4,12 +4,12 @@ program WinToPas;
 
 uses
   Forms, Interfaces,
-  fScanLog in 'fScanLog.pas' {ScanLog},
-  fTypes in 'fTypes.pas' {TypeDefList},
-  fScopeView in 'fScopeView.pas' {ScopeView},
-  fConfiguration in 'fConfiguration.pas' {ConfigViewer},
-  fSymView in 'fSymView.pas' {SymView},
-  fMacros in 'fMacros.pas' {MacroChecker};
+  fScanLog in '..\lazWinToPas\fScanLog.pas' {ScanLog},
+  fTypes in '..\lazWinToPas\fTypes.pas' {TypeDefList},
+  fScopeView in '..\lazWinToPas\fScopeView.pas' {ScopeView},
+  fConfiguration in '..\lazWinToPas\fConfiguration.pas' {ConfigViewer},
+  fSymView in '..\lazWinToPas\fSymView.pas' {SymView},
+  fMacros in '..\lazWinToPas\fMacros.pas' {MacroChecker};
 
 {$R *.res}
 

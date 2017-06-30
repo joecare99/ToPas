@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<fpdoc-descriptions><package name="lfpToPasLib"><module name="uHashList"><short>THashList is a list of objects (TStrings), combined with a hash table. </short><descr><p>The code is based on TStringList, with some modifications:<br/>
+The intended use are symbol lists for compilers etc., with dynamic scopes.<br/>
+  - retain list order (option: allow for removal/insertion of entries)<br/>
+  - possibly owned entries<br/>
+  - find first/next entry of same name, search top-down (LIFO)<br/>
+  - extensible item descriptors</p><p>Case sensitivity can be specified in OHashList.fCaseInsensitive.</p><p>Override methods of TStrings:<br/>
+  
+Must override:<br/>
+  abstract: Clear, Delete, Insert, Get, GetCount<br/>
+  inappropriate:  Add<br/>
+Since in D4 Insert is used from (non-virtual) InsertObject,<br/>
+  Insert must be implemented properly, even if its use can destroy the structure!<br/>
+  Assert index=Count, as is when called from Add.</p><p>The hash table is implemented in an array[Capacity], which must be reconstructed
+  entirely when the capacity changes, or when entries are reordered, deleted
+  or inserted - what's not the intended use of this implementation.</p><p>The definition and management of the Items array is up to the container class.
+OHashList implements the hash functionality, using some callback methods
+  to communicate with the container object:<br/>
+    GetItem:  retrieve pointer to the item descriptor. (@Items[index])<br/>
+    Resize:   resize the Items array (SetLength).<br/>
+    Removed:  notification of removal of an entry, for finalization...</p><p>Possible extensions:<br/>
+AddName(s), with s = &lt;name&gt;=&lt;value&gt;.<br/>
+    Requires: strip value in computation of hashcode and compares<br/>
+  Hash code case insensitive, find functions (first/next...) both case in/sensitive.<br/>
+    This feature might simplify and speed up tests for conflicting names
+    in a conversion from C (case sensitive) to OPL (case insensitive).</p><p>Problems:<br/>
+Add() and handling of dupes:<br/>
+    Default list dupes property is not always appropriate,
+    even in lists with dupes a new entry is not always the desired behaviour.
+    Every call should specify whether an existing entry should be reused!
+    -&gt; add method AddNew(name, obj=nil), to indicate really new object desired.
+    or: (CreateIn)  </p>
+      </descr>
+    </module>
+  </package>
+</fpdoc-descriptions>

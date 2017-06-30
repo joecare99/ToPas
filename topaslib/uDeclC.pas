@@ -30,8 +30,8 @@ uses
   uUI,
   uTokenC,
   uScanC,
-  uTablesPrep,
-  uExprC;
+  uTablesPrep{,
+  uExprC};
 
 (*
 declarator :
@@ -229,6 +229,8 @@ __inline //in extended_storage_class_specifiers
 //calling_conventions=
 __cdecl __fastcall __stdcall
 *)
+var
+  _inline: Boolean;
 begin //declaration_specifiers
 (*
 declaration_specifiers :
@@ -288,12 +290,12 @@ end;
 
 function TDeclaration.declarator: boolean;
 begin
-...
+//...
 end;
 
 function TDeclaration.init_declarator_list: boolean;
 begin
-...
+//...
 end;
 
 function  TDeclaration.type_name():  boolean;
@@ -302,7 +304,7 @@ begin
 type_name :
 specifier_qualifier_list [abstract_declarator]
 *)
-...
+//...
 end;
 
 // --------------------

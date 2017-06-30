@@ -1,104 +1,94 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <CONFIG>
   <ProjectSession>
-    <Version Value="7"/>
+    <Version Value="10"/>
     <Units Count="7">
       <Unit0>
         <Filename Value="WinToPas.lpr"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="20"/>
+        <EditorIndex Value="6"/>
+        <CursorPos X="30" Y="12"/>
+        <UsageCount Value="31"/>
+        <Loaded Value="True"/>
       </Unit0>
       <Unit1>
-        <Filename Value="fScanLog.pas"/>
+        <Filename Value="../lazwintopas/fScanLog.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="ScanLog"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <UnitName Value="fScanLog"/>
-        <IsVisibleTab Value="True"/>
         <EditorIndex Value="2"/>
-        <WindowIndex Value="0"/>
-        <TopLine Value="797"/>
-        <CursorPos X="42" Y="810"/>
-        <UsageCount Value="20"/>
+        <CursorPos X="17" Y="20"/>
+        <UsageCount Value="31"/>
         <Bookmarks Count="1">
-          <Item0 X="17" Y="796" ID="2"/>
+          <Item0 X="17" Y="797" ID="2"/>
         </Bookmarks>
         <Loaded Value="True"/>
+        <LoadedDesigner Value="True"/>
       </Unit1>
       <Unit2>
-        <Filename Value="fTypes.pas"/>
+        <Filename Value="../lazwintopas/fTypes.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="TypeDefList"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <UnitName Value="fTypes"/>
-        <EditorIndex Value="8"/>
-        <WindowIndex Value="0"/>
-        <TopLine Value="1"/>
-        <CursorPos X="40" Y="3"/>
-        <UsageCount Value="20"/>
+        <EditorIndex Value="5"/>
+        <CursorPos X="40" Y="18"/>
+        <UsageCount Value="31"/>
         <Loaded Value="True"/>
+        <LoadedDesigner Value="True"/>
       </Unit2>
       <Unit3>
-        <Filename Value="fScopeView.pas"/>
+        <Filename Value="../lazwintopas/fScopeView.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="ScopeView"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <UnitName Value="fScopeView"/>
-        <EditorIndex Value="0"/>
-        <WindowIndex Value="0"/>
-        <TopLine Value="136"/>
-        <CursorPos X="14" Y="147"/>
-        <UsageCount Value="20"/>
+        <EditorIndex Value="3"/>
+        <TopLine Value="16"/>
+        <CursorPos X="30" Y="25"/>
+        <UsageCount Value="31"/>
         <Loaded Value="True"/>
+        <LoadedDesigner Value="True"/>
       </Unit3>
       <Unit4>
-        <Filename Value="fConfiguration.pas"/>
+        <Filename Value="../lazwintopas/fConfiguration.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="ConfigViewer"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <UnitName Value="fConfiguration"/>
-        <EditorIndex Value="9"/>
-        <WindowIndex Value="0"/>
-        <TopLine Value="1"/>
-        <CursorPos X="18" Y="9"/>
-        <UsageCount Value="20"/>
+        <TopLine Value="78"/>
+        <CursorPos X="31" Y="91"/>
+        <UsageCount Value="31"/>
         <Loaded Value="True"/>
+        <LoadedDesigner Value="True"/>
       </Unit4>
       <Unit5>
-        <Filename Value="fSymView.pas"/>
+        <Filename Value="../lazwintopas/fSymView.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="SymView"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <UnitName Value="fSymView"/>
         <EditorIndex Value="4"/>
-        <WindowIndex Value="0"/>
-        <TopLine Value="147"/>
-        <CursorPos X="1" Y="162"/>
-        <UsageCount Value="20"/>
+        <TopLine Value="132"/>
+        <CursorPos Y="162"/>
+        <UsageCount Value="31"/>
         <Loaded Value="True"/>
+        <LoadedDesigner Value="True"/>
       </Unit5>
       <Unit6>
-        <Filename Value="fMacros.pas"/>
+        <Filename Value="../lazwintopas/fMacros.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="MacroChecker"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <UnitName Value="fMacros"/>
         <EditorIndex Value="1"/>
-        <WindowIndex Value="0"/>
-        <TopLine Value="41"/>
+        <TopLine Value="36"/>
         <CursorPos X="33" Y="52"/>
-        <UsageCount Value="20"/>
+        <UsageCount Value="31"/>
         <Loaded Value="True"/>
+        <LoadedDesigner Value="True"/>
       </Unit6>
     </Units>
-    <General>
-      <ActiveWindowIndexAtStart Value="0"/>
-    </General>
   </ProjectSession>
 </CONFIG>

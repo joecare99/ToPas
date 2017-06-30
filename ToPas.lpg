@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CONFIG>
+  <ProjectGroup FileVersion="1">
+    <Targets Count="2">
+      <Target0 FileName="FPC\WinToPas.lpi">
+        <BuildModes Count="1"/>
+        <Mode1 Name="default"/>
+      </Target0>
+      <Target1 FileName="FPC\lfpToPasLib.lpk"/>
+    </Targets>
+  </ProjectGroup>
+</CONFIG>

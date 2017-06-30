@@ -90,15 +90,18 @@ type
     fOldParams: boolean;  //prevent default type "int"
     //procedure Init;
   {$IFDEF lclScopes}
-    constructor Create(AScope: TScopeC);
     procedure Clear;
   {$ELSE}
-    constructor Create(fPub: TPublic);  //Create; (AScope: TScope)
     procedure Clear(fPub: TPublic); //Clear;
   {$ENDIF}
-    destructor  Done;
     property  name: string read r.name;
   public
+    {$IFDEF lclScopes}
+    constructor Create(AScope: TScopeC);
+    {$ELSE}
+    constructor Create(fPub: TPublic);  //Create; (AScope: TScope)
+    {$ENDIF}
+    destructor  Done;
     //function  declaration(AScope: TScopeC): boolean;
     function  declaration: boolean;
   end;

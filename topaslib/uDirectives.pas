@@ -91,7 +91,7 @@ type
 const //all handlers implemented in uScanC.pas
   aDirectives: array[eStdDirectives] of TDirRec = (
   //blocking
-    (n: 'endif'), (n: 'if'), (n: 'ifdef'), (n: 'ifndef'),
+    (n: 'endif'{%H-}), (n: 'if'{%H-}), (n: 'ifdef'), (n: 'ifndef'),
     (n: 'elif'), (n: 'else'),
   //other
     (n: 'define'), (n: 'undef'),

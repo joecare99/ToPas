@@ -383,6 +383,7 @@ Called from 2 places:
 *)
 function nextNoEof(fRaw: boolean): eToken;
 begin
+  if assigned(pSrc) then  // Appended
   repeat
     if fRaw then
       Result := pSrc.nextRaw
@@ -394,7 +395,9 @@ begin
       else
         exit; //return EOF
     end;
-  until Result > t_eof;
+  until Result > t_eof
+  else
+  result := t_empty;
 end;
 
 (* nextNoWhite
@@ -1976,6 +1979,6 @@ begin
 end;
 
 initialization
-  DecimalSeparator := '.';  //for StrToFloat conversion!
+   DefaultFormatSettings.DecimalSeparator := '.';  //for StrToFloat conversion!
   TokenStack.Init;
 end.

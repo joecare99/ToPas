@@ -10,7 +10,8 @@ object ScanLog: TScanLog
   Font.Name = 'MS Sans Serif'
   Menu = MainMenu1
   OnCreate = FormCreate
-  LCLVersion = '0.9.29'
+  LCLVersion = '1.8.0.2'
+  Visible = False
   object Splitter1: TSplitter
     Cursor = crVSplit
     Left = 0
@@ -32,7 +33,7 @@ object ScanLog: TScanLog
   end
   object lbSrc: TListBox
     Left = 0
-    Height = 267
+    Height = 239
     Top = 253
     Width = 494
     Align = alClient
@@ -48,8 +49,8 @@ object ScanLog: TScanLog
   end
   object StatusBar: TStatusBar
     Left = 0
-    Height = 15
-    Top = 520
+    Height = 23
+    Top = 492
     Width = 494
     Panels = <    
       item
@@ -67,38 +68,38 @@ object ScanLog: TScanLog
     Width = 494
     Align = alTop
     Caption = 'Panel1'
-    ClientHeight = 14
-    ClientWidth = 479
+    ClientHeight = 29
+    ClientWidth = 494
     TabOrder = 3
     object Label1: TLabel
       Left = 9
-      Height = 16
+      Height = 13
       Top = 8
-      Width = 19
+      Width = 16
       Caption = 'File'
       ParentColor = False
     end
     object edFile: TEdit
       Left = 32
-      Height = 22
+      Height = 21
       Top = 4
-      Width = 406
+      Width = 421
       Anchors = [akTop, akLeft, akRight]
       TabOrder = 0
       Text = 'wintest.c'
     end
     object udLinks: TUpDown
-      Left = 445
+      Left = 460
       Height = 16
       Top = 8
       Width = 25
       Anchors = [akTop, akRight]
       Min = 0
+      OnClick = udLinksClick
       Orientation = udHorizontal
       Position = 0
       TabOrder = 1
       Wrap = False
-      OnClick = udLinksClick
     end
   end
   object MainMenu1: TMainMenu

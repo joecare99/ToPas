@@ -1,9 +1,9 @@
 object ScanLog: TScanLog
   Left = 134
   Top = 97
-  Width = 494
-  Height = 535
   Caption = 'ToPas'
+  ClientHeight = 476
+  ClientWidth = 478
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -18,16 +18,17 @@ object ScanLog: TScanLog
   object Splitter1: TSplitter
     Left = 0
     Top = 249
-    Width = 486
+    Width = 478
     Height = 4
     Cursor = crVSplit
     Align = alTop
     ResizeStyle = rsUpdate
+    ExplicitWidth = 486
   end
   object lbMsg: TListBox
     Left = 0
     Top = 29
-    Width = 486
+    Width = 478
     Height = 220
     Align = alTop
     ItemHeight = 13
@@ -37,7 +38,7 @@ object ScanLog: TScanLog
   object lbSrc: TListBox
     Left = 0
     Top = 253
-    Width = 486
+    Width = 478
     Height = 200
     Style = lbVirtualOwnerDraw
     Align = alClient
@@ -55,8 +56,8 @@ object ScanLog: TScanLog
   end
   object StatusBar: TStatusBar
     Left = 0
-    Top = 462
-    Width = 486
+    Top = 457
+    Width = 478
     Height = 19
     Panels = <
       item
@@ -70,13 +71,13 @@ object ScanLog: TScanLog
   object Panel1: TPanel
     Left = 0
     Top = 0
-    Width = 486
+    Width = 478
     Height = 29
     Align = alTop
     Caption = 'Panel1'
     TabOrder = 3
     DesignSize = (
-      486
+      478
       29)
     object Label1: TLabel
       Left = 9

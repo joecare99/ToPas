@@ -1,0 +1,95 @@
+msgid ""
+msgstr "Content-Type: text/plain; charset=UTF-8"
+
+#: tscanlog.config1.caption
+msgid "&Config"
+msgstr ""
+
+#: tscanlog.edfile.text
+msgid "wintest.c"
+msgstr ""
+
+#: tscanlog.exit1.caption
+msgid "E&xit"
+msgstr ""
+
+#: tscanlog.file1.caption
+msgid "&File"
+msgstr ""
+
+#: tscanlog.label1.caption
+msgid "File"
+msgstr ""
+
+#: tscanlog.loadtest1.caption
+msgid "Convert &Types"
+msgstr ""
+
+#: tscanlog.mnufilesel.caption
+msgid "&Select"
+msgstr ""
+
+#: tscanlog.mnuparse.caption
+msgid "&Parse"
+msgstr ""
+
+#: tscanlog.mnupreplock.caption
+msgid "&locklevel"
+msgstr ""
+
+#: tscanlog.mnupreptrad.caption
+msgid "&traditional"
+msgstr ""
+
+#: tscanlog.mnusavemetadata.caption
+msgid "Save &Metadata"
+msgstr ""
+
+#: tscanlog.mnutestparse.caption
+msgid "&Parser"
+msgstr ""
+
+#: tscanlog.mnutestscan.caption
+msgid "&Scanner"
+msgstr ""
+
+#: tscanlog.mnuviewsymbols.caption
+msgid "S&ymbols"
+msgstr ""
+
+#: tscanlog.mnuviewtypes.caption
+msgid "&Types"
+msgstr ""
+
+#: tscanlog.n2.caption
+msgid "&Macros"
+msgstr ""
+
+#: tscanlog.panel1.caption
+msgid "Panel1"
+msgstr ""
+
+#: tscanlog.preprocess1.caption
+msgid "Pr&eprocess"
+msgstr ""
+
+#: tscanlog.scopes1.caption
+msgid "&Scopes"
+msgstr ""
+
+#: tscanlog.statusbar.panels[0].text
+msgid "00000"
+msgstr ""
+
+#: tscanlog.stop1.caption
+msgid "St&op"
+msgstr ""
+
+#: tscanlog.test1.caption
+msgid "&Test"
+msgstr ""
+
+#: tscanlog.view1.caption
+msgid "&View"
+msgstr ""
+

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<fpdoc-descriptions><package name="lfpToPasLib"><module name="uDirectives"><short>Collections for preprocessor directive and pragma handlers.</short><descr>Hooks for adding app specific handlers:
+  registerDirective
+  registerPragma    </descr><element name="eDirectives"><short>preprocessor directives </short>
+      </element><element name="eDirectiveAttrs"/><element name="eDirectiveAttrs.daExpression"><short>expect const_expression argument</short>
+      </element><element name="eDirectiveAttrs.daInclude"><short>expect #include filespec</short>
+      </element>
+    </module>
+  </package>
+</fpdoc-descriptions>

@@ -20,11 +20,11 @@ uses
 type
   TFile = class(TStringList)
   private //internal use only
-    constructor CreateFrom(const ADir, fn: string);
   public
     name, dir:  string;
     id: integer;  //index in file list
     foundWhere: integer;  //index in include path
+    constructor CreateFrom(const ADir, fn: string);
     procedure UpdateFrom(lst: TStrings);
   end;
 

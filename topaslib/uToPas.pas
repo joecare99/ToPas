@@ -186,120 +186,120 @@ Grammar:
 *)
 const
   aPasOp: array[eScannerTokens] of RPasOp = (
-    (n:''; t:poIgnore), //t_empty,
-    (n:''; t:poStop), //t_eof,
-    (n:''; t:poIgnore), //t_bol,  //begin of line, + file and line numbers
-    (n:''; t:poIgnore), //t_NoEol,  //dto., escaped (continuation line)
-    (n:''; t:poIgnore), //t_rem,
-    (n:''; t:poErr), //t_err,
-    (n:''; t:poStr; p:prUnary), //t_str, //string literal "s", L"s", header name, + ID
-    (n:''; t:poStr; p:prUnary), //t_car, //char 'c', L'c', + chars/cval
+    (n:''; t:poIgnore{%H-}), //t_empty,
+    (n:''; t:poStop{%H-}), //t_eof,
+    (n:''; t:poIgnore{%H-}), //t_bol,  //begin of line, + file and line numbers
+    (n:''; t:poIgnore{%H-}), //t_NoEol,  //dto., escaped (continuation line)
+    (n:''; t:poIgnore{%H-}), //t_rem,
+    (n:''; t:poErr{%H-}), //t_err,
+    (n:''; t:poStr; p:prUnary{%H-}), //t_str, //string literal "s", L"s", header name, + ID
+    (n:''; t:poStr; p:prUnary{%H-}), //t_car, //char 'c', L'c', + chars/cval
 {$IFDEF t_num}
     (n:''; t:poErr), //t_num,  //unclassified preprocessor number (not yet implemented)
 {$ENDIF}
-    (n:''; t:poInt; p:prUnary), //t_int,
-    (n:''; t:poInt; p:prUnary), //t_Lint, //int number, + value
-    (n:''; t:poLit; p:prUnary), //t_flt, //real number, + value
-    (n:''; t:poSym; p:prUnary), //t_sym,
-    (n:''; t:poErr), //t_symNX,  //symbol, + ID
-    (n:''; t:poErr), //t_arg,
-    (n:''; t:poErr), //t_argNX,
+    (n:''; t:poInt; p:prUnary{%H-}), //t_int,
+    (n:''; t:poInt; p:prUnary{%H-}), //t_Lint, //int number, + value
+    (n:''; t:poLit; p:prUnary{%H-}), //t_flt, //real number, + value
+    (n:''; t:poSym; p:prUnary{%H-}), //t_sym,
+    (n:''; t:poErr{%H-}), //t_symNX,  //symbol, + ID
+    (n:''; t:poErr{%H-}), //t_arg,
+    (n:''; t:poErr{%H-}), //t_argNX,
   //parser specific, mapped from t_sym
     //t_type, t_const,
   //preprocessor operators
-    (n:'???'; t:poType), //opSharp,
-    (n:''; t:poErr), //op2Sharp,
+    (n:'???'; t:poType{%H-}), //opSharp,
+    (n:''; t:poErr{%H-}), //op2Sharp,
   //!!!if opCast=opSharpAt!!!
-    (n:'???'; t:poCast), //opSharpAt, // # ## #@
+    (n:'???'; t:poCast{%H-}), //opSharpAt, // # ## #@
     //(n:''; t:poErr), //opSharpAt, // # ## #@
   //operators - sorted within lines
     (n:' and '; t:poInfix; p:prMulOp; m:opAddr1), //& binAnd/opAddr
-    (n:'__and'; t:poFunc), //&= letAND,
-    (n:' and '; t:poInfix; p:prMulOp), //&& logAND,
-    (n:'+'; t:poInfix; p:prAddOp), //+ opADD,
-    (n:' inc'; t:poFunc), //+= letADD,
-    (n:' __postinc'; t:poFunc), //++ opINC: postfix! prefix as +=(x,1)
-    (n:'<'; t:poInfix; p:prRelOp), //opLT,
-    (n:'<='; t:poInfix; p:prRelOp), //opLE,
-    (n:' shl '; t:poInfix; p:prMulOp), //opSHL,
-    (n:' __shl'; t:poFunc), //letSHL, // < <= << <<=
-    (n:'>'; t:poInfix; p:prRelOp), //opGT,
-    (n:'>='; t:poInfix; p:prRelOp), //opGE,
-    (n:' shr '; t:poInfix; p:prMulOp), //opSHR,
-    (n:' __shr'; t:poFunc), //letSHR, // > >= >> >>=
-    (n:' or '; t:poInfix; p:prAddOp), //binOR,
-    (n:' __or'; t:poFunc), //letOR,
-    (n:' or '; t:poInfix; p:prAddOp), //logOR,    // | |= ||
+    (n:'__and'; t:poFunc{%H-}), //&= letAND,
+    (n:' and '; t:poInfix; p:prMulOp{%H-}), //&& logAND,
+    (n:'+'; t:poInfix; p:prAddOp{%H-}), //+ opADD,
+    (n:' inc'; t:poFunc{%H-}), //+= letADD,
+    (n:' __postinc'; t:poFunc{%H-}), //++ opINC: postfix! prefix as +=(x,1)
+    (n:'<'; t:poInfix; p:prRelOp{%H-}), //opLT,
+    (n:'<='; t:poInfix; p:prRelOp{%H-}), //opLE,
+    (n:' shl '; t:poInfix; p:prMulOp{%H-}), //opSHL,
+    (n:' __shl'; t:poFunc{%H-}), //letSHL, // < <= << <<=
+    (n:'>'; t:poInfix; p:prRelOp{%H-}), //opGT,
+    (n:'>='; t:poInfix; p:prRelOp{%H-}), //opGE,
+    (n:' shr '; t:poInfix; p:prMulOp{%H-}), //opSHR,
+    (n:' __shr'; t:poFunc{%H-}), //letSHR, // > >= >> >>=
+    (n:' or '; t:poInfix; p:prAddOp{%H-}), //binOR,
+    (n:' __or'; t:poFunc{%H-}), //letOR,
+    (n:' or '; t:poInfix; p:prAddOp{%H-}), //logOR,    // | |= ||
 
-    (n:' not '; t:poPrefix; p:prUnary), //logNOT,
-    (n:'<>'; t:poInfix; p:prRelOp), //opNE,   // ! !=
-    (n:' mod '; t:poInfix; p:prMulOp), //opMOD,
-    (n:' __mod'; t:poFunc), //letMOD,  // % %=
+    (n:' not '; t:poPrefix; p:prUnary{%H-}), //logNOT,
+    (n:'<>'; t:poInfix; p:prRelOp{%H-}), //opNE,   // ! !=
+    (n:' mod '; t:poInfix; p:prMulOp{%H-}), //opMOD,
+    (n:' __mod'; t:poFunc{%H-}), //letMOD,  // % %=
     (n:'*'; t:poInfix; p:prMulOp; m:opDeref1), //* opStar/opDeref1 - ambiguous: mul or deref?
       //deref as opTo "->"
-    (n:' mul'; t:poFunc), //*= letMUL,
+    (n:' mul'; t:poFunc{%H-}), //*= letMUL,
 //!!! we don't have disambiguated tokens here!!!
 //unless the writer emitted special codes...
 {$IFDEF opMul}
   // *
-    (n:'*'; t:poInfix; p:prMulOp), //opMul,
-    (n:'^'; t:poPrefix; p:prUnary), //opPtr, //classified "*"
-    (n:'^'; t:poPostfix; p:prUnary), //opDeref1, //classified "*"
+    (n:'*'; t:poInfix; p:prMulOp{%H-}), //opMul,
+    (n:'^'; t:poPrefix; p:prUnary{%H-}), //opPtr, //classified "*"
+    (n:'^'; t:poPostfix; p:prUnary{%H-}), //opDeref1, //classified "*"
   // &
     (n:' and '; t:poInfix; p:prMulOp; m:opAddr1), //binAnd,
-    (n:'@'; t:poPrefix; p:prUnary), //opAddr,   //classified "&" (unary)
+    (n:'@'; t:poPrefix; p:prUnary{%H-}), //opAddr,   //classified "&" (unary)
   // -
     (n:'-'; t:poInfix; p:prAddOp; m:opMinus1), //- opSub/opMinus1
-    (n:'-'; t:poPrefix; p:prUnary), //opMinus1,  //classified "-" (unary)
+    (n:'-'; t:poPrefix; p:prUnary{%H-}), //opMinus1,  //classified "-" (unary)
 {$ENDIF}
-    (n:':='; t:poInfix), //opLet,
-    (n:'='; t:poInfix; p:prRelOp), //opEQ,    // = ==
-    (n:' xor '; t:poInfix; p:prAddOp), //opXor,
-    (n:' __xor'; t:poFunc), //letXOR,  // ^ ^=
+    (n:':='; t:poInfix{%H-}), //opLet,
+    (n:'='; t:poInfix; p:prRelOp{%H-}), //opEQ,    // = ==
+    (n:' xor '; t:poInfix; p:prAddOp{%H-}), //opXor,
+    (n:' __xor'; t:poFunc{%H-}), //letXOR,  // ^ ^=
 
   {$IFDEF ExprTerm}
   //old!!!
-    (n:''; t:poList; p:prHighest), //opLPar,
-    (n:''; t:poErr), //opRPar, // ( )
-    (n:', '; t:poLit; p:prUnary), //opComma,
-    (n:': '; t:poErr), //opColon: label!
-    (n:''; t:poDone), //opSemi, // , : ; C++: ::
+    (n:''; t:poList; p:prHighest{%H-}), //opLPar,
+    (n:''; t:poErr{%H-}), //opRPar, // ( )
+    (n:', '; t:poLit; p:prUnary{%H-}), //opComma,
+    (n:': '; t:poErr{%H-}), //opColon: label!
+    (n:''; t:poDone{%H-}), //opSemi, // , : ; C++: ::
   {$ELSE}
     {$IFDEF old}
-      (n:''; t:poStop), //opLPar,
+      (n:''; t:poStop{%H-}), //opLPar,
     {$ELSE}
-      (n:'('; t:poCall; p:prLowest), //opLPar,  //prio???
+      (n:'('; t:poCall; p:prLowest{%H-}), //opLPar,  //prio???
     {$ENDIF}
-    (n:''; t:poStop), //opRPar, // ( )
-    (n:''; t:poSep), //opComma: consume and exit
-    (n:''; t:poStop), //opColon: label!
-    (n:''; t:poStop), //opSemi, // , : ; C++: ::
+    (n:''; t:poStop{%H-}), //opRPar, // ( )
+    (n:''; t:poSep{%H-}), //opComma: consume and exit
+    (n:''; t:poStop{%H-}), //opColon: label!
+    (n:''; t:poStop{%H-}), //opSemi, // , : ; C++: ::
   {$ENDIF}
-    (n:' __if'; t:poFunc), //opTERN, ?(cond,t,f)
-    (n:''; t:poArray; p:prLowest), //opLBra,
+    (n:' __if'; t:poFunc{%H-}), //opTERN, ?(cond,t,f)
+    (n:''; t:poArray; p:prLowest{%H-}), //opLBra,
   {$IFDEF ExprTerm}
     (n:''; t:poErr), //opRBra, // [ ]
     (n:''; t:poErr), //opBeg,
     (n:''; t:poErr), //opEnd,   // { }
   {$ELSE}
-    (n:''; t:poStop), //opRBra, // [ ]
-    (n:''; t:poStop), //opBeg,
-    (n:''; t:poStop), //opEnd,   // { }
+    (n:''; t:poStop{%H-}), //opRBra, // [ ]
+    (n:''; t:poStop{%H-}), //opBeg,
+    (n:''; t:poStop{%H-}), //opEnd,   // { }
   {$ENDIF}
-    (n:' not '; t:poPrefix; p:prUnary), //binNot,  //~
+    (n:' not '; t:poPrefix; p:prUnary{%H-}), //binNot,  //~
   //not in op1$
-    (n:'.'; t:poInfix; p:prSelect), //opDot,
-    (n:''; t:poErr), //op3Dot, // . ..., C++: .*
-    (n:'/'; t:poInfix; p:prMulOp), //opDiv,
-    (n:' __div'; t:poFunc), //letDiv, // / /=
-    (n:''; t:poIgnore), //opDivDiv - rem!!!
-    (n:'-'; t:poInfix; p:prAddOp), //opSub,
-    (n:' dec'; t:poFunc), //letSub, -= or --arg!!!
-    (n:' __postdec'; t:poFunc), //-- opDec: postfix! prefix: -=(x,1)
+    (n:'.'; t:poInfix; p:prSelect{%H-}), //opDot,
+    (n:''; t:poErr{%H-}), //op3Dot, // . ..., C++: .*
+    (n:'/'; t:poInfix; p:prMulOp{%H-}), //opDiv,
+    (n:' __div'; t:poFunc{%H-}), //letDiv, // / /=
+    (n:''; t:poIgnore{%H-}), //opDivDiv - rem!!!
+    (n:'-'; t:poInfix; p:prAddOp{%H-}), //opSub,
+    (n:' dec'; t:poFunc{%H-}), //letSub, -= or --arg!!!
+    (n:' __postdec'; t:poFunc{%H-}), //-- opDec: postfix! prefix: -=(x,1)
     (n:'^.'; t:poInfix; p:prSelect; m:opDeref1) //opTo, // - -= -- ->, C++: ->*
   );
 
-(* AnsiToPascal - convert AnsiString into Pascal format.
+(* AnsiToPascal - convert AnsiString into Pascal format.*)
 (* PascalStringLit - convert meta string into Pascal format.
 Control characters are inserted as hex character codes (#$), without '+'.
 Quote chars are doubled.
@@ -2030,7 +2030,7 @@ var //reduce try/finally blocks
         begin
           WriteLn('repeat');  //nextToken;
           inc(indent);
-          ShowStmt; //works - "," instead of ";" ???
+          ShowStmt(); //works - "," instead of ";" ???
           //expect(opComma, 'no do","stmt');
           dec(indent);
           Write('until not ');
@@ -2055,7 +2055,7 @@ var //reduce try/finally blocks
             if i_ttyp = Kif then begin
             //it's NOT a block, so...
               Write(' ');  //need a blank before "if"!
-              ShowStmt;
+              ShowStmt();
             end else
               ShowStmts(sfOneOrBlock);
           end;

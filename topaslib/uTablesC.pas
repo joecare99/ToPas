@@ -365,7 +365,7 @@ other - local
       //arguments for Scope.CreateScope
     destructor  Destroy; override;
     function  Add(const s: string): integer; override;
-    function  toString: string; //override;  //full (meta) string
+    function  toString: string; override;  //full (meta) string
   //parser API - the string is cleared/re-initialized
     procedure addStmt(var s: string);
     procedure addLcls;

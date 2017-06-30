@@ -16,6 +16,7 @@ interface
 uses
   LCLIntf, LCLType, LMessages, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
   ExtCtrls, StdCtrls, ComCtrls, Menus, Contnrs,
+  // lfpToPasLib
   uScanC, uFiles, 
   uLineScan, uTablesPrep, uTablesC,
   uUI;
@@ -749,14 +750,14 @@ const
   );
 
   WordStyles: array[eWordStyle] of RWordStyle = (
-    (fg:clBlack), //wsOther,
-    (fg:clRed; attrs:[fsBold]), //wsNoEol,
+    (fg:clBlack{%H-}), //wsOther,
+    (fg:clRed; attrs:{%H-}[fsBold]), //wsNoEol,
     //(fg:clLtGray; attrs:[fsItalic]), //wsRem,
-    (fg:clNavy; attrs:[fsItalic]), //wsRem,
+    (fg:clNavy; attrs:{%H-}[fsItalic]), //wsRem,
     //(fg:clGreen; bg:clYellow; attrs:[fsItalic]), //wsPrep,
-    (fg:clBlack; bg:clYellow), //wsPrep,
-    (fg:clMaroon), //wsNum,
-    (fg:clDkGray), //wsStr,
+    (fg:clBlack; bg:clYellow{%H-}), //wsPrep,
+    (fg:clMaroon{%H-}), //wsNum,
+    (fg:clDkGray{%H-}), //wsStr,
     (fg:clRed; attrs:[fsBold]), //wsOp,
     (fg:clGreen; attrs:[fsBold]), //wsPunct,
     //(fg:clBlue; attrs:[fsUnderline]), //wsIdent,

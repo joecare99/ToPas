@@ -1,26 +1,29 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <CONFIG>
   <ProjectOptions>
-    <Version Value="7"/>
+    <Version Value="10"/>
     <General>
       <Flags>
         <SaveOnlyProjectUnits Value="True"/>
       </Flags>
       <SessionStorage Value="InProjectDir"/>
       <MainUnit Value="0"/>
-      <TargetFileExt Value=""/>
+      <Title Value="WinToPas"/>
       <ResourceType Value="res"/>
       <UseXPManifest Value="True"/>
-      <Icon Value="0"/>
     </General>
+    <LazDoc Paths="../FPDoc"/>
     <i18n>
-      <EnableI18N LFM="False"/>
+      <EnableI18N Value="True"/>
+      <OutDir Value="../Language"/>
     </i18n>
     <VersionInfo>
       <Language Value=""/>
       <CharSet Value=""/>
-      <StringTable Comments="" CompanyName="" FileDescription="" FileVersion="" InternalName="" LegalCopyright="" LegalTrademarks="" OriginalFilename="" ProductName="" ProductVersion=""/>
     </VersionInfo>
+    <BuildModes Count="1">
+      <Item1 Name="default" Default="True"/>
+    </BuildModes>
     <PublishOptions>
       <Version Value="2"/>
       <IgnoreBinaries Value="False"/>
@@ -32,10 +35,13 @@
         <FormatVersion Value="1"/>
       </local>
     </RunParams>
-    <RequiredPackages Count="1">
+    <RequiredPackages Count="2">
       <Item1>
-        <PackageName Value="LCL"/>
+        <PackageName Value="lfpToPasLib"/>
       </Item1>
+      <Item2>
+        <PackageName Value="LCL"/>
+      </Item2>
     </RequiredPackages>
     <Units Count="7">
       <Unit0>
@@ -43,71 +49,71 @@
         <IsPartOfProject Value="True"/>
       </Unit0>
       <Unit1>
-        <Filename Value="fScanLog.pas"/>
+        <Filename Value="../lazwintopas/fScanLog.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="ScanLog"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <UnitName Value="fScanLog"/>
       </Unit1>
       <Unit2>
-        <Filename Value="fTypes.pas"/>
+        <Filename Value="../lazwintopas/fTypes.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="TypeDefList"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <UnitName Value="fTypes"/>
       </Unit2>
       <Unit3>
-        <Filename Value="fScopeView.pas"/>
+        <Filename Value="../lazwintopas/fScopeView.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="ScopeView"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <UnitName Value="fScopeView"/>
       </Unit3>
       <Unit4>
-        <Filename Value="fConfiguration.pas"/>
+        <Filename Value="../lazwintopas/fConfiguration.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="ConfigViewer"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <UnitName Value="fConfiguration"/>
       </Unit4>
       <Unit5>
-        <Filename Value="fSymView.pas"/>
+        <Filename Value="../lazwintopas/fSymView.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="SymView"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <UnitName Value="fSymView"/>
       </Unit5>
       <Unit6>
-        <Filename Value="fMacros.pas"/>
+        <Filename Value="../lazwintopas/fMacros.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="MacroChecker"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <UnitName Value="fMacros"/>
       </Unit6>
     </Units>
   </ProjectOptions>
   <CompilerOptions>
-    <Version Value="9"/>
+    <Version Value="11"/>
+    <PathDelim Value="\"/>
     <Target>
-      <Filename Value="wintopas"/>
+      <Filename Value="..\..\..\bin\$(TargetCPU)-$(TargetOS)\$NameOnly($(ProjFile))"/>
     </Target>
     <SearchPaths>
-      <IncludeFiles Value="../topaslib/"/>
-      <OtherUnitFiles Value="../topaslib/"/>
-      <UnitOutputDirectory Value="lib/$(TargetCPU)-$(TargetOS)/"/>
+      <IncludeFiles Value="$(ProjOutDir);..\..\..\include;..\topaslib"/>
+      <OtherUnitFiles Value="..\topaslib"/>
+      <UnitOutputDirectory Value="..\..\..\bin\$(TargetCPU)-$(TargetOS)\units"/>
     </SearchPaths>
-    <Other>
-      <CompilerMessages>
-        <UseMsgFile Value="True"/>
-      </CompilerMessages>
-      <CompilerPath Value="$(CompPath)"/>
-    </Other>
+    <Parsing>
+      <SyntaxOptions>
+        <AllowLabel Value="False"/>
+      </SyntaxOptions>
+    </Parsing>
+    <CodeGeneration>
+      <SmartLinkUnit Value="True"/>
+    </CodeGeneration>
+    <Linking>
+      <LinkSmart Value="True"/>
+    </Linking>
   </CompilerOptions>
   <Debugging>
     <Exceptions Count="3">

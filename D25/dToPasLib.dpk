@@ -1,0 +1,51 @@
+package dToPasLib;
+
+{$R *.res}
+{$IFDEF IMPLICITBUILDING This IFDEF should not be used by users}
+{$ALIGN 8}
+{$ASSERTIONS ON}
+{$BOOLEVAL OFF}
+{$DEBUGINFO OFF}
+{$EXTENDEDSYNTAX ON}
+{$IMPORTEDDATA ON}
+{$IOCHECKS ON}
+{$LOCALSYMBOLS ON}
+{$LONGSTRINGS ON}
+{$OPENSTRINGS ON}
+{$OPTIMIZATION OFF}
+{$OVERFLOWCHECKS OFF}
+{$RANGECHECKS OFF}
+{$REFERENCEINFO ON}
+{$SAFEDIVIDE OFF}
+{$STACKFRAMES ON}
+{$TYPEDADDRESS OFF}
+{$VARSTRINGCHECKS ON}
+{$WRITEABLECONST OFF}
+{$MINENUMSIZE 1}
+{$IMAGEBASE $400000}
+{$DEFINE DEBUG}
+{$ENDIF IMPLICITBUILDING}
+{$LIBSUFFIX '250'}
+{$RUNONLY}
+{$IMPLICITBUILD OFF}
+
+requires
+  rtl;
+
+contains
+  uDirectives in '..\topaslib\uDirectives.pas',
+  uFiles in '..\topaslib\uFiles.pas',
+  uHashList in '..\topaslib\uHashList.pas',
+  uLineScan in '..\topaslib\uLineScan.pas',
+  uMacros in '..\topaslib\uMacros.pas',
+  uParseC in '..\topaslib\uParseC.pas',
+  uScanC in '..\topaslib\uScanC.pas',
+  uTablesC in '..\topaslib\uTablesC.pas',
+  uTablesPrep in '..\topaslib\uTablesPrep.pas',
+  uTokenC in '..\topaslib\uTokenC.pas',
+  uToPas in '..\topaslib\uToPas.pas',
+  uTranslator in '..\topaslib\uTranslator.pas',
+  uUI in '..\topaslib\uUI.pas',
+  uXStrings in '..\topaslib\uXStrings.pas';
+
+end.

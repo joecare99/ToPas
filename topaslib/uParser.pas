@@ -50,7 +50,10 @@ implementation
 
 function  external_declaration(r: PVBL): boolean;
 begin
-  Result := declaration_specifiers(r) and (function_definition(r) or declaration(r));
+  Result :=
+    declaration_specifiers(r) and (
+      function_definition(r) or
+      declaration(r));
 end;
 
 //template
@@ -60,7 +63,7 @@ var
 begin
   Result := True;  //can be empty?
   r.scanner := UnitScanner;
-  r.root := nil;
+  r.root := TParseTree(nil);
   while i_ttyp <> t_eof do begin
     Result := external_declaration(@r);
     if not Result then

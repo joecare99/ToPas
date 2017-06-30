@@ -2,12 +2,12 @@ program WinToPas;
 
 uses
   Forms,
-  fScanLog in 'fScanLog.pas' {ScanLog},
-  fTypes in 'fTypes.pas' {TypeDefList},
-  fScopeView in 'fScopeView.pas' {ScopeView},
-  fConfiguration in 'fConfiguration.pas' {ConfigViewer},
-  fSymView in 'fSymView.pas' {SymView},
-  fMacros in 'fMacros.pas' {MacroChecker};
+  fScanLog in '..\wintopas\fScanLog.pas' {ScanLog},
+  fTypes in '..\wintopas\fTypes.pas' {TypeDefList},
+  fScopeView in '..\wintopas\fScopeView.pas' {ScopeView},
+  fConfiguration in '..\wintopas\fConfiguration.pas' {ConfigViewer},
+  fSymView in '..\wintopas\fSymView.pas' {SymView},
+  fMacros in '..\wintopas\fMacros.pas' {MacroChecker};
 
 {$R *.RES}
 

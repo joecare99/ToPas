@@ -50,6 +50,7 @@ var
   Log: procedure (const msg: AnsiString; kind: eLogKind = lkProgress);
 
 const
+{$ifndef fpc}LineEnding=#10#13;{$h+}{$endif}
   EOLstr : AnsiString = LineEnding;
 
 const //not up-to-date!!!

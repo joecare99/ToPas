@@ -61,6 +61,8 @@ type
     function  ScanPChar(Asrc: PChar): eToken;
   end;
 
+  { TDupeList }
+
   TDupeList = class(TXStringList)
   public
     constructor Create(const AName: string; AKey: integer = 0); override;
@@ -127,7 +129,7 @@ begin
   sym.DupeCount := cnt;
 end;
 
-constructor TDupeList.Create;
+constructor TDupeList.Create(const AName: string; AKey: integer);
 begin
   inherited;
 (* When the source language is case insensitive,
