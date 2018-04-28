@@ -3,6 +3,7 @@ object ScanLog: TScanLog
   Height = 535
   Top = 97
   Width = 494
+  ActiveControl = lbMsg
   Caption = 'ToPas'
   ClientHeight = 535
   ClientWidth = 494
@@ -10,7 +11,6 @@ object ScanLog: TScanLog
   Font.Name = 'MS Sans Serif'
   Menu = MainMenu1
   OnCreate = FormCreate
-  LCLVersion = '1.8.0.2'
   Visible = False
   object Splitter1: TSplitter
     Cursor = crVSplit
@@ -33,7 +33,7 @@ object ScanLog: TScanLog
   end
   object lbSrc: TListBox
     Left = 0
-    Height = 239
+    Height = 259
     Top = 253
     Width = 494
     Align = alClient
@@ -50,7 +50,7 @@ object ScanLog: TScanLog
   object StatusBar: TStatusBar
     Left = 0
     Height = 23
-    Top = 492
+    Top = 512
     Width = 494
     Panels = <    
       item
